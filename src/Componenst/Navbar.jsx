@@ -72,8 +72,6 @@ function Navbar() {
                         </div>
                     </ul>
 
-
-
                 </div>
             )}
         </>

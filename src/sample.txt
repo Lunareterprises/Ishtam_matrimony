@@ -1,0 +1,7 @@
+
+import realstories1 from '../assets/images/Property 1=Frame 1000008792 (1).png';
+import realstories2 from '../assets/images/Property 1=Frame 1000008795.png';
+import realstories3 from '../assets/images/Property 1=Frame 1000008797.png';
+import realstories4 from '../assets/images/Property 11=Frame 1000008796.png';
+import realstories5 from '../assets/images/Property 12=Frame 1000008796.png';
+import realstories6 from '../assets/images/Property 17=Frame 1000008796.png';
