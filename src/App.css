@@ -1,0 +1,16 @@
+
+
+.aos-animate {
+  transition: all 0.5s ease-in-out;
+  /* Default styles */
+}
+
+@media (max-width: 768px) {
+
+  .aos-animate {
+    opacity: 1 !important;
+    /* Override AOS styles */
+    transform: none !important;
+    /* Reset animations for small screens */
+  }
+}

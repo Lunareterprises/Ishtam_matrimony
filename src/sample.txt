@@ -1,7 +1,45 @@
+data-aos="zoom-in" data-aos-duration="1600"
 
-import realstories1 from '../assets/images/Property 1=Frame 1000008792 (1).png';
-import realstories2 from '../assets/images/Property 1=Frame 1000008795.png';
-import realstories3 from '../assets/images/Property 1=Frame 1000008797.png';
-import realstories4 from '../assets/images/Property 11=Frame 1000008796.png';
-import realstories5 from '../assets/images/Property 12=Frame 1000008796.png';
-import realstories6 from '../assets/images/Property 17=Frame 1000008796.png';
+
+
+{/* Process Steps on Zigzag Path */}
+                    <div className="absolute inset-0 flex flex-col">
+                        {/* step 1 */}
+                        <div className="absolute left-[-30px] top-[20px]">
+                            <div className='pb-6 text-center' >
+                                <h1 className='sm:text-[20px] text-[15px]  font-semibold' >Register Your Profile</h1>
+                                <p className='sm:text-[19px] text-[14px]'>Simple, fast, and free.</p>
+                            </div>
+                            <img src={processImg1} className='sm:w-[175px] w-[110px] h-auto' alt="Step 1" />
+                        </div>
+
+                        {/* step 2 */}
+                        <div className="absolute right-0 top-[160px] sm:top-[100px] md:top-[160px] flex flex-col items-center text-center">
+                            <div className='pb-6' >
+                                <h1 className=" sm:text-[20px] text-[15px]  font-semibold" >Match Preferences</h1>
+                                <p className="sm:text-[19px] text-[14px]" >Filter by faith, location, values.</p>
+                            </div>
+                            <img src={processImg2} className='sm:w-[175px] w-[130px] h-auto' alt="Step 2" />
+                        </div>
+
+                        {/* step 3 */}
+                        <div className="absolute right-0 top-[500px] sm:top-[-300px] md:top-[450px] flex flex-col items-center sm:text-right text-left">
+                            <div className="pb-6 pr-7">
+                                <h1 className="sm:text-[20px] text-[15px]  font-semibold">Connect Securely</h1>
+                                <p className="sm:text-[19px] text-[14px]">Safe chat & family involvement.</p>
+                            </div>
+                            <img src={processImg3} className='sm:w-[175px] w-[130px] h-auto' alt="Step 3" />
+                        </div>
+
+                        {/* step 4 */}
+                        <div className="absolute left-[-200px] md:left-[-200px] sm:left-[-30px] top-[700px] sm:top-[10px] md:top-[690px] flex flex-col items-center">
+                            <div className='pb-6 text-center' >
+                                <h1 className='sm:text-[20px] text-[15px]  font-semibold' >Meet & Marry</h1>
+                                <p className='sm:text-[19px] text-[14px]'>Celebrate love, the traditional way.</p>
+                            </div>
+                            <img src={processImg4} className='sm:w-[175px] w-[110px] h-auto' alt="Step 4" />
+                        </div>
+                    </div>
+
+
+ 

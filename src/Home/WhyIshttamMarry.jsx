@@ -1,10 +1,12 @@
 import React from 'react'
 import WhyChooseUsImg from '../assets/Property 1=Default.png'
+import RealStories from './RealStories';
 
 
 
 
 function WhyIshttamMarry() {
+
   const cardData = [
     {
       title: "100% Human Verified Profiles",
@@ -29,15 +31,15 @@ function WhyIshttamMarry() {
   ];
 
   return (
-    <div className='' >
-      <div className='flex flex-col items-center text-center gap-4' >
-        <h1 className="text-3xl font-semibold text-[#490b22] sm:pt-[100px] pt-[60px]">
+    <div >
+      <div data-aos="zoom-in" data-aos-duration="1600" className='flex flex-col items-center text-center gap-4' >
+        <h1 className="text-3xl font-semibold text-[#490b22] sm:pt-[80px] pt-[60px]">
           Why Choose ishttam Marry
         </h1>
         <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >We understand that marriage is more than just a match — it's a divine connection between families, faith, and futures. Here's why thousands trust ishttam Marry on their journey to find true love:</p>
       </div>
 
-      <div className="relative w-full px-6 py-7 sm:py-20">
+      <div className="relative w-full px-6 pt-7 sm:pt-20">
 
         {/* Left Floating Image */}
         <img
@@ -109,17 +111,7 @@ function WhyIshttamMarry() {
           ))}
         </div>
       </div>
-
-      <div className='flex flex-col items-center' >
-        <div className='flex flex-col items-center pt-6' >
-          <h1 className='text-3xl font-semibold text-[#490b22]' >💕Real Stories, Real Love</h1>
-          <p className='text-[18px] sm:text-[20px] px-7 pt-3 text-[#490b22]' >"Be inspired by the couples who trusted Ishttam Marry to find their faith-filled soulmate."</p>
-        </div>
-        <div className='pt-[50px]' >
-          
-        </div>
-
-      </div>
+      <RealStories/>
     </div>
   )
 }

@@ -5,6 +5,9 @@ import BannerImage3 from '../assets/Property 1=Default (3).png';
 import BannerImage4 from '../assets/Property 1=Default (4).png';
 import BannerImage5 from '../assets/Property 1=Default (5).png';
 import WhyIshttamMarry from './WhyIshttamMarry';
+import OurProcess from './OurProcess';
+import TrustUs from './TrustUs';
+import HomeContactSection from './HomeContactSection';
 
 
 function Home() {
@@ -52,7 +55,10 @@ function Home() {
           </div>
         </div>
       </section>
-      <WhyIshttamMarry/>
+      <WhyIshttamMarry />
+      <OurProcess />
+      <HomeContactSection/>
+      <TrustUs/>   
     </>
   );
 }
