@@ -32,7 +32,7 @@ function WhyIshttamMarry() {
 
   return (
     <div >
-      <div data-aos="zoom-in" data-aos-duration="1600" className='flex flex-col items-center text-center gap-4' >
+      <div  className='flex flex-col items-center text-center gap-4' >
         <h1 className="text-3xl font-semibold text-[#490b22] sm:pt-[80px] pt-[60px]">
           Why Choose ishttam Marry
         </h1>

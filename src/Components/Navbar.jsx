@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import IshtamMarry_Logo from '../assets/Frame 1000008772.png'
 import { HiMiniBars3BottomRight } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
+import Login from '../Components/Login';
 
 function Navbar() {
 
@@ -9,11 +10,13 @@ function Navbar() {
     const toggleSidebar = () => {
         setShowSidebar(!showSidebar);
     };
+    const [showLogin, setShowLogin] = useState(false);
+    const [showOtp, setShowOtp] = useState(false);
 
     return (
 
         <>
-            <nav className="bg-white h-[80px] flex items-center justify-center shadow">
+            <nav className="bg-white h-[80px] flex items-center justify-center shadow fixed z-50">
                 <div className="w-[90%] flex items-center justify-between">
 
                     {/* Logo */}
@@ -66,7 +69,7 @@ function Navbar() {
                             <button className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
                                 Registration
                             </button>
-                            <button className="w-[150px] h-[39px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
+                            <button onClick={() => setShowLogin(true)} className="w-[150px] h-[39px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
                                 Sign In
                             </button>
                         </div>
@@ -74,8 +77,10 @@ function Navbar() {
 
                 </div>
             )}
-        </>
 
+            {showLogin && <Login onClose={() => setShowLogin(false)} />}
+
+        </>
 
     )
 }

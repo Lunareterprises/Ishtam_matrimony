@@ -8,6 +8,8 @@ import WhyIshttamMarry from './WhyIshttamMarry';
 import OurProcess from './OurProcess';
 import TrustUs from './TrustUs';
 import HomeContactSection from './HomeContactSection';
+import Nav from '../Components/Nav'
+import Footer from '../Components/Footer';
 
 
 function Home() {
@@ -30,6 +32,7 @@ function Home() {
 
   return (
     <>
+      <Nav/>
       <section className="relative w-full h-[80vh] sm:h-[90vh] overflow-hidden">
         <img
           src={banners[current]}
@@ -57,8 +60,9 @@ function Home() {
       </section>
       <WhyIshttamMarry />
       <OurProcess />
-      <HomeContactSection/>
-      <TrustUs/>   
+      <HomeContactSection />
+      <TrustUs />
+      <Footer/>
     </>
   );
 }

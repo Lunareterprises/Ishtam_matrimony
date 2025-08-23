@@ -19,12 +19,12 @@ function RealStories() {
         {
             image: realStoriesImg2,
             name: 'Sarah & Michael',
-            story: '"Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely."'
+            story: 'Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely.'
         },
         {
             image: realStoriesImg3,
             name: 'Maria & David',
-            story: '"Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together."'
+            story: 'Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together.'
         },
         {
             image: realStoriesImg4,
@@ -34,12 +34,12 @@ function RealStories() {
         {
             image: realStoriesImg5,
             name: 'Sarah & Michael',
-            story: '"Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely."'
+            story: 'Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely.'
         },
         {
             image: realStoriesImg6,
             name: 'Maria & David',
-            story: '"Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together."'
+            story: 'Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together.'
         },
 
     ];
