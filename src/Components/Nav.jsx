@@ -4,28 +4,22 @@ import { HiMiniBars3BottomRight } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import Login from '../Components/Login';
 import LoginWithOtp from './LoginWithOtp';
+import EnterOtp from './EnterOtp'
+import Registration from './Registration';
 
 
 function Nav() {
 
     const [showSidebar, setShowSidebar] = useState(false);
-    const [showLoginWithOtp, setShowLoginWithOtp] = useState(false);
+
+    //for login
     const [showLogin, setShowLogin] = useState(false);
+    const [showLoginWithOtp, setShowLoginWithOtp] = useState(false);
+    const [showEnterOtp, setShowEnterOtp] = useState(false)
 
-    const toggleSidebar = () => {
-        setShowSidebar(!showSidebar);
-    };
+    //for Registration
+    const [showRegistration, setShowRegistration] = useState(false)
 
-
-    const openLoginWithOtpModal = () => {
-        setShowLogin(false);
-        setShowLoginWithOtp(true);
-    };
-
-    const closeModals = () => {
-        setShowLogin(false);
-        setShowLoginWithOtp(false);
-    };
 
     return (
         <>
@@ -49,7 +43,7 @@ function Nav() {
 
                     {/* Buttons - Hidden on small screens */}
                     <div className="hidden sm:flex gap-5">
-                        <button className="w-[150px]  h-[36px] sm:h-[40px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
+                        <button  onClick={() => setShowRegistration(true)} className="w-[150px]  h-[36px] sm:h-[40px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
                             Registration
                         </button>
                         <button onClick={() => setShowLogin(true)} className="w-[90px]  h-[36px] sm:h-[40px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
@@ -70,15 +64,15 @@ function Nav() {
 
             {/* Mobile Menu */}
             {showSidebar && (
-                <div className="bg-white w-full shadow-lg xl:hidden h-[340px] sm:h-[230px] ">
-                    <ul className="flex flex-col items-center gap-4 font-medium text-gray-700">
+                <div className="bg-white w-full shadow-lg xl:hidden h-[470px]  fixed inset-0 z-[50] ">
+                    <ul className="flex flex-col items-center gap-4 font-medium text-gray-700 pt-25">
                         <li>Home</li>
                         <li>About us</li>
                         <li>FAQ</li>
                         <li>Guide</li>
                         <li>Contact</li>
                         <div className="sm:hidden flex flex-col gap-4 items-center mt-6">
-                            <button className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
+                            <button onClick={() => setShowRegistration(true)} className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
                                 Registration
                             </button>
                             <button onClick={() => setShowLogin(true)} className="w-[150px] h-[39px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
@@ -89,6 +83,16 @@ function Nav() {
 
                 </div>
             )}
+
+            {
+                
+                
+                showRegistration && (
+                    <Registration
+                        onClose={() => setShowRegistration(false)}
+                    />
+                )
+            }
 
             {showLogin && (
                 <Login
@@ -103,8 +107,21 @@ function Nav() {
             {showLoginWithOtp && (
                 <LoginWithOtp
                     onClose={() => setShowLoginWithOtp(false)}
+                    onSendOtp={() => {
+                        setShowLoginWithOtp(false);
+                        setShowEnterOtp(true);
+                    }}
                 />
             )}
+
+
+            {
+                showEnterOtp && (
+                    <EnterOtp
+                        onClose={() => setShowEnterOtp(false)}
+                    />
+                )
+            }
 
         </>
     )

@@ -4,7 +4,6 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import { Route, Routes } from 'react-router-dom'
 import Home from './Home/Home'
-import Navbar from './Components/Navbar'
 import Aos from 'aos'
 import 'aos/dist/aos.css';
 import Footer from './Components/Footer'
