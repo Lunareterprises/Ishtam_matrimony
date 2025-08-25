@@ -114,7 +114,7 @@ function HomeContactSection() {
                         </div>
                         <button
                             type="submit"
-                            className="w-[50%] bg-pink-600 text-white font-semibold py-2 rounded-full hover:bg-pink-700 transition mx-auto block"
+                            className="w-[50%] bg-[#E33183] text-white font-semibold py-2 rounded-full hover:bg-pink-700 transition mx-auto block"
                         >
                             SUBMIT ↗
                         </button>

@@ -43,10 +43,10 @@ function Nav() {
 
                     {/* Buttons - Hidden on small screens */}
                     <div className="hidden sm:flex gap-5">
-                        <button  onClick={() => setShowRegistration(true)} className="w-[150px]  h-[36px] sm:h-[40px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
+                        <button  onClick={() => setShowRegistration(true)} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
                             Registration
                         </button>
-                        <button onClick={() => setShowLogin(true)} className="w-[90px]  h-[36px] sm:h-[40px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
+                        <button onClick={() => setShowLogin(true)} className="w-[90px]  h-[36px] sm:h-[40px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
                             Sign In
                         </button>
                     </div>

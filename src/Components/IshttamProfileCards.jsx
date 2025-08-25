@@ -8,7 +8,7 @@ function IshttamProfileCards() {
  
 
     return (
-        <div className="rounded-lg overflow-hidden relative shadow-lg">
+        <div className="rounded-lg overflow-hidden relative shadow-lg w-55">
             {/* Top badges */}
             <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
                 PREMIUM
@@ -43,11 +43,11 @@ function IshttamProfileCards() {
                 <p className="text-[10px] font-normal text-[#D4D4D8]">Malayalam | Nair | Alappuzha, Kerala</p>
 
                 {/* Buttons */}
-                <div className="flex justify-center gap-2 mt-2">
-                    <button className="border border-white text-white text-[9px] px-4 py-1 rounded-l-full rounded-r-full hover:bg-white hover:text-black transition">
+                <div className="flex  justify-between mt-2">
+                    <button className="border border-white text-white text-[9px] px-3 py-1 rounded-l-full rounded-r-full hover:bg-white hover:text-black transition">
                         View Contact
                     </button>
-                    <button className="bg-[#E33183] text-white text-[9px] px-4 py-1 rounded-l-full rounded-r-full hover:bg-pink-600 transition">
+                    <button className="bg-[#E33183] text-white text-[9px] px-3 py-1 rounded-l-full rounded-r-full hover:bg-pink-600 transition">
                         Connect Now
                     </button>
                 </div>
