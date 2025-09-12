@@ -1,0 +1,1 @@
+export const BASE_URL = 'https://lunarsenterprises.com:6050/ishtam_marry'

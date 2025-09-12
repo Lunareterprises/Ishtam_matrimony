@@ -10,6 +10,8 @@ import TrustUs from './TrustUs';
 import HomeContactSection from './HomeContactSection';
 import Nav from '../Components/Nav'
 import Footer from '../Components/Footer';
+import Header from '../Components/Header';
+import AppFeatures from './AppFeatures';
 
 
 function Home() {
@@ -64,6 +66,7 @@ function Home() {
       <WhyIshttamMarry />
       <OurProcess />
       <HomeContactSection />
+      <AppFeatures/>
       <TrustUs />
       <Footer />
     </>

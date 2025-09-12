@@ -13,7 +13,7 @@ function Sidebar() {
   const [toggleMatches, setToggleMatches] = useState(false);
 
   return (
-    <div className='bg-white h-screen flex flex-col gap-3 w-[220px] sm:w-[240px] 
+    <div className='hidden lg:flex bg-white h-screen  flex-col gap-3 w-[220px] sm:w-[240px] 
                     fixed top-0 left-0 shadow-sm border-r border-gray-200
                     overflow-y-auto z-30'>
       
@@ -61,13 +61,13 @@ function Sidebar() {
 
       {toggleMatches && (
         <div className="transition-all duration-300 text-sm">
-          <Link to="/todays-match" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
+          <Link to="/todaysMatch" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
             Todays Match
           </Link>
-          <Link to="/my-match" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
+          <Link to="/myMatch" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
             My Match (12)
           </Link>
-          <Link to="/more-matches" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
+          <Link to="/moreMatch" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
             More Matches
           </Link>
         </div>

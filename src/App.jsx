@@ -9,6 +9,10 @@ import 'aos/dist/aos.css';
 import Footer from './Components/Footer'
 import MyProfile from './Profile/MyProfile'
 import Dashboard from './Dashboard/Dashboard'
+import TodaysMatch from './TodaysMatch/TodaysMatch'
+import MyMatch from './myMatch/MyMatch'
+import MoreMatches from './more matches/MoreMatches'
+import Swal from 'sweetalert2';
 
 
 function App() {
@@ -24,6 +28,9 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/myProfile' element={<MyProfile/>} />
         <Route path='/dashboard' element={<Dashboard/>} />
+        <Route path='/todaysMatch' element={<TodaysMatch/>} />
+        <Route path='/myMatch' element={<MyMatch/>} />
+        <Route path='/moreMatch' element={<MoreMatches/>} />
       </Routes>
       
     </>

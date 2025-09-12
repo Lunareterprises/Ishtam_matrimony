@@ -3,7 +3,7 @@ import IshttamProfileCards from '../Components/IshttamProfileCards'
 
 function FindYourIshtam() {
     return (
-        <div className='pt-20' >
+        <div className='pt-10' >
             <div className='flex flex-col  sm:items-start items-center  '>
                 <h1 className='text-[22px] text-[#530F29] font-semibold' >Find your ishtam (12)</h1>
                 <p className='text-[16px font-semibold text-[#787878]' >we found 12 new profiles matching your preferance</p>

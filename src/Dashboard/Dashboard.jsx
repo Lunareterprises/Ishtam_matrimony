@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import Sidebar from '../Components/Sidebar'
-import { FaPen } from "react-icons/fa";
-import IshttamProfileCards from '../Components/IshttamProfileCards';
 import FindYourIshtam from './FindYourIshtam';
 import MatchSuggestions from './MatchSuggestions';
 import WhoViewedMyProfile from './WhoViewedMyProfile';
@@ -9,9 +7,11 @@ import DashboardHeader from '../Components/DashboardHeader';
 import profilePic from "../assets/profilePic.jpg";
 import { HiBadgeCheck } from "react-icons/hi";
 import { BsArrowDownLeftCircleFill } from "react-icons/bs";
-import { BsFillArrowDownRightCircleFill } from "react-icons/bs";
 import { BsArrowUpRightCircleFill } from "react-icons/bs";
 import ChatMessages from '../Components/ChatMessages';
+import DashboardNav from '../Components/DashboardNav';
+import { FaSearch } from "react-icons/fa";
+import { PiSlidersBold } from "react-icons/pi";
 
 
 
@@ -19,6 +19,7 @@ import ChatMessages from '../Components/ChatMessages';
 function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [progress, setProgress] = useState(65);
+    
 
     return (
         <div className="flex">
@@ -45,23 +46,32 @@ function Dashboard() {
             {/* Main content */}
             <div className="flex-1 overflow-y-auto">
                 {/* Topbar with menu button (mobile only) */}
-                <div className="lg:hidden flex items-center justify-between p-4 border-b">
-                    <button
-                        className="text-[#540D33] font-bold"
-                        onClick={() => setSidebarOpen(true)}
-                    >
-                        ☰
-                    </button>
-                    <h1 className="text-lg font-semibold text-[#540D33]">Dashboard</h1>
-                </div>
+                <DashboardNav />
                 <div className='flex flex-col justify-center' >
                     <DashboardHeader />
                     {/* Page content */}
                     <div className="flex w-full md:pl-10 sm:px-0 px-2 py-10 sm:py-20">
-
                         <div className="max-w-[1000px] w-full px-4 sm:px-10">
-                            <div className="flex flex-col lg:flex-row gap-4 w-full">
 
+                            {/* search bar and filter */}
+                            <div className="flex px-10 lg:hidden items-center justify-center gap-3 pt-18 pb-8 w-full">
+                                {/* Search Bar */}
+                                <div className="relative w-full ">
+                                    <input
+                                        type="text"
+                                        placeholder="Search Profile ID"
+                                        className="w-full rounded-full border border-[#E4E4E7] pl-12 pr-4 py-2 text-[#787878] placeholder-gray-400 focus:outline-none"
+                                    />
+                                    <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                                </div>
+
+                                {/* Filter Icon */}
+                                <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+                                    <PiSlidersBold className="text-xl text-[#787878]" />
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col lg:flex-row gap-8 sm:gap-4 w-full">
 
                                 {/* Profile Summary */}
                                 <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7] w-full lg:w-[60%] shadow-sm">
@@ -142,7 +152,7 @@ function Dashboard() {
                                 </div>
 
                                 {/* Side cards */}
-                                <div className="flex flex-col gap-4 w-full lg:w-[40%]">
+                                <div className="flex flex-col gap-8 sm:gap-4 w-full lg:w-[40%]">
                                     {/* Received Interest */}
                                     <div className="rounded-xl overflow-hidden border border-[#E4E4E7]">
                                         <div className="flex justify-between items-center px-4 sm:px-6 py-4 sm:py-5 bg-[#E331830F]">
@@ -172,13 +182,13 @@ function Dashboard() {
                             <MatchSuggestions />
                             <WhoViewedMyProfile />
                         </div>
-                        <ChatMessages/>
+                        <ChatMessages />
                     </div>
                 </div>
 
             </div>
 
-            
+
         </div>
     )
 }

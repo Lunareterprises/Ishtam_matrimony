@@ -6,6 +6,7 @@ import Login from '../Components/Login';
 import LoginWithOtp from './LoginWithOtp';
 import EnterOtp from './EnterOtp'
 import Registration from './Registration';
+import VerifyOtp from './VerifyOtp';
 
 
 function Nav() {
@@ -15,7 +16,9 @@ function Nav() {
     //for login
     const [showLogin, setShowLogin] = useState(false);
     const [showLoginWithOtp, setShowLoginWithOtp] = useState(false);
-    const [showEnterOtp, setShowEnterOtp] = useState(false)
+    const [showEnterOtp, setShowEnterOtp] = useState(false);
+    const [showVerifyOtp, setShowVerifyOtp] = useState(false);
+    const [emailToVerify, setEmailToVerify] = useState("");
 
     //for Registration
     const [showRegistration, setShowRegistration] = useState(false)
@@ -43,7 +46,7 @@ function Nav() {
 
                     {/* Buttons - Hidden on small screens */}
                     <div className="hidden sm:flex gap-5">
-                        <button  onClick={() => setShowRegistration(true)} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
+                        <button onClick={() => setShowRegistration(true)} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
                             Registration
                         </button>
                         <button onClick={() => setShowLogin(true)} className="w-[90px]  h-[36px] sm:h-[40px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
@@ -84,15 +87,25 @@ function Nav() {
                 </div>
             )}
 
-            {
-                
-                
+            {/* 
+            { 
                 showRegistration && (
                     <Registration
                         onClose={() => setShowRegistration(false)}
                     />
                 )
-            }
+            } */}
+
+            {showRegistration && (
+                <Registration
+                    onClose={() => setShowRegistration(false)}
+                    onSuccess={(email) => {
+                        setEmailToVerify(email);
+                        setShowRegistration(false);
+                        setShowVerifyOtp(true);
+                    }}
+                />
+            )}
 
             {showLogin && (
                 <Login
@@ -103,6 +116,7 @@ function Nav() {
                     }}
                 />
             )}
+            
 
             {showLoginWithOtp && (
                 <LoginWithOtp
@@ -114,6 +128,25 @@ function Nav() {
                 />
             )}
 
+
+            {/* for verifying otp after Successfull user registration */}
+            {/*  {showVerifyOtp && (
+                <VerifyOtp
+                    onClose={() => setShowVerifyOtp(false)}
+                    email={emailToVerify}  // Pass the email here
+                />
+            )} */}
+
+            {showVerifyOtp && (
+                <VerifyOtp
+                    onClose={() => setShowVerifyOtp(false)}
+                    email={emailToVerify}
+                    onVerified={() => {
+                        setShowVerifyOtp(false); // close VerifyOtp
+                        setShowLogin(true);      // open Login modal
+                    }}
+                />
+            )}
 
             {
                 showEnterOtp && (

@@ -20,7 +20,7 @@ function EnterOtp({ onClose }) {
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-40 px-4">
-      <div className="bg-white sm:px-12 px-8 py-8 flex flex-col items-center justify-center rounded-2xl shadow-lg gap-6 relative">
+      {/* <div className="bg-white sm:px-12 px-8 py-8 flex flex-col items-center justify-center rounded-2xl shadow-lg gap-6 relative">
 
         <button
           onClick={onClose}
@@ -83,7 +83,7 @@ function EnterOtp({ onClose }) {
             </button>
           )}
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }
