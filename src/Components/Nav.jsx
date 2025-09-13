@@ -4,9 +4,9 @@ import { HiMiniBars3BottomRight } from "react-icons/hi2";
 import { RxCross2 } from "react-icons/rx";
 import Login from '../Components/Login';
 import LoginWithOtp from './LoginWithOtp';
-import EnterOtp from './EnterOtp'
 import Registration from './Registration';
 import VerifyOtp from './VerifyOtp';
+import ForgotPassword from '../Components/ForgotPassword';
 
 
 function Nav() {
@@ -23,6 +23,8 @@ function Nav() {
     //for Registration
     const [showRegistration, setShowRegistration] = useState(false)
 
+    //for forgot password
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
 
     return (
         <>
@@ -87,15 +89,6 @@ function Nav() {
                 </div>
             )}
 
-            {/* 
-            { 
-                showRegistration && (
-                    <Registration
-                        onClose={() => setShowRegistration(false)}
-                    />
-                )
-            } */}
-
             {showRegistration && (
                 <Registration
                     onClose={() => setShowRegistration(false)}
@@ -114,9 +107,17 @@ function Nav() {
                         setShowLogin(false);
                         setShowLoginWithOtp(true);
                     }}
+                    onForgotPassword={() => {
+                        setShowLogin(false);
+                        setShowForgotPassword(true);
+                    }}
                 />
             )}
-            
+
+            {showForgotPassword && (
+                <ForgotPassword onClose={() => setShowForgotPassword(false)} />
+            )}
+
 
             {showLoginWithOtp && (
                 <LoginWithOtp
@@ -127,15 +128,6 @@ function Nav() {
                     }}
                 />
             )}
-
-
-            {/* for verifying otp after Successfull user registration */}
-            {/*  {showVerifyOtp && (
-                <VerifyOtp
-                    onClose={() => setShowVerifyOtp(false)}
-                    email={emailToVerify}  // Pass the email here
-                />
-            )} */}
 
             {showVerifyOtp && (
                 <VerifyOtp
@@ -148,13 +140,8 @@ function Nav() {
                 />
             )}
 
-            {
-                showEnterOtp && (
-                    <EnterOtp
-                        onClose={() => setShowEnterOtp(false)}
-                    />
-                )
-            }
+
+
 
         </>
     )
