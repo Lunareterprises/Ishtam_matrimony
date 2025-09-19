@@ -1,22 +1,45 @@
 import React, { useState } from 'react'
 import IshtamMarry_Logo from '../assets/Frame 1000008772.png'
 import DoubleHearts from '../assets/DoubleHearts.png'
-import { FaCaretUp, FaCaretDown } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { FaCaretUp, FaCaretDown, FaRegHeart } from "react-icons/fa";
+import { Link, useNavigate } from 'react-router-dom';
 import { IoPeopleSharp } from "react-icons/io5";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { BsEnvelopeArrowDown } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
+import Swal from 'sweetalert2';
 
 function Sidebar() {
   const [toggleMyIshtam, setToggleMyIshtam] = useState(false);
   const [toggleMatches, setToggleMatches] = useState(false);
+  const navigate = useNavigate()
+
+  const handleLogout = async (e) => {
+    e.preventDefault()
+
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        sessionStorage.removeItem("token")
+        navigate('/')
+      }
+    });
+
+  }
 
   return (
     <div className='hidden lg:flex bg-white h-screen  flex-col gap-3 w-[220px] sm:w-[240px] 
                     fixed top-0 left-0 shadow-sm border-r border-gray-200
                     overflow-y-auto z-30'>
-      
+
       {/* Logo */}
       <div className='py-5'>
         <div className='flex justify-center w-full h-auto'>
@@ -74,22 +97,31 @@ function Sidebar() {
       )}
 
       {/* Inbox */}
-      <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
-        <BsEnvelopeArrowDown className='text-xl' />
-        <h1 className='font-semibold'>Inbox</h1>
-      </div>
+      <Link to="/inbox" >
+        <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
+          <BsEnvelopeArrowDown className='text-xl' />
+          <h1 className='font-semibold'>Inbox</h1>
+        </div>
+      </Link>
+
 
       {/* Subscription */}
+      <Link to="/subscription" >
+        <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
+          <MdOutlineWorkspacePremium className='text-xl' />
+          <h1 className='font-semibold'>Subscription</h1>
+        </div>
+      </Link>
       <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
-        <MdOutlineWorkspacePremium className='text-xl' />
-        <h1 className='font-semibold'>Subscription</h1>
+        <FaRegHeart className='text-[18px]' />
+        <h1 className='font-semibold'>Wishlists</h1>
       </div>
-
       {/* Logout */}
-      <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
+      <div onClick={handleLogout} className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
         <BiLogOut className='text-xl' />
         <h1 className='font-semibold'>Logout</h1>
       </div>
+
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import HomeContactImg from '../assets/PexelsPhotobyTrungNguyen.png'
 import { FcRating } from "react-icons/fc";
 import HappyClient1 from '../assets/Ellipse 71.png'
@@ -7,6 +7,8 @@ import HappyClient3 from '../assets/Ellipse 73.png'
 import HappyClient4 from '../assets/Ellipse 74.png'
 import HappyClient5 from '../assets/Ellipse 75.png'
 import flowerImg from '../assets/image27.png'
+import Swal from 'sweetalert2';
+import { sendEnquiryRequestApi } from '../Services/allApi';
 
 
 function HomeContactSection() {
@@ -17,6 +19,62 @@ function HomeContactSection() {
         { img: HappyClient4 },
         { img: HappyClient5 }
     ]
+    const [countryCode, setCountryCode] = useState("+91");
+    const [contactFormData, setContactFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        message: ""
+    });
+
+
+
+    const submitContactForm = async (e) => {
+        e.preventDefault();
+        try {
+            console.log("inside send enquiry request::");
+            // API call
+            const result = await sendEnquiryRequestApi(contactFormData);
+            console.log("result :: ", result);
+
+            Swal.close(); // close loading
+
+            if (result?.data?.result === true) {
+                await Swal.fire({
+                    title: 'Enquiry Sent!',
+                    text: 'Thank you for reaching out. We will get back to you shortly.',
+                    icon: 'success',
+                    iconColor: "#E33183",
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: "#E33183"
+                });
+                setContactFormData({
+                    name: "",
+                    email: "",
+                    phone: "",
+                    message: ""
+                });
+            } else {
+                await Swal.fire({
+                    title: 'Enquiry Not Delivered',
+                    text: result?.data?.message || 'Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
+            }
+        } catch (error) {
+            Swal.close();
+            await Swal.fire({
+                title: 'Error',
+                text: error?.response?.data?.message || 'Something went wrong. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+        }
+    };
+
+
+
 
     return (
 
@@ -81,6 +139,8 @@ function HomeContactSection() {
                                 type="text"
                                 placeholder="Your name"
                                 className="w-full p-2 rounded-md bg-white border border-transparent focus:outline-none"
+                                value={contactFormData.name}
+                                onChange={(e) => setContactFormData({ ...contactFormData, name: e.target.value })}
                             />
                         </div>
                         <div>
@@ -89,30 +149,55 @@ function HomeContactSection() {
                                 type="email"
                                 placeholder="you@company.com"
                                 className="w-full p-2 rounded-md bg-white border border-transparent focus:outline-none"
+                                value={contactFormData.email}
+                                onChange={(e) => setContactFormData({ ...contactFormData, email: e.target.value })}
                             />
                         </div>
+
                         <div>
                             <label className="block mb-1 font-medium text-white">Phone number</label>
                             <div className="flex gap-2">
-                                <select className="border rounded-md px-2 py-1 bg-white border-transparent focus:outline-none text-gray-400">
-                                    <option>US</option>
-                                    <option>IN</option>
+                                <select
+                                    className="border rounded-md px-2 py-1 bg-white border-transparent focus:outline-none text-gray-400"
+                                    value={countryCode}
+                                    onChange={(e) => {
+                                        setCountryCode(e.target.value);
+                                        setContactFormData({
+                                            ...contactFormData,
+                                            phone: `${e.target.value} ${contactFormData.phone.split(" ").slice(1).join(" ")}`,
+                                        });
+                                    }}
+                                >
+                                    <option value="+1">US (+1)</option>
+                                    <option value="+91">IN (+91)</option>
                                 </select>
+
                                 <input
                                     type="text"
-                                    placeholder="+1 (555) 000-0000"
+                                    placeholder="Enter phone number"
                                     className="w-full p-2 border rounded-md bg-white border-transparent focus:outline-none"
+                                    value={contactFormData.phone.replace(countryCode + " ", "")}
+                                    onChange={(e) =>
+                                        setContactFormData({
+                                            ...contactFormData,
+                                            phone: `${countryCode} ${e.target.value}`,
+                                        })
+                                    }
                                 />
                             </div>
                         </div>
+
                         <div>
                             <label className="block mb-1 font-medium text-white">What's on your mind....</label>
                             <textarea
                                 className="w-full p-2 border rounded-md bg-white border-transparent focus:outline-none"
                                 rows="4"
+                                value={contactFormData.message}
+                                onChange={(e) => setContactFormData({ ...contactFormData, message: e.target.value })}
                             ></textarea>
                         </div>
                         <button
+                            onClick={submitContactForm}
                             type="submit"
                             className="w-[50%] bg-[#E33183] text-white font-semibold py-2 rounded-full hover:bg-pink-700 transition mx-auto block"
                         >
@@ -122,6 +207,7 @@ function HomeContactSection() {
                     </form>
                 </div>
             </div>
+            
         </div>
 
     )

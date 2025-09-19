@@ -71,11 +71,9 @@ function TrustUs() {
             </div>
 
             <div className='flex justify-center pt-6' >
-               
                 <button className="border border-transparent font-semibold hover:border-[#490b22] text-[#490b22] h-12 text-[13px] sm:text-[15px]  w-70 sm:w-85 sm:h-14 rounded-full hover:text-[#490b22a7] transition-colors duration-300 flex justify-center items-center gap-1">
                     See all reviews by our customers <span><MdArrowOutward /></span>
                 </button>
-
             </div>
 
 

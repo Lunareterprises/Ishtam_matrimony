@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import { resetCredentialsApi, resetPasswordApi, verifyOtpApi } from '../Services/allApi';
 import { useNavigate } from 'react-router-dom';
 
-function ForgotPassword({ onClose }) {
+function ForgotPassword({ onClose, onSuccess }) {
     const [forgotEmail, setForgotEmail] = useState({
         email: ""
     });
@@ -118,7 +118,7 @@ function ForgotPassword({ onClose }) {
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
                 });
-
+                onSuccess()
             } else {
                 Swal.fire({
                     title: 'Invalid OTP',

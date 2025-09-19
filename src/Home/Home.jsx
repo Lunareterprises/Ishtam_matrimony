@@ -12,6 +12,7 @@ import Nav from '../Components/Nav'
 import Footer from '../Components/Footer';
 import Header from '../Components/Header';
 import AppFeatures from './AppFeatures';
+import RealStories from './RealStories';
 
 
 function Home() {
@@ -64,9 +65,10 @@ function Home() {
       </div>
 
       <WhyIshttamMarry />
+      <RealStories />
       <OurProcess />
       <HomeContactSection />
-      <AppFeatures/>
+      <AppFeatures />
       <TrustUs />
       <Footer />
     </>

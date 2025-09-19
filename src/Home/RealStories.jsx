@@ -1,48 +1,32 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import realStoriesImg1 from '../assets/Property 1=Frame 1000008792 (1).png'
 import realStoriesImg2 from '../assets/Property 1=Frame 1000008795.png'
 import realStoriesImg3 from '../assets/Property 1=Frame 1000008797.png'
 import realStoriesImg4 from '../assets/Property 11=Frame 1000008796.png'
 import realStoriesImg5 from '../assets/Property 12=Frame 1000008796.png'
 import realStoriesImg6 from '../assets/Property 17=Frame 1000008796.png'
+import { MdArrowOutward } from 'react-icons/md'
+import { Link } from 'react-router-dom'
+import { listAllStoriesApi } from '../Services/allApi'
 
 
 
 function RealStories() {
+    const [successStoriesData, setSuccessStoriesData] = useState([]);
+    
+    const fetchSuccessStories = async () => {
+        try {
+            const result = await listAllStoriesApi();
+            setSuccessStoriesData(result.data.data); // ✅ use the array inside
+            console.log("consoling success sotories result ::", result.data.data);
+        } catch (error) {
+            console.log("Error in fetching success stories", error);
+        }
+    };
 
-    const realStories = [
-        {
-            image: realStoriesImg1,
-            name: 'Anita & Joseph',
-            story: 'Through Ishttam Marry. I found a partner who shares my faith and values. We felt spiritually connected from the first meeting.'
-        },
-        {
-            image: realStoriesImg2,
-            name: 'Sarah & Michael',
-            story: 'Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely.'
-        },
-        {
-            image: realStoriesImg3,
-            name: 'Maria & David',
-            story: 'Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together.'
-        },
-        {
-            image: realStoriesImg4,
-            name: 'Anita & Joseph',
-            story: 'Through Ishttam Marry. I found a partner who shares my faith and values. We felt spiritually connected from the first meeting.'
-        },
-        {
-            image: realStoriesImg5,
-            name: 'Sarah & Michael',
-            story: 'Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely.'
-        },
-        {
-            image: realStoriesImg6,
-            name: 'Maria & David',
-            story: 'Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together.'
-        },
-
-    ];
+    useEffect(() => {
+        fetchSuccessStories()
+    }, [])
 
 
     return (
@@ -53,29 +37,45 @@ function RealStories() {
                 </h1>
                 <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >"Be inspired by the couples who trusted Ishttam Marry to find their faith-filled soulmate."</p>
             </div>
-            <div className='pt-[50px]' >
-            </div>
 
-            <div className="flex flex-wrap justify-center gap-6 px-7 pb-7">
-                {realStories.map((item, index) => (
-                    <div
-                        key={index}
-                        className="w-full sm:max-w-[400px] md:max-w-[380px] lg:max-w-[380px]"
-                    >
-                        <img
-                            src={item.image}
-                            alt={item.name}
-                            className="w-full h-auto"
-                        />
-                        <div className="px-1 pt-4">
-                            <h2 className="text-xl font-semibold">{item.name}</h2>
-                            <p className="italic text-[16px]">"{item.story}"</p>
-                            <h3 className="pt-2 underline">Read more</h3>
-                        </div>
-                    </div>
-                ))}
-            </div>
+            <div className="flex flex-wrap justify-center gap-6 px-7 pb-7 pt-[50px]">
+                {
+                    successStoriesData?.length > 0 ? (
+                        successStoriesData.map((item, index) => (
+                            <div
+                                key={index}
+                                className="w-full sm:max-w-[400px] md:max-w-[380px] lg:max-w-[380px]"
+                            >
+                                <img
+                                    src={`https://lunarsenterprises.com:6050${item.ss_image}`}
+                                    alt={item.bride_firstname}
+                                    className="w-full h-auto rounded-lg shadow-md "
+                                   
+                                />
+                                <div className="px-1 pt-4">
+                                    <h2 className="text-xl font-semibold">
+                                        {item.bride_firstname} & {item.groom_firstname}
+                                    </h2>
+                                    <p className="italic text-[16px]">"{item.ss_story}"</p>
+                                    <h3 className="pt-2 underline cursor-pointer text-[#5A0A1D]">
+                                        Read more
+                                    </h3>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <p>No stories found</p>
+                    )
+                }
 
+            </div>
+            <div className='flex justify-center pt-6' >
+                <Link to="/all-Success-Stories" >
+                    <button className="border border-transparent font-semibold hover:border-[#490b22] text-[#490b22] h-12 text-[13px] sm:text-[15px]  w-70 sm:w-85 sm:h-14 rounded-full hover:text-[#490b22a7] transition-colors duration-300 flex justify-center items-center gap-1">
+                        See all stories & add your story<span><MdArrowOutward /></span>
+                    </button>
+                </Link>
+            </div>
 
         </div>
 

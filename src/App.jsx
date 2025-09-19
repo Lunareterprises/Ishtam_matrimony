@@ -13,6 +13,12 @@ import TodaysMatch from './TodaysMatch/TodaysMatch'
 import MyMatch from './myMatch/MyMatch'
 import MoreMatches from './more matches/MoreMatches'
 import Swal from 'sweetalert2';
+import Inbox from './Inbox/Inbox'
+import Subscription from './subscription/Subscription'
+import AllSuccessStories from './all stories/AllSuccessStories'
+import AddNewSuccessStory from './all stories/AddNewSuccessStory'
+import ViewSuccessStory from './all stories/ViewSuccessStory'
+import PartnerProfile from './partner profile/PartnerProfile'
 
 
 function App() {
@@ -23,16 +29,22 @@ function App() {
 
   return (
     <>
-  
+
       <Routes>
         <Route path='/' element={<Home />} />
-        <Route path='/myProfile' element={<MyProfile/>} />
-        <Route path='/dashboard' element={<Dashboard/>} />
-        <Route path='/todaysMatch' element={<TodaysMatch/>} />
-        <Route path='/myMatch' element={<MyMatch/>} />
-        <Route path='/moreMatch' element={<MoreMatches/>} />
+        <Route path='/myProfile' element={<MyProfile />} />
+        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='/todaysMatch' element={<TodaysMatch />} />
+        <Route path='/myMatch' element={<MyMatch />} />
+        <Route path='/moreMatch' element={<MoreMatches />} />
+        <Route path='/inbox' element={<Inbox />} />
+        <Route path='/subscription' element={<Subscription />} />
+        <Route path='/all-Success-Stories' element={<AllSuccessStories />} />
+        <Route path='/add-New-success-Story' element={<AddNewSuccessStory />} />
+        <Route path='/view-success-story' element={<ViewSuccessStory />} />
+        <Route path='/partner-profile/:profileId' element={<PartnerProfile/>} />
       </Routes>
-      
+
     </>
   )
 }

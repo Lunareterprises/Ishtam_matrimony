@@ -77,7 +77,6 @@ function Registration({ onClose, onSuccess }) {
 
             const result = await RegistrationApi(registrationData);
             console.log("Result of registration :::", result);
-
             Swal.close();
 
             if (result?.data?.result === true) {

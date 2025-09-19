@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from '../Components/Sidebar'
 import { FaPen } from "react-icons/fa";
 import DashboardHeader from '../Components/DashboardHeader';
@@ -6,9 +6,239 @@ import DashboardNav from '../Components/DashboardNav';
 import { FaSearch } from "react-icons/fa";
 import { PiSlidersBold } from "react-icons/pi";
 import ChatMessages from '../Components/ChatMessages';
+import { useRef } from "react";
+import { fetchPartnerPreferenceApi, fetchProfileDataApi, getCurrentPlanApi, updatePartnerPreferenceApi, updateProfileApi } from '../Services/allApi';
+import ProfileSection from './ProfileSection';
+import PartnerPreferenceSection from './PartnerPreferenceSection';
 
 function MyProfile() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingSection, setEditingSection] = useState(null);
+    const [preview, setPreview] = useState(null)
+    const [currentPlanData, setCurrentPlanData] = useState({})
+
+
+    //function for fetching partner prefernce data
+    const fetchPartnerPrefernce = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                Authorization: `Bearer ${token}`,
+            };
+            const result = await fetchPartnerPreferenceApi(reqHeader);
+            if (result?.status === 200 && result.data) {
+                console.log("Fetched Partner Preference Data ::", result.data);
+                // ✅ Update state with API response
+                setPartnerPreferenceData({
+                    age: result.data.data.pp_age || "",
+                    height: result.data.data.pp_height || "",
+                    marital_status: result.data.data.pp_marital_status || "",
+                    religion: result.data.data.pp_religion || "",
+                    community: result.data.pp_community || "",
+                    mother_tongue: result.data.pp_mother_tongue || "",
+                    country: result.data.pp_country || "",
+                    state: result.data.pp_state || "",
+                    city: result.data.pp_city || "",
+                    district: result.data.pp_district || "",
+                    qualification: result.data.pp_qualification || "",
+                    working_with: result.data.pp_working_with || "",
+                    profession_area: result.data.pp_profession_area || "",
+                    working_as: result.data.pp_working_as || "",
+                    annual_income: result.data.pp_annual_income || "",
+                    profile_managed_by: result.data.pp_profile_managed_by || "",
+                    diet: result.data.pp_diet || "",
+                });
+                console.log("partner preference data ::", partnerPreferenceData);
+
+            } else {
+                console.warn("No partner preference data found.");
+            }
+        } catch (error) {
+            console.error("Error fetching partner preference data:", error);
+        }
+    };
+
+
+    const getCurrentPlan = async () => {
+        try {
+            console.log("inside get current plan");
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                Authorization: `Bearer ${token}`,
+            };
+            const result = await getCurrentPlanApi(reqHeader)
+            console.log("consoling result ::", result.data.data);
+            setCurrentPlanData(result.data);
+            if (result.data.result === false) {
+                console.log("ni mandan aada");
+            }
+            else {
+                console.log("pottta");
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getCurrentPlan()
+    }, [])
+
+
+    //function for fetching profile data
+    const fetchProfileData = async () => {
+        try {
+            const token = sessionStorage.getItem("token")
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+            const result = await fetchProfileDataApi(reqHeader);
+            console.log("result for fetching profile Data:", result);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        fetchPartnerPrefernce()
+        fetchProfileData()
+    }, [])
+
+
+    const [profileData, setProfileData] = useState({
+        created_by: "",
+        gender: "",
+        firstname: "",
+        lastname: "",
+        dob: "",
+        religion: "",
+        community: "",
+        father: "",
+        mother: "",
+        no_of_sisters: "",
+        no_of_brothers: "",
+        financial_status: "",
+        diet: "",
+        hobbies: [],
+        about: "",
+        mother_tongue: "",
+        height: "",
+        marital_status: "",
+        district: "",
+        profession_area: "",
+        country: "",
+        state: "",
+        city: "",
+        zip: "",
+        qualification: "",
+        college: "",
+        working_with: "",
+        working_as: "",
+        employer_name: "",
+        annual_income: "",
+        is_private: "",
+        file: "",
+    })
+
+    const fileInputRef = useRef(null);
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            setPreview(imageUrl);
+            setProfileData({ ...profileData, file: file })
+        }
+    };
+
+
+    //function for updating profile 
+    const handleUpdateProfile = async (e) => {
+        e.preventDefault();
+        console.log("handle update profile function::");
+
+        try {
+            const token = sessionStorage.getItem('token')
+            const reqHeader = {
+                "Content-Type": "multipart/form-data",
+                "Authorization": `Bearer ${token}`
+            }
+            const reqBody = new FormData();
+            // Loop through profileData instead of writing manually
+            for (let key in profileData) {
+                if (profileData[key]) {
+                    reqBody.append(key, profileData[key]);
+                }
+            }
+            // Debugging: log FormData contents
+            for (let [key, value] of reqBody.entries()) {
+                console.log(`${key}:`, value);
+            }
+
+            const result = await updateProfileApi(reqBody, reqHeader);
+            setIsEditing(false);
+            if (result?.data?.result === true) {
+                alert("Profile updated successfully");
+                console.log(result);
+            } else {
+                console.log(result);
+                alert(result?.data?.message || "Update failed");
+            }
+        } catch (error) {
+            console.error("Update profile failed:", error);
+            alert("Something went wrong while updating profile");
+        }
+    };
+
+
+    const [partnerPreferenceData, setPartnerPreferenceData] = useState({
+        age: "",
+        height: "",
+        marital_status: "",
+        religion: "",
+        community: "",
+        mother_tongue: "",
+        country: "",
+        state: "",
+        city: "",
+        district: "",
+        qualification: "",
+        working_with: "",
+        profession_area: "",
+        working_as: "",
+        annual_income: "",
+        profile_managed_by: "",
+        diet: ""
+    })
+
+
+    //function for updating partner preference 
+    const handleUpdatePartnerPreference = async (e) => {
+        e.preventDefault();
+        console.log("handle update partner prefernce:");
+        try {
+            const token = sessionStorage.getItem('token')
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            }
+            const result = await updatePartnerPreferenceApi(partnerPreferenceData, reqHeader);
+            setIsEditing(false);
+            if (result?.data?.result === true) {
+                alert("Partner prefernce updated successfully");
+                console.log(result);
+            } else {
+                console.log(result);
+                alert(result?.data?.message || "Update failed");
+            }
+        } catch (error) {
+            console.error("Update prefernce failed:", error);
+            alert("Something went wrong while updating profile");
+        }
+    }
+
+
 
     return (
         <div className='flex '>
@@ -39,6 +269,7 @@ function MyProfile() {
                     <DashboardHeader />
 
                     <div className='flex flex-col w-full md:pl-20 sm:px-0 px-2 py-10 sm:py-20'>
+
                         {/* search bar and filter */}
                         <div className="flex px-10 lg:hidden items-center justify-center gap-3 pt-18 pb-8 w-full">
                             {/* Search Bar */}
@@ -81,361 +312,19 @@ function MyProfile() {
                                 </div>
                             </div>
 
-                            <div className=' flex flex-col  text-left pt-[50px]' >
+                            <div className=' flex flex-col  text-left pt-[50px] text-[#540D33]' >
                                 <h1 className='text-[28px] font-bold'  >WELCOME, CALVIN..!</h1>
                                 <p className=' font-semibold' >Your profile is 45% completed, Let’s finish setting up your <br /> profile so we can show it to more matches..!</p>
                             </div>
 
+
                             <div className='flex flex-col gap-10 pt-[50px] justify-center' >
-                                <div className='bg-[#F5F5F5] flex items-center h-40 w-full rounded-xl '>
-                                    <div className='flex justify-between w-full items-center  p-7' >
-                                        <div className='flex items-center gap-4' >
-                                            <div className='w-20 h-20 rounded-full bg-[#D9D9D9]' >
-                                            </div>
-                                            <div className='flex flex-col items-center text-[#540D33]' >
-                                                <h1 className='font-semibold' >Calvin Sunny</h1>
-                                                <h1 className='font-extralight' >ID : ITM 1001</h1>
-                                            </div>
-                                        </div>
 
-                                        <button className='bg-[#E33183] py-2 px-10 rounded-full text-white font-medium ' >
-                                            Subscription
-                                        </button>
+                                {/* profile section */}
+                                <ProfileSection />
 
-                                    </div>
-
-                                </div>
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">BASIC INFO</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Created by</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">Gender</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">First Name</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-
-                                            <div className="font-semibold text-[#540D33]">Last Name</div>
-                                            <div>:</div>
-                                            <div>Sunny</div>
-
-                                            <div className="font-semibold text-[#540D33]">DOB</div>
-                                            <div>:</div>
-                                            <div>16/08/1998</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">RELIGION BACKGROUND</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Religion</div>
-                                            <div>:</div>
-                                            <div>Hindu</div>
-
-                                            <div className="font-semibold text-[#540D33]">Community</div>
-                                            <div>:</div>
-                                            <div>Namboothiri (Brahmin)</div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">FAMILY INFO</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Father's Details</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">Mother's Details</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">No: of Sisters</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-
-                                            <div className="font-semibold text-[#540D33]">No: of Brothers</div>
-                                            <div>:</div>
-                                            <div>Sunny</div>
-
-                                            <div className="font-semibold text-[#540D33]">Family Financial Status </div>
-                                            <div>:</div>
-                                            <div>16/08/1998</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">LOCATION, EDUCATION & CAREER</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Country Living in</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">State Living In</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">City Living In</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-
-                                            <div className="font-semibold text-[#540D33]">Zip/Pin code</div>
-                                            <div>:</div>
-                                            <div>Sunny</div>
-
-                                            <div className="font-semibold text-[#540D33]">Highest Qualification</div>
-                                            <div>:</div>
-                                            <div>16/08/1998</div>
-
-
-                                            <div className="font-semibold text-[#540D33]">College Attended</div>
-                                            <div>:</div>
-                                            <div>Sunny</div>
-
-                                            <div className="font-semibold text-[#540D33]">Working With</div>
-                                            <div>:</div>
-                                            <div>16/08/1998</div>
-
-                                            <div className="font-semibold text-[#540D33]">Working As</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-
-                                            <div className="font-semibold text-[#540D33]">Employer Name</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                            <div className="font-semibold text-[#540D33]">Annual Income</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                        </div>
-                                        <div className='flex justify-center pt-10' >
-
-                                            <label className="inline-flex items-center space-x-2 cursor-pointer">
-                                                <input type="checkbox" className="form-checkbox h-5 w-5 " />
-                                                <span className="text-sm text-[#540D33]">Keep this private</span>
-                                            </label>
-
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">LIFE STYLE</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Diet</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex  justify-center px-6 py-6 bg-white">
-                                        <h2 className="text-3xl font-bold text-[#540D33]">PARTNER PREFERENCE</h2>
-
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] h-30 px-7 py-7">
-
-
-                                    </div>
-                                </div>
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">PARTNER BASIC INFO</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Age</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">Height</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">Marital Status</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-
-                                            <div className="font-semibold text-[#540D33]">Religion/Community</div>
-                                            <div>:</div>
-                                            <div>Sunny</div>
-
-                                            <div className="font-semibold text-[#540D33]">Mother Tongue</div>
-                                            <div>:</div>
-                                            <div>16/08/1998</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">PARTNER LOCATION DETAILS</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Country Living In</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">State Living In :</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">City/District In</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">PARTNER EDUCATION & CAREER</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Qualification</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">Working with</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">Profession Area</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                            <div className="font-semibold text-[#540D33]">Working As</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">Annual Income</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                                    {/* Header */}
-                                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                                        <h2 className="text-lg font-bold text-[#540D33]">PARTNER OTHER DETAILS</h2>
-                                        <div className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer">
-                                            <FaPen className="text-white text-[10px]" />
-                                        </div>
-                                    </div>
-
-                                    {/* Body */}
-                                    <div className="bg-[#F5F5F5] px-7 py-7">
-                                        <div className="grid grid-cols-3 gap-y-4 text-sm ">
-                                            <div className="font-semibold text-[#540D33]">Profile Managed by</div>
-                                            <div>:</div>
-                                            <div>Self</div>
-
-                                            <div className="font-semibold text-[#540D33]">Diet</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">Profession Area</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                            <div className="font-semibold text-[#540D33]">Working As</div>
-                                            <div>:</div>
-                                            <div>Male</div>
-
-                                            <div className="font-semibold text-[#540D33]">Annual Income</div>
-                                            <div>:</div>
-                                            <div>Calvin</div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className='w-full flex justify-center' >
-                                    <button className='bg-[#E33183] py-2 w-[250px] rounded-sm text-white font-medium ' >
-                                        Save & Update
-                                    </button>
-                                </div>
+                                {/* partner preference section */}
+                                <PartnerPreferenceSection/>     
 
                             </div>
 

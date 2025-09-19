@@ -111,7 +111,7 @@ function WhyIshttamMarry() {
           ))}
         </div>
       </div>
-      <RealStories/>
+  
     </div>
   )
 }

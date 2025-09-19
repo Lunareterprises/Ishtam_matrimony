@@ -111,11 +111,14 @@ function Nav() {
                         setShowLogin(false);
                         setShowForgotPassword(true);
                     }}
+                    openRegistrationModal={() => setShowRegistration(true)}
                 />
             )}
 
             {showForgotPassword && (
-                <ForgotPassword onClose={() => setShowForgotPassword(false)} />
+                <ForgotPassword onClose={() => setShowForgotPassword(false)}
+                    onSuccess={() => setShowLogin(true)}
+                />
             )}
 
 

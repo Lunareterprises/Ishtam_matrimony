@@ -12,14 +12,14 @@ import ChatMessages from '../Components/ChatMessages';
 import DashboardNav from '../Components/DashboardNav';
 import { FaSearch } from "react-icons/fa";
 import { PiSlidersBold } from "react-icons/pi";
-
-
+import ChangePassword from '../Components/ChangePassword';
+import { Link } from 'react-router-dom';
 
 
 function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [progress, setProgress] = useState(65);
-    
+    const [showChangePassword, setShowChangePassword] = useState(false);
 
     return (
         <div className="flex">
@@ -140,12 +140,15 @@ function Dashboard() {
                                             </div>
                                         </div>
                                         <div className='flex gap-5 items-center justify-center pt-5' >
-                                            <button className="py-2 px-7 text-[14px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
+                                            <button onClick={() => setShowChangePassword(true)} className="py-2 px-7 text-[14px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
                                                 Change password
                                             </button>
-                                            <button className="py-2 px-7 text-[14px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
-                                                Edit Profile
-                                            </button>
+                                            <Link to={"/myProfile"} >
+                                                <button className="py-2 px-7 text-[14px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
+                                                    Edit Profile
+                                                </button>
+                                            </Link>
+
 
                                         </div>
                                     </div>
@@ -188,7 +191,10 @@ function Dashboard() {
 
             </div>
 
-
+            {/* Show modal */}
+            {showChangePassword && (
+                <ChangePassword onClose={() => setShowChangePassword(false)} />
+            )}
         </div>
     )
 }
