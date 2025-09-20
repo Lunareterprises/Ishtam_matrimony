@@ -3,6 +3,7 @@ import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
 import { IoCloseOutline } from "react-icons/io5"
 import { RegistrationApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
+import DatePicker from "react-datepicker";
 
 function Registration({ onClose, onSuccess }) {
     const [step, setStep] = useState(1);
@@ -31,9 +32,10 @@ function Registration({ onClose, onSuccess }) {
         } else if (step === 2) {
             if (!registrationData.firstname) newErrors.firstname = "First name is required";
             if (!registrationData.lastname) newErrors.lastname = "Last name is required";
-            if (!registrationData.dob || !/^\d{2}-\d{2}-\d{4}$/.test(registrationData.dob)) {
-                newErrors.dob = "Enter a valid DOB (DD-MM-YYYY)";
+            if (!registrationData.dob || !/^\d{4}-\d{2}-\d{2}$/.test(registrationData.dob)) {
+                newErrors.dob = "Enter a valid DOB (YYYY-MM-DD)";
             }
+
         } else if (step === 3) {
             if (!registrationData.religion) newErrors.religion = "Religion is required";
             if (!registrationData.community) newErrors.community = "Community is required";
@@ -85,7 +87,7 @@ function Registration({ onClose, onSuccess }) {
                     title: 'Registration Successful!',
                     text: result?.data?.message || 'Your account has been created successfully.',
                     icon: 'success',
-                    iconColor:"#E33183",
+                    iconColor: "#E33183",
                     confirmButtonText: 'OK',
                 });
 
@@ -199,36 +201,26 @@ function Registration({ onClose, onSuccess }) {
                                 {errors.lastname && <p className="text-red-500 text-xs ">{errors.lastname}</p>}
                             </div>
                         </div>
+
+                        {/* Date of birth */}
                         <div className='flex flex-col gap-3'>
                             <label className="block text-sm font-medium text-[#490B22]">Date of Birth</label>
-                            <div className="flex gap-3">
-                                <input
-                                    type="text"
-                                    placeholder="DD"
-                                    maxLength="2"
-                                    value={registrationData.dob.split("-")[0] || ""}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, dob: e.target.value + "-" + (registrationData.dob.split("-")[1] || "") + "-" + (registrationData.dob.split("-")[2] || "") })}
-                                    className="w-1/3 border border-gray-300 rounded-lg px-3 py-2 text-center focus:outline-none text-[14px]"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="MM"
-                                    maxLength="2"
-                                    value={registrationData.dob.split("-")[1] || ""}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, dob: (registrationData.dob.split("-")[0] || "") + "-" + e.target.value + "-" + (registrationData.dob.split("-")[2] || "") })}
-                                    className="w-1/3 border border-gray-300 rounded-lg px-3 py-2 text-center focus:outline-none text-[14px]"
-                                />
-                                <input
-                                    type="text"
-                                    placeholder="YYYY"
-                                    maxLength="4"
-                                    value={registrationData.dob.split("-")[2] || ""}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, dob: (registrationData.dob.split("-")[0] || "") + "-" + (registrationData.dob.split("-")[1] || "") + "-" + e.target.value })}
-                                    className="w-1/3 border border-gray-300 rounded-lg px-3 py-2 text-center focus:outline-none text-[14px]"
-                                />
-                            </div>
+                            <input
+                                type="date"
+                                value={registrationData.dob || ""}
+                                onChange={(e) =>
+                                    setRegistrationData({
+                                        ...registrationData,
+                                        dob: e.target.value, // YYYY-MM-DD
+                                    })
+                                }
+                                min="1900-01-01"
+                                max={new Date().toISOString().split("T")[0]} // prevent future dates
+                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] focus:outline-none bg-white shadow-sm hover:shadow-md transition"
+                            />
                             {errors.dob && <p className="text-red-500 text-xs pt-1">{errors.dob}</p>}
                         </div>
+
                         <button onClick={nextStep} type="button" className="w-full bg-[#E33183] text-white py-2 rounded-lg font-semibold hover:bg-pink-700">
                             Continue
                         </button>

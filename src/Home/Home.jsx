@@ -13,6 +13,7 @@ import Footer from '../Components/Footer';
 import Header from '../Components/Header';
 import AppFeatures from './AppFeatures';
 import RealStories from './RealStories';
+import AboutUs from './AboutUs';
 
 
 function Home() {
@@ -65,6 +66,7 @@ function Home() {
       </div>
 
       <WhyIshttamMarry />
+      <AboutUs />
       <RealStories />
       <OurProcess />
       <HomeContactSection />

@@ -30,27 +30,6 @@ function MyProfile() {
             if (result?.status === 200 && result.data) {
                 console.log("Fetched Partner Preference Data ::", result.data);
                 // ✅ Update state with API response
-                setPartnerPreferenceData({
-                    age: result.data.data.pp_age || "",
-                    height: result.data.data.pp_height || "",
-                    marital_status: result.data.data.pp_marital_status || "",
-                    religion: result.data.data.pp_religion || "",
-                    community: result.data.pp_community || "",
-                    mother_tongue: result.data.pp_mother_tongue || "",
-                    country: result.data.pp_country || "",
-                    state: result.data.pp_state || "",
-                    city: result.data.pp_city || "",
-                    district: result.data.pp_district || "",
-                    qualification: result.data.pp_qualification || "",
-                    working_with: result.data.pp_working_with || "",
-                    profession_area: result.data.pp_profession_area || "",
-                    working_as: result.data.pp_working_as || "",
-                    annual_income: result.data.pp_annual_income || "",
-                    profile_managed_by: result.data.pp_profile_managed_by || "",
-                    diet: result.data.pp_diet || "",
-                });
-                console.log("partner preference data ::", partnerPreferenceData);
-
             } else {
                 console.warn("No partner preference data found.");
             }
@@ -87,27 +66,6 @@ function MyProfile() {
     }, [])
 
 
-    //function for fetching profile data
-    const fetchProfileData = async () => {
-        try {
-            const token = sessionStorage.getItem("token")
-            const reqHeader = {
-                "Authorization": `Bearer ${token}`
-            }
-            const result = await fetchProfileDataApi(reqHeader);
-            console.log("result for fetching profile Data:", result);
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        fetchPartnerPrefernce()
-        fetchProfileData()
-    }, [])
-
-
     const [profileData, setProfileData] = useState({
         created_by: "",
         gender: "",
@@ -141,103 +99,73 @@ function MyProfile() {
         annual_income: "",
         is_private: "",
         file: "",
+        userId: ""
     })
 
-    const fileInputRef = useRef(null);
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        if (file) {
-            const imageUrl = URL.createObjectURL(file);
-            setPreview(imageUrl);
-            setProfileData({ ...profileData, file: file })
-        }
-    };
-
-
-    //function for updating profile 
-    const handleUpdateProfile = async (e) => {
-        e.preventDefault();
-        console.log("handle update profile function::");
-
+    //function for fetching profile data
+    const fetchProfileData = async () => {
         try {
-            const token = sessionStorage.getItem('token')
-            const reqHeader = {
-                "Content-Type": "multipart/form-data",
-                "Authorization": `Bearer ${token}`
-            }
-            const reqBody = new FormData();
-            // Loop through profileData instead of writing manually
-            for (let key in profileData) {
-                if (profileData[key]) {
-                    reqBody.append(key, profileData[key]);
-                }
-            }
-            // Debugging: log FormData contents
-            for (let [key, value] of reqBody.entries()) {
-                console.log(`${key}:`, value);
-            }
-
-            const result = await updateProfileApi(reqBody, reqHeader);
-            setIsEditing(false);
-            if (result?.data?.result === true) {
-                alert("Profile updated successfully");
-                console.log(result);
-            } else {
-                console.log(result);
-                alert(result?.data?.message || "Update failed");
-            }
-        } catch (error) {
-            console.error("Update profile failed:", error);
-            alert("Something went wrong while updating profile");
-        }
-    };
-
-
-    const [partnerPreferenceData, setPartnerPreferenceData] = useState({
-        age: "",
-        height: "",
-        marital_status: "",
-        religion: "",
-        community: "",
-        mother_tongue: "",
-        country: "",
-        state: "",
-        city: "",
-        district: "",
-        qualification: "",
-        working_with: "",
-        profession_area: "",
-        working_as: "",
-        annual_income: "",
-        profile_managed_by: "",
-        diet: ""
-    })
-
-
-    //function for updating partner preference 
-    const handleUpdatePartnerPreference = async (e) => {
-        e.preventDefault();
-        console.log("handle update partner prefernce:");
-        try {
-            const token = sessionStorage.getItem('token')
+            const token = sessionStorage.getItem("token");
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
+            };
+            const result = await fetchProfileDataApi(reqHeader);
+            console.log("result for fetching profile Data:", result);
+
+            // Update state with fetched data - CORRECTED
+            if (result.data && result.data.data && result.data.data.length > 0) {
+                const userData = result.data.data[0];
+
+                setProfileData({
+                    file: userData.u_profile_pic,
+                    created_by: userData.u_profile_for || "",
+                    gender: userData.u_gender || "",
+                    firstname: userData.u_firstname || "",
+                    lastname: userData.u_lastname || "",
+                    dob: userData.u_dob || "",
+                    userId: userData.u_id || "",
+                    religion: userData.u_religion || "",
+                    community: userData.u_community || "",
+                    father: userData.u_father || "",
+                    mother: userData.u_mother || "",
+                    no_of_sisters: userData.u_no_sisters || "",
+                    no_of_brothers: userData.u_no_brothers || "",
+                    financial_status: userData.u_financial_status || "",
+                    diet: userData.u_diet || "",
+                    hobbies: userData.u_hobbies ? userData.u_hobbies.split(',') : [],
+                    about: userData.u_about || "",
+                    mother_tongue: userData.u_mother_tongue || "",
+                    height: userData.u_height || "",
+                    marital_status: userData.u_marital_status || "",
+                    district: userData.u_district || "",
+                    profession_area: userData.u_profession_area || "",
+                    country: userData.u_country || "",
+                    state: userData.u_state || "",
+                    city: userData.u_city || "",
+                    zip: userData.u_zip || "",
+                    qualification: userData.u_qualification || "",
+                    college: userData.u_college || "",
+                    working_with: userData.u_working_with || "",
+                    working_as: userData.u_working_as || "",
+                    employer_name: userData.u_employer_name || "",
+                    annual_income: userData.u_annual_income || "",
+                    is_private: userData.u_private_income || false,
+                });
+
+                console.log("profile pic path:", userData.u_profile_pic);
             }
-            const result = await updatePartnerPreferenceApi(partnerPreferenceData, reqHeader);
-            setIsEditing(false);
-            if (result?.data?.result === true) {
-                alert("Partner prefernce updated successfully");
-                console.log(result);
-            } else {
-                console.log(result);
-                alert(result?.data?.message || "Update failed");
-            }
+
         } catch (error) {
-            console.error("Update prefernce failed:", error);
-            alert("Something went wrong while updating profile");
+            console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
+    useEffect(() => {
+        fetchPartnerPrefernce()
+        fetchProfileData()
+    }, [])
 
 
     return (
@@ -313,7 +241,7 @@ function MyProfile() {
                             </div>
 
                             <div className=' flex flex-col  text-left pt-[50px] text-[#540D33]' >
-                                <h1 className='text-[28px] font-bold'  >WELCOME, CALVIN..!</h1>
+                                <h1 className='text-[28px] font-bold'  >WELCOME, {profileData.firstname}..!</h1>
                                 <p className=' font-semibold' >Your profile is 45% completed, Let’s finish setting up your <br /> profile so we can show it to more matches..!</p>
                             </div>
 
@@ -324,7 +252,7 @@ function MyProfile() {
                                 <ProfileSection />
 
                                 {/* partner preference section */}
-                                <PartnerPreferenceSection/>     
+                                <PartnerPreferenceSection />
 
                             </div>
 

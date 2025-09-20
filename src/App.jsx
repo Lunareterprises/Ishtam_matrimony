@@ -19,6 +19,7 @@ import AllSuccessStories from './all stories/AllSuccessStories'
 import AddNewSuccessStory from './all stories/AddNewSuccessStory'
 import ViewSuccessStory from './all stories/ViewSuccessStory'
 import PartnerProfile from './partner profile/PartnerProfile'
+import "react-datepicker/dist/react-datepicker.css";
 
 
 function App() {

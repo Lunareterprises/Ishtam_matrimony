@@ -3,7 +3,7 @@ import { FaRegUser } from "react-icons/fa";
 import { TiCameraOutline } from "react-icons/ti";
 import { FaPen } from "react-icons/fa";
 import { useRef } from "react";
-import {  fetchProfileDataApi, getCurrentPlanApi, updateProfileApi } from '../Services/allApi';
+import { fetchProfileDataApi, getCurrentPlanApi, updateProfileApi } from '../Services/allApi';
 
 
 function ProfileSection() {
@@ -11,8 +11,6 @@ function ProfileSection() {
     const [isEditing, setIsEditing] = useState(false);
     const [editingSection, setEditingSection] = useState(null);
     const [preview, setPreview] = useState(null)
-
-
 
     //for fetching current plan
     const getCurrentPlan = async () => {
@@ -42,15 +40,67 @@ function ProfileSection() {
     //function for fetching profile data
     const fetchProfileData = async () => {
         try {
-            const token = sessionStorage.getItem("token")
+            const token = sessionStorage.getItem("token");
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
-            }
+            };
             const result = await fetchProfileDataApi(reqHeader);
             console.log("result for fetching profile Data:", result);
-        }
-        catch (error) {
+
+            // Update state with fetched data - CORRECTED
+            if (result.data && result.data.data && result.data.data.length > 0) {
+                const userData = result.data.data[0];
+
+                setProfileData({
+                    file: userData.u_profile_pic,
+                    created_by: userData.u_profile_for || "",
+                    gender: userData.u_gender || "",
+                    firstname: userData.u_firstname || "",
+                    lastname: userData.u_lastname || "",
+                    dob: userData.u_dob || "",
+                    userId: userData.u_id || "",
+                    religion: userData.u_religion || "",
+                    community: userData.u_community || "",
+                    father: userData.u_father || "",
+                    mother: userData.u_mother || "",
+                    no_of_sisters: userData.u_no_sisters || "",
+                    no_of_brothers: userData.u_no_brothers || "",
+                    financial_status: userData.u_financial_status || "",
+                    diet: userData.u_diet || "",
+                    hobbies: userData.u_hobbies ? userData.u_hobbies.split(',') : [],
+                    about: userData.u_about || "",
+                    mother_tongue: userData.u_mother_tongue || "",
+                    height: userData.u_height || "",
+                    marital_status: userData.u_marital_status || "",
+                    district: userData.u_district || "",
+                    profession_area: userData.u_profession_area || "",
+                    country: userData.u_country || "",
+                    state: userData.u_state || "",
+                    city: userData.u_city || "",
+                    zip: userData.u_zip || "",
+                    qualification: userData.u_qualification || "",
+                    college: userData.u_college || "",
+                    working_with: userData.u_working_with || "",
+                    working_as: userData.u_working_as || "",
+                    employer_name: userData.u_employer_name || "",
+                    annual_income: userData.u_annual_income || "",
+                    is_private: userData.u_private_income || false,
+                });
+
+                console.log("profile pic path:", userData.u_profile_pic);
+
+                if (userData.u_profile_pic) {
+                    // Create full URL for the server image
+                    const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
+                    setPreview(fullImageUrl);  // Setting the complete URL
+                }
+
+            }
+
+        } catch (error) {
             console.log(error);
+        } finally {
+            setIsLoading(false);
         }
     }
 
@@ -93,6 +143,8 @@ function ProfileSection() {
         annual_income: "",
         is_private: "",
         file: "",
+        images: "",
+        userId: ""
     })
 
 
@@ -113,25 +165,31 @@ function ProfileSection() {
         console.log("handle update profile function::");
 
         try {
-            const token = sessionStorage.getItem('token')
+            const token = sessionStorage.getItem("token");
+
+            // Don’t set Content-Type manually, let browser handle it
             const reqHeader = {
-                "Content-Type": "multipart/form-data",
-                "Authorization": `Bearer ${token}`
-            }
+                "Authorization": `Bearer ${token}`,
+            };
+
             const reqBody = new FormData();
-            // Loop through profileData instead of writing manually
+
+            // Append all fields including image
             for (let key in profileData) {
                 if (profileData[key]) {
                     reqBody.append(key, profileData[key]);
                 }
             }
+
             // Debugging: log FormData contents
             for (let [key, value] of reqBody.entries()) {
                 console.log(`${key}:`, value);
             }
 
             const result = await updateProfileApi(reqBody, reqHeader);
+
             setIsEditing(false);
+
             if (result?.data?.result === true) {
                 alert("Profile updated successfully");
                 console.log(result);
@@ -153,19 +211,49 @@ function ProfileSection() {
             <div className="bg-[#F5F5F5] flex flex-col sm:flex-row sm:items-center sm:justify-between h-auto sm:h-40 w-full rounded-xl p-5 sm:p-7 gap-5 sm:gap-0">
                 {/* Left Section (Profile + Info) */}
                 <div className="flex items-center gap-5">
+
                     {/* Profile Image Placeholder */}
                     <div className="relative w-20 h-20 sm:w-24 sm:h-24">
                         {/* Circle container with overflow-hidden */}
                         <div className="w-full h-full rounded-full bg-[#D9D9D9] flex items-center justify-center overflow-hidden">
-                            {preview ? (
+                            {/* First try to show preview */}
+                            {preview && (
                                 <img
                                     src={preview}
                                     alt="Profile"
                                     className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        console.log("Preview image failed to load");
+                                        e.target.style.display = 'none';
+                                    }}
                                 />
-                            ) : (
+                            )}
+
+                            {/* If no preview, try to show server image */}
+                            {!preview && profileData.file && (
+                                <img
+                                    src={`https://lunarsenterprises.com:6050${profileData.file}`}
+                                    alt="Profile"
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                        console.log("Server image failed to load");
+                                        e.target.style.display = 'none';
+                                    }}
+                                />
+                            )}
+
+                            {/* If both fail, show default icon */}
+                            {!preview && !profileData.file && (
                                 <FaRegUser className="text-[#797979] text-[24px] sm:text-[30px]" />
                             )}
+
+                            {/* Camera icon for uploading */}
+                            <div
+                                className="absolute bottom-0 right-0 bg-white rounded-full p-2 cursor-pointer"
+                                onClick={() => fileInputRef.current?.click()}
+                            >
+                                <TiCameraOutline className="text-gray-600 text-[18px]" />
+                            </div>
 
                             {/* Hidden File Input */}
                             <input
@@ -176,23 +264,15 @@ function ProfileSection() {
                                 accept="image/*"
                             />
                         </div>
-
-                        {/* Camera Upload Icon (outside circle clipping) */}
-                        <div
-                            onClick={() => fileInputRef.current.click()}
-                            className="absolute bottom-0 right-0 bg-[#540D33] w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center cursor-pointer"
-                        >
-                            <TiCameraOutline className="text-white text-[16px] sm:text-[18px]" />
-                        </div>
                     </div>
 
                     {/* User Info */}
                     <div className="flex flex-col items-start text-[#540D33]">
                         <div className="flex gap-2 sm:gap-3 items-center">
-                            <h1 className="font-semibold text-sm sm:text-base">Calvin Sunny</h1>
+                            <h1 className="font-semibold text-sm sm:text-base">{profileData.firstname} {profileData.lastname}</h1>
                             <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                         </div>
-                        <h1 className="font-extralight text-xs sm:text-sm">ID : ITM 1001</h1>
+                        <h1 className="font-extralight text-xs sm:text-sm">ID : ITM {profileData.userId}</h1>
                     </div>
                 </div>
                 {
@@ -215,7 +295,111 @@ function ProfileSection() {
 
                     )
                 }
+            </div>
 
+            <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7]">
+                {/* Header */}
+                <div className="flex justify-between items-center px-6 py-6 bg-white">
+                    <h2 className="text-lg font-bold text-[#540D33]">Add more photos (2/4)</h2>
+                    <div
+                        className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
+                        onClick={() => setEditingSection(editingSection === "photos" ? null : "photos")}
+                    >
+                        <FaPen className="text-white text-[10px]" />
+                    </div>
+                </div>
+
+                {/* Body - Only show when editing */}
+                {editingSection === "photos" ? (
+                    <div className="bg-[#F5F5F5] px-7 py-7">
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Photo 1 - With delete button */}
+                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
+                                <img
+                                    src="https://placehold.co/200x200/540d33/white?text=Photo+1"
+                                    alt="Profile photo 1"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <span className="text-xs font-bold text-[#540D33]">1</span>
+                                </div>
+                                {/* Delete button */}
+                                <div className="absolute top-2 left-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors">
+                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Photo 2 - With delete button */}
+                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
+                                <img
+                                    src="https://placehold.co/200x200/540d33/white?text=Photo+2"
+                                    alt="Profile photo 2"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <span className="text-xs font-bold text-[#540D33]">2</span>
+                                </div>
+                                {/* Delete button */}
+                                <div className="absolute top-2 left-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors">
+                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            {/* Add Photo Button */}
+                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+                                <div className="w-12 h-12 rounded-full bg-[#540D33] flex items-center justify-center mb-2">
+                                    <TiCameraOutline className="text-white text-xl" />
+                                </div>
+                                <span className="text-sm font-medium text-[#540D33]">Add Photo</span>
+                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <span className="text-xs font-bold text-[#540D33]">3</span>
+                                </div>
+                            </div>
+
+                            {/* Add Photo Button */}
+                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
+                                <div className="w-12 h-12 rounded-full bg-[#540D33] flex items-center justify-center mb-2">
+                                    <TiCameraOutline className="text-white text-xl" />
+                                </div>
+                                <span className="text-sm font-medium text-[#540D33]">Add Photo</span>
+                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <span className="text-xs font-bold text-[#540D33]">4</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="bg-[#F5F5F5] px-7 py-7">
+                        <div className="grid grid-cols-2 gap-4">
+                            {/* Display only the first two photos in view mode */}
+                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
+                                <img
+                                    src="https://placehold.co/200x200/540d33/white?text=Photo+1"
+                                    alt="Profile photo 1"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <span className="text-xs font-bold text-[#540D33]">1</span>
+                                </div>
+                            </div>
+
+                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
+                                <img
+                                    src="https://placehold.co/200x200/540d33/white?text=Photo+2"
+                                    alt="Profile photo 2"
+                                    className="w-full h-full object-cover"
+                                />
+                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                    <span className="text-xs font-bold text-[#540D33]">2</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
 
@@ -246,17 +430,25 @@ function ProfileSection() {
                                 <div>:</div>
                                 <div>
                                     {editingSection === "basic" ? (
-                                        <input
-                                            type="text"
-                                            value={profileData.createdBy}
+                                        < select
+                                            value={profileData.created_by}
                                             onChange={(e) =>
-                                                setProfileData({ ...profileData, createdBy: e.target.value })
+                                                setProfileData({ ...profileData, created_by: e.target.value })
                                             }
-                                            className="bg-transparent border-b-2 border-gray-200 
-                                                                 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
-                                        />
+                                            className="bg-transparent border-b-2 border-gray-200
+                                    focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
+                                        >
+                                            <option value="My Son">My Son</option>
+                                            <option value="My Self">My Self</option>
+                                            <option value="My Daughter">My Daughter</option>
+                                            <option value="My Brother">My Brother</option>
+                                            <option value="My Sister">My Sister</option>
+                                            <option value="My Friend">My Friend</option>
+                                            <option value="My Relative">My Relative</option>
+                                        </select>
+
                                     ) : (
-                                        <span>{profileData.createdBy || "Not specified"}</span>
+                                        <span>{profileData.created_by || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
@@ -293,7 +485,7 @@ function ProfileSection() {
                                     {editingSection === "basic" ? (
                                         <input
                                             type="text"
-                                            value={profileData.firstName}
+                                            value={profileData.firstname}
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, firstName: e.target.value })
                                             }
@@ -301,7 +493,7 @@ function ProfileSection() {
                                                         focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         />
                                     ) : (
-                                        <span>{profileData.firstName || "Not specified"}</span>
+                                        <span>{profileData.firstname || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
@@ -314,7 +506,7 @@ function ProfileSection() {
                                     {editingSection === "basic" ? (
                                         <input
                                             type="text"
-                                            value={profileData.lastName}
+                                            value={profileData.lastname}
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, lastName: e.target.value })
                                             }
@@ -322,7 +514,7 @@ function ProfileSection() {
                                                             focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         />
                                     ) : (
-                                        <span>{profileData.lastName || "Not specified"}</span>
+                                        <span>{profileData.lastname || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
@@ -343,7 +535,15 @@ function ProfileSection() {
                                                                   focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         />
                                     ) : (
-                                        <span>{profileData.dob || "Not specified"}</span>
+                                        <span>
+                                            {profileData.dob
+                                                ? new Date(profileData.dob).toLocaleDateString("en-GB", {
+                                                    day: "2-digit",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })
+                                                : "Not specified"}
+                                        </span>
                                     )}
                                 </div>
                             </div>
@@ -1065,7 +1265,7 @@ function ProfileSection() {
                     </button>
                 </div>
 
-            </div>
+            </div >
         </>
     )
 }
