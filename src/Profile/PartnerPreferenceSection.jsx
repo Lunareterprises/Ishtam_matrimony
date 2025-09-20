@@ -14,27 +14,30 @@ function PartnerPreferenceSection() {
                 Authorization: `Bearer ${token}`,
             };
             const result = await fetchPartnerPreferenceApi(reqHeader);
-            if (result?.status === 200 && result.data) {
-                console.log("Fetched Partner Preference Data ::", result.data);
+
+
+            // Update state with fetched data - CORRECTED
+            if (result.data && result.data.data && result.data.data.length > 0) {
+                const partnerData = result.data.data[0];
                 // ✅ Update state with API response
                 setPartnerPreferenceData({
-                    age: result.data.data.pp_age || "",
-                    height: result.data.data.pp_height || "",
-                    marital_status: result.data.data.pp_marital_status || "",
-                    religion: result.data.data.pp_religion || "",
-                    community: result.data.pp_community || "",
-                    mother_tongue: result.data.pp_mother_tongue || "",
-                    country: result.data.pp_country || "",
-                    state: result.data.pp_state || "",
-                    city: result.data.pp_city || "",
-                    district: result.data.pp_district || "",
-                    qualification: result.data.pp_qualification || "",
-                    working_with: result.data.pp_working_with || "",
-                    profession_area: result.data.pp_profession_area || "",
-                    working_as: result.data.pp_working_as || "",
-                    annual_income: result.data.pp_annual_income || "",
-                    profile_managed_by: result.data.pp_profile_managed_by || "",
-                    diet: result.data.pp_diet || "",
+                    age: partnerData.pp_age || "",
+                    height: partnerData.pp_height || "",
+                    marital_status: partnerData.pp_marital_status || "",
+                    religion: partnerData.pp_religion || "",
+                    community: partnerData.pp_community || "",
+                    mother_tongue: partnerData.pp_mother_tongue || "",
+                    country: partnerData.pp_country || "",
+                    state: partnerData.pp_state || "",
+                    city: partnerData.pp_city || "",
+                    district: partnerData.pp_district || "",
+                    qualification: partnerData.pp_qualification || "",
+                    working_with: partnerData.pp_working_with || "",
+                    profession_area: partnerData.pp_profession_area || "",
+                    working_as: partnerData.pp_working_as || "",
+                    annual_income: partnerData.pp_annual_income || "",
+                    profile_managed_by: partnerData.pp_profile_managed_by || "",
+                    diet: partnerData.pp_diet || "",
                 });
                 console.log("partner preference data ::", partnerPreferenceData);
 
@@ -572,18 +575,18 @@ function PartnerPreferenceSection() {
                                 <div>:</div>
                                 <div>
                                     {editingSection === "partner_other" ? (
-                                        <input
-                                            type="text"
+                                        < select
                                             value={partnerPreferenceData.diet}
                                             onChange={(e) =>
-                                                setPartnerPreferenceData({
-                                                    ...partnerPreferenceData,
-                                                    diet: e.target.value,
-                                                })
+                                                setPartnerPreferenceData({ ...partnerPreferenceData, diet: e.target.value })
                                             }
-                                            className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
-                                                                 focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                            className="bg-transparent border-b-2 border-gray-200
+                                    focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
+                                        >
+                                            <option value="My Son">Veg</option>
+                                            <option value="My Self">Non Veg</option>
+
+                                        </select>
                                     ) : (
                                         <span>{partnerPreferenceData.diet || "Not specified"}</span>
                                     )}
@@ -600,7 +603,7 @@ function PartnerPreferenceSection() {
                         Save & Update
                     </button>
                 </div>
-            </div>
+            </div >
         </>
     )
 }

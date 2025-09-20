@@ -87,8 +87,7 @@ function ProfileSection() {
                     is_private: userData.u_private_income || false,
                 });
 
-                console.log("profile pic path:", userData.u_profile_pic);
-
+                
                 if (userData.u_profile_pic) {
                     // Create full URL for the server image
                     const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
@@ -141,7 +140,7 @@ function ProfileSection() {
         working_as: "",
         employer_name: "",
         annual_income: "",
-        is_private: "",
+        is_private: false,
         file: "",
         images: "",
         userId: ""
@@ -181,13 +180,12 @@ function ProfileSection() {
                 }
             }
 
-            // Debugging: log FormData contents
+           /*  // Debugging: log FormData contents
             for (let [key, value] of reqBody.entries()) {
                 console.log(`${key}:`, value);
             }
-
+ */
             const result = await updateProfileApi(reqBody, reqHeader);
-
             setIsEditing(false);
 
             if (result?.data?.result === true) {
@@ -683,14 +681,14 @@ function ProfileSection() {
                                     {editingSection === "family" ? (
                                         <input
                                             type="text"
-                                            value={profileData.sisters}
+                                            value={profileData.no_of_sisters}
                                             onChange={(e) =>
-                                                setProfileData({ ...profileData, sisters: e.target.value })
+                                                setProfileData({ ...profileData, no_of_sisters: e.target.value })
                                             }
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
-                                        <span>{profileData.sisters || "Not specified"}</span>
+                                        <span>{profileData.no_of_sisters || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
@@ -703,14 +701,14 @@ function ProfileSection() {
                                     {editingSection === "family" ? (
                                         <input
                                             type="text"
-                                            value={profileData.brothers}
+                                            value={profileData.no_of_brothers}
                                             onChange={(e) =>
-                                                setProfileData({ ...profileData, brothers: e.target.value })
+                                                setProfileData({ ...profileData, no_of_brothers: e.target.value })
                                             }
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
-                                        <span>{profileData.brothers || "Not specified"}</span>
+                                        <span>{profileData.no_of_brothers || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
@@ -1046,15 +1044,20 @@ function ProfileSection() {
                                 <div>:</div>
                                 <div>
                                     {editingSection === "lifestyle" ? (
-                                        <input
-                                            type="text"
+
+                                        < select
                                             value={profileData.diet}
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, diet: e.target.value })
                                             }
-                                            className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
-                             focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                            className="bg-transparent border-b-2 border-gray-200
+                                    focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
+                                        >
+                                            <option value="My Son">Veg</option>
+                                            <option value="My Self">Non Veg</option>
+
+                                        </select>
+        
                                     ) : (
                                         <span>{profileData.diet || "Not specified"}</span>
                                     )}

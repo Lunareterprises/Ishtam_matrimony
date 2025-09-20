@@ -1,23 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../Components/Sidebar'
-import { FaPen } from "react-icons/fa";
 import DashboardHeader from '../Components/DashboardHeader';
 import DashboardNav from '../Components/DashboardNav';
 import { FaSearch } from "react-icons/fa";
 import { PiSlidersBold } from "react-icons/pi";
 import ChatMessages from '../Components/ChatMessages';
-import { useRef } from "react";
 import { fetchPartnerPreferenceApi, fetchProfileDataApi, getCurrentPlanApi, updatePartnerPreferenceApi, updateProfileApi } from '../Services/allApi';
 import ProfileSection from './ProfileSection';
 import PartnerPreferenceSection from './PartnerPreferenceSection';
 
 function MyProfile() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [isEditing, setIsEditing] = useState(false);
-    const [editingSection, setEditingSection] = useState(null);
-    const [preview, setPreview] = useState(null)
+    const [completionPercent, setCompletionPercent] = useState(0);
     const [currentPlanData, setCurrentPlanData] = useState({})
-
 
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
@@ -27,9 +22,33 @@ function MyProfile() {
                 Authorization: `Bearer ${token}`,
             };
             const result = await fetchPartnerPreferenceApi(reqHeader);
-            if (result?.status === 200 && result.data) {
-                console.log("Fetched Partner Preference Data ::", result.data);
+
+
+            // Update state with fetched data - CORRECTED
+            if (result.data && result.data.data && result.data.data.length > 0) {
+                const partnerData = result.data.data[0];
                 // ✅ Update state with API response
+                setPartnerPreferenceData({
+                    age: partnerData.pp_age || "",
+                    height: partnerData.pp_height || "",
+                    marital_status: partnerData.pp_marital_status || "",
+                    religion: partnerData.pp_religion || "",
+                    community: partnerData.pp_community || "",
+                    mother_tongue: partnerData.pp_mother_tongue || "",
+                    country: partnerData.pp_country || "",
+                    state: partnerData.pp_state || "",
+                    city: partnerData.pp_city || "",
+                    district: partnerData.pp_district || "",
+                    qualification: partnerData.pp_qualification || "",
+                    working_with: partnerData.pp_working_with || "",
+                    profession_area: partnerData.pp_profession_area || "",
+                    working_as: partnerData.pp_working_as || "",
+                    annual_income: partnerData.pp_annual_income || "",
+                    profile_managed_by: partnerData.pp_profile_managed_by || "",
+                    diet: partnerData.pp_diet || "",
+                });
+                console.log("partner preference data ::", partnerPreferenceData);
+
             } else {
                 console.warn("No partner preference data found.");
             }
@@ -66,43 +85,6 @@ function MyProfile() {
     }, [])
 
 
-    const [profileData, setProfileData] = useState({
-        created_by: "",
-        gender: "",
-        firstname: "",
-        lastname: "",
-        dob: "",
-        religion: "",
-        community: "",
-        father: "",
-        mother: "",
-        no_of_sisters: "",
-        no_of_brothers: "",
-        financial_status: "",
-        diet: "",
-        hobbies: [],
-        about: "",
-        mother_tongue: "",
-        height: "",
-        marital_status: "",
-        district: "",
-        profession_area: "",
-        country: "",
-        state: "",
-        city: "",
-        zip: "",
-        qualification: "",
-        college: "",
-        working_with: "",
-        working_as: "",
-        employer_name: "",
-        annual_income: "",
-        is_private: "",
-        file: "",
-        userId: ""
-    })
-
-    //function for fetching profile data
     const fetchProfileData = async () => {
         try {
             const token = sessionStorage.getItem("token");
@@ -152,8 +134,15 @@ function MyProfile() {
                     is_private: userData.u_private_income || false,
                 });
 
-                console.log("profile pic path:", userData.u_profile_pic);
+
+                if (userData.u_profile_pic) {
+                    // Create full URL for the server image
+                    const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
+                    setPreview(fullImageUrl);  // Setting the complete URL
+                }
+
             }
+            calculateCompletion()
 
         } catch (error) {
             console.log(error);
@@ -162,10 +151,104 @@ function MyProfile() {
         }
     }
 
+
     useEffect(() => {
         fetchPartnerPrefernce()
         fetchProfileData()
     }, [])
+
+
+    const [profileData, setProfileData] = useState({
+        created_by: "",
+        gender: "",
+        firstname: "",
+        lastname: "",
+        dob: "",
+        religion: "",
+        community: "",
+        father: "",
+        mother: "",
+        no_of_sisters: "",
+        no_of_brothers: "",
+        financial_status: "",
+        diet: "",
+        hobbies: [],
+        about: "",
+        mother_tongue: "",
+        height: "",
+        marital_status: "",
+        district: "",
+        profession_area: "",
+        country: "",
+        state: "",
+        city: "",
+        zip: "",
+        qualification: "",
+        college: "",
+        working_with: "",
+        working_as: "",
+        employer_name: "",
+        annual_income: "",
+        is_private: "",
+        file: "",
+    })
+
+    const [partnerPreferenceData, setPartnerPreferenceData] = useState({
+        age: "",
+        height: "",
+        marital_status: "",
+        religion: "",
+        community: "",
+        mother_tongue: "",
+        country: "",
+        state: "",
+        city: "",
+        district: "",
+        qualification: "",
+        working_with: "",
+        profession_area: "",
+        working_as: "",
+        annual_income: "",
+        profile_managed_by: "",
+        diet: ""
+    })
+
+
+    //for calculating profile completion progress
+    const calculateCompletion = (profileData, partnerData) => {
+        const combinedData = { ...profileData, ...partnerData };
+
+        // exclude only `is_private`
+        const excludedKeys = ["is_private"];
+
+        const validKeys = Object.keys(combinedData).filter(
+            (key) => !excludedKeys.includes(key)
+        );
+
+        const filledCount = validKeys.filter((key) => {
+            const value = combinedData[key];
+            return (
+                value !== "" &&
+                value !== null &&
+                value !== undefined &&
+                !(Array.isArray(value) && value.length === 0)
+            );
+        }).length;
+
+        return Math.round((filledCount / validKeys.length) * 100);
+    };
+
+
+    useEffect(() => {
+        if (profileData && partnerPreferenceData) {
+            const percent = calculateCompletion(profileData, partnerPreferenceData);
+            setCompletionPercent(percent);
+        }
+    }, [profileData, partnerPreferenceData]);
+
+    const radius = 54;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (completionPercent / 100) * circumference;
 
 
     return (
@@ -216,33 +299,48 @@ function MyProfile() {
                             </div>
                         </div>
                         <div className='max-w-[800px] w-full px-4 sm:px-10' >
-                            <div class="flex justify-start my-2 w-full">
-                                <div class="relative w-full max-w-[120px] md:max-w-[150px] aspect-square">
 
-                                    <svg class="w-full h-full absolute" viewBox="0 0 120 120">
-                                        <circle cx="60" cy="60" r="54" fill="#E6F2FF" stroke="#E6F2FF" stroke-width="8" />
+                            <div className="flex justify-start my-2 w-full">
+                                <div className="relative w-full max-w-[120px] md:max-w-[150px] aspect-square">
+
+                                    {/* Background circle */}
+                                    <svg className="w-full h-full absolute" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r={radius} fill="#D9D9D9" stroke="#E6F2FF" strokeWidth="8" />
                                     </svg>
 
-
-                                    <svg class="w-full h-full absolute" viewBox="0 0 120 120">
-                                        <circle cx="60" cy="60" r="54" fill="none" stroke="#F0F0F0" stroke-width="8" />
+                                    {/* Gray track */}
+                                    <svg className="w-full h-full absolute" viewBox="0 0 120 120">
+                                        <circle cx="60" cy="60" r={radius} fill="none" stroke="#F0F0F0" strokeWidth="8" />
                                     </svg>
 
-
-                                    <svg class="w-full h-full absolute rotate-[-90deg]" viewBox="0 0 120 120">
-                                        <circle cx="60" cy="60" r="54" fill="none" stroke="#4094F7" stroke-width="8"
-                                            stroke-dasharray="339.292" stroke-dashoffset="186.611" />
+                                    {/* Blue progress */}
+                                    <svg className="w-full h-full absolute rotate-[-90deg]" viewBox="0 0 120 120">
+                                        <circle
+                                            cx="60"
+                                            cy="60"
+                                            r={radius}
+                                            fill="none"
+                                            stroke="#E33183"
+                                            strokeWidth="8"
+                                            strokeDasharray={circumference}
+                                            strokeDashoffset={offset}
+                                            strokeLinecap="round"
+                                        />
                                     </svg>
 
-                                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-                                        <span class="text-xl md:text-2xl font-bold text-[#4094F7]">45%</span>
+                                    {/* Percentage text */}
+                                    <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                        <span className="text-xl md:text-2xl font-bold text-[#E33183]">
+                                            {completionPercent}%
+                                        </span>
                                     </div>
                                 </div>
                             </div>
 
+
                             <div className=' flex flex-col  text-left pt-[50px] text-[#540D33]' >
-                                <h1 className='text-[28px] font-bold'  >WELCOME, {profileData.firstname}..!</h1>
-                                <p className=' font-semibold' >Your profile is 45% completed, Let’s finish setting up your <br /> profile so we can show it to more matches..!</p>
+                                <h1 className='text-[28px] font-bold'  >WELCOME, CALVIN..!</h1>
+                                <p className=' font-semibold' >Your profile is {completionPercent}% completed, Let’s finish setting up your <br /> profile so we can show it to more matches..!</p>
                             </div>
 
 
