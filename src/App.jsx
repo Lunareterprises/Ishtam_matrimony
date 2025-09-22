@@ -20,6 +20,7 @@ import AddNewSuccessStory from './all stories/AddNewSuccessStory'
 import ViewSuccessStory from './all stories/ViewSuccessStory'
 import PartnerProfile from './partner profile/PartnerProfile'
 import "react-datepicker/dist/react-datepicker.css";
+import ProfileVisits from './Profile visits/ProfileVisits'
 
 
 function App() {
@@ -44,6 +45,7 @@ function App() {
         <Route path='/add-New-success-Story' element={<AddNewSuccessStory />} />
         <Route path='/view-success-story' element={<ViewSuccessStory />} />
         <Route path='/partner-profile/:profileId' element={<PartnerProfile/>} />
+        <Route path='/profile-vists' element={<ProfileVisits/>}  />
       </Routes>
 
     </>

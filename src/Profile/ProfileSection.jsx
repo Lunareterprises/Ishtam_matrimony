@@ -180,11 +180,6 @@ function ProfileSection() {
                 }
             }
 
-           /*  // Debugging: log FormData contents
-            for (let [key, value] of reqBody.entries()) {
-                console.log(`${key}:`, value);
-            }
- */
             const result = await updateProfileApi(reqBody, reqHeader);
             setIsEditing(false);
 
@@ -270,7 +265,7 @@ function ProfileSection() {
                             <h1 className="font-semibold text-sm sm:text-base">{profileData.firstname} {profileData.lastname}</h1>
                             <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-500"></div>
                         </div>
-                        <h1 className="font-extralight text-xs sm:text-sm">ID : ITM {profileData.userId}</h1>
+                        <h1 className="font-extralight text-xs sm:text-sm">ID : ITM{profileData.userId}</h1>
                     </div>
                 </div>
                 {
@@ -1053,9 +1048,8 @@ function ProfileSection() {
                                             className="bg-transparent border-b-2 border-gray-200
                                     focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         >
-                                            <option value="My Son">Veg</option>
-                                            <option value="My Self">Non Veg</option>
-
+                                            <option value="Veg">Veg</option>
+                                            <option value="Non Veg">Non Veg</option>
                                         </select>
         
                                     ) : (

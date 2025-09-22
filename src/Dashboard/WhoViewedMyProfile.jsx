@@ -28,6 +28,7 @@ function WhoViewedMyProfile() {
     }, [])
 
     const navigate = useNavigate()
+    
     const navigateToParnerProfile = (id) => {
         navigate(`/partner-profile/${id}`)
     }

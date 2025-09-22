@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { IoPeopleSharp } from "react-icons/io5";
 import { MdOutlineWorkspacePremium } from "react-icons/md";
 import { BsEnvelopeArrowDown } from "react-icons/bs";
+import { FaEye } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
 import Swal from 'sweetalert2';
 
@@ -34,10 +35,12 @@ function Sidebar() {
     });
 
   }
+  const HeaderCss = `hover:text-pink-600 font-semibold`
+  const headerIcon = `hover:text-pink-600 font-semibold text-xl`
 
   return (
     <div className='hidden lg:flex bg-white h-screen  flex-col gap-3 w-[220px] sm:w-[240px] 
-                    fixed top-0 left-0 shadow-sm border-r border-gray-200
+                    fixed top-0 left-0 shadow-sm border-r border-gray-200 
                     overflow-y-auto z-30'>
 
       {/* Logo */}
@@ -54,7 +57,7 @@ function Sidebar() {
       >
         <div className='flex items-center gap-2'>
           <img src={DoubleHearts} alt="icon" />
-          <h1 className='font-semibold'>My Ishtam</h1>
+          <h1 className={`${HeaderCss}`}>My Ishtam</h1>
         </div>
         {toggleMyIshtam ? <FaCaretUp /> : <FaCaretDown />}
       </div>
@@ -77,7 +80,7 @@ function Sidebar() {
       >
         <div className='flex items-center gap-3'>
           <IoPeopleSharp className='text-xl' />
-          <h1 className='font-semibold'>Matches</h1>
+          <h1 className={`${HeaderCss}`}>Matches</h1>
         </div>
         {toggleMatches ? <FaCaretUp /> : <FaCaretDown />}
       </div>
@@ -100,7 +103,7 @@ function Sidebar() {
       <Link to="/inbox" >
         <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
           <BsEnvelopeArrowDown className='text-xl' />
-          <h1 className='font-semibold'>Inbox</h1>
+          <h1 className={`${HeaderCss}`}>Inbox</h1>
         </div>
       </Link>
 
@@ -109,17 +112,26 @@ function Sidebar() {
       <Link to="/subscription" >
         <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
           <MdOutlineWorkspacePremium className='text-xl' />
-          <h1 className='font-semibold'>Subscription</h1>
+          <h1 className={`${HeaderCss}`}>Subscription</h1>
         </div>
       </Link>
       <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
         <FaRegHeart className='text-[18px]' />
-        <h1 className='font-semibold'>Wishlists</h1>
+        <h1 className={`${HeaderCss}`}>Wishlists</h1>
       </div>
+
+      {/* Profile visits */}
+      <Link to="/profile-vists"  >
+        <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
+          <FaEye className='text-xl' />
+          <h1 className={`${HeaderCss}`}>Profile Visits</h1>
+        </div>
+      </Link>
+
       {/* Logout */}
-      <div onClick={handleLogout} className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
+      <div onClick={handleLogout} className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200 '>
         <BiLogOut className='text-xl' />
-        <h1 className='font-semibold'>Logout</h1>
+        <h1 className={`${HeaderCss}`} >Logout</h1>
       </div>
 
     </div>

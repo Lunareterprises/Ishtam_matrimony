@@ -47,9 +47,12 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
       console.log("Login result ::", result);
       if (result?.data?.result === true) {
         sessionStorage.setItem("token", result.data.data.token)
-      
+        sessionStorage.setItem("profilePic", result.data.data.profile_pic)
         sessionStorage.setItem("user_id", result.data.data.user_id)
-       
+        sessionStorage.setItem("email",result.data.data.email)
+        sessionStorage.setItem("name",result.data.data.name)
+  
+
         onClose()
         await Swal.fire({
           title: 'Login Successful!',

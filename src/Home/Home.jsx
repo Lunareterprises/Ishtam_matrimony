@@ -1,84 +1,65 @@
-import React, { useEffect, useState } from 'react';
-import BannerImage1 from '../assets/Property 1=Default (1).png';
-import BannerImage2 from '../assets/Property 1=Default (2).png';
-import BannerImage3 from '../assets/Property 1=Default (3).png';
-import BannerImage4 from '../assets/Property 1=Default (4).png';
-import BannerImage5 from '../assets/Property 1=Default (5).png';
-import WhyIshttamMarry from './WhyIshttamMarry';
-import OurProcess from './OurProcess';
-import TrustUs from './TrustUs';
-import HomeContactSection from './HomeContactSection';
-import Nav from '../Components/Nav'
-import Footer from '../Components/Footer';
-import Header from '../Components/Header';
-import AppFeatures from './AppFeatures';
-import RealStories from './RealStories';
-import AboutUs from './AboutUs';
+import React from 'react';
+import { FaRegUser, FaSearch } from "react-icons/fa";
+import { PiSlidersBold } from "react-icons/pi";
+import { HiBadgeCheck } from "react-icons/hi";
+import defaultProfilePic from "../assets/profilePic.jpg";
 
+function DashboardHeader() {
+  const email = sessionStorage.getItem("email");
+  const name = sessionStorage.getItem("name");
+  const profilePic = sessionStorage.getItem("profilePic");
+  const user_id = sessionStorage.getItem("user_id");
 
-function Home() {
-  const banners = [
-    BannerImage1,
-    BannerImage2,
-    BannerImage3,
-    BannerImage4,
-    BannerImage5,
-  ];
-
-  const [current, setCurrent] = useState(0);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % banners.length);
-    }, 4000); // 4 seconds
-
-    return () => clearInterval(interval);
-  }, [banners.length]);
+  const hasProfilePic = profilePic && profilePic !== "null";
 
   return (
-    <>
-      <Nav />
-      <div name="home" className='pt-[80px]' >
-        <section className="relative w-full h-[80vh] sm:h-[90vh] overflow-hidden">
-          <img
-            src={banners[current]}
-            alt={`Slide ${current + 1}`}
-            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out"
+    <div className="hidden lg:flex bg-white w-full h-auto min-h-[80px] items-center justify-evenly gap-4 px-4 fixed z-20 top-0 left-20">
+      {/* Left Section - Search + Filter */}
+      <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-5 w-full md:w-auto">
+        <div className="relative w-full sm:w-[100px] md:w-[350px]">
+          <input
+            type="text"
+            placeholder="Search Profile ID"
+            className="w-full rounded-full border border-[#E4E4E7] pl-12 pr-4 py-2 text-[#787878] placeholder-gray-400 focus:outline-none"
           />
-          <div className="relative z-10 flex flex-col gap-5 items-center justify-center text-center h-full bg-black/10 px-7">
-            <h1 className="text-white text-[29px] sm:text-5xl px-5 font-bold leading-tight">
-              Find Your ishtam –<br />
-              <span className="text-white">A Match Made in Heart & Heaven</span>
-            </h1>
-            <p className="text-white italic text-[15px] sm:text-lg ">
-              Begin your journey with trusted matches, family values, and soulful connections
-            </p>
-
-            <div className=" flex flex-col gap-4">
-              <button className="bg-pink-600 text-white w-45 h-12 text-[12px] sm:text-[15px] sm:w-60 sm:h-13 rounded-full font-semibold hover:bg-pink-700 transition">
-                JOIN ISHTTAM MARRY
-              </button>
-              <button className="border border-white text-white w-45 h-12 text-[12px] sm:text-[15px] sm:w-60 sm:h-13 rounded-full hover:bg-white hover:text-pink-600 transition">
-                FREE REGISTRATION
-              </button>
-            </div>
-          </div>
-        </section>
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+        </div>
+        <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+          <PiSlidersBold className="text-xl text-[#787878]" />
+        </div>
       </div>
 
-      <WhyIshttamMarry />
-      <section id="aboutUs">
-        <AboutUs  />
-      </section>
-      <RealStories />
-      <OurProcess />
-      <section id="contactUs">
-        <HomeContactSection />
-      </section>
-      <AppFeatures />
-      <TrustUs />
-      <Footer />
-    </>
+      {/* Right Section - User Info */}
+      <div className="items-center justify-center gap-4 sm:gap-6 w-full md:w-auto hidden lg:flex">
+        {/* Text Info */}
+        <div className="flex flex-col items-center sm:items-start text-center sm:text-left">
+          <div className="flex flex-wrap justify-center sm:justify-start items-center gap-2 sm:gap-3">
+            <h1 className="text-[14px] sm:text-[16px]">
+              <span className="font-semibold text-[#540D33]">{name} | </span>
+              ID : ITM{user_id}
+            </h1>
+            <HiBadgeCheck className="text-[#3A78FF] text-[24px] sm:text-[30px]" />
+          </div>
+          <h1 className="text-[#787878] text-[12px] sm:text-[14px] break-all">{email}</h1>
+        </div>
+
+        {/* Profile Image */}
+        <div>
+          {hasProfilePic ? (
+            <img
+              className="rounded-full object-cover w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-13"
+              src={`https://lunarsenterprises.com:6050${profilePic}`}
+              alt="Profile"
+            />
+          ) : (
+            <div className="flex border-gray-200 bg-[#D9D9D9] items-center justify-center rounded-full w-10 h-10 sm:w-12 sm:h-12 md:w-13 md:h-13">
+              <FaRegUser className="text-[#797979] text-[15px]" />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 
-export default Home;
+export default DashboardHeader;

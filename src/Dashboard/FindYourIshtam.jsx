@@ -28,7 +28,7 @@ function FindYourIshtam() {
                 search: search
             };
             const result = await getMyMatchesApi(reqHeader, reqBody)
-            console.log("todays match data ::", result);
+            console.log("match data ::", result);
             setMyMatchData(result.data.data)
         }
         catch (error) {
@@ -99,7 +99,6 @@ function FindYourIshtam() {
                     </div>
                 </Link>
             }
-
         </div>
     )
 }

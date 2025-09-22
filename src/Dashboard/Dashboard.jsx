@@ -10,11 +10,11 @@ import { BsArrowDownLeftCircleFill } from "react-icons/bs";
 import { BsArrowUpRightCircleFill } from "react-icons/bs";
 import ChatMessages from '../Components/ChatMessages';
 import DashboardNav from '../Components/DashboardNav';
-import { FaSearch } from "react-icons/fa";
+import { FaRegUser, FaSearch } from "react-icons/fa";
 import { PiSlidersBold } from "react-icons/pi";
 import ChangePassword from '../Components/ChangePassword';
 import { Link } from 'react-router-dom';
-import { listInterestApi } from '../Services/allApi';
+import { fetchPartnerPreferenceApi, fetchProfileDataApi, getCurrentPlanApi, listInterestApi } from '../Services/allApi';
 
 
 function Dashboard() {
@@ -23,6 +23,8 @@ function Dashboard() {
     const [showChangePassword, setShowChangePassword] = useState(false);
     const [sentInterestCount, setSentInterestCout] = useState(0);
     const [receivedInterestCount, setReceivedInterestCount] = useState(0);
+    const [completionPercent, setCompletionPercent] = useState(0);
+    const [currentPlanData, setCurrentPlanData] = useState({})
 
 
     const listSentInterest = async () => {
@@ -63,10 +65,264 @@ function Dashboard() {
         }
     }
 
+
+
+    const getCurrentPlan = async () => {
+        try {
+            console.log("inside get current plan");
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                Authorization: `Bearer ${token}`,
+            };
+            const result = await getCurrentPlanApi(reqHeader)
+            console.log("consoling result ::", result.data.data);
+            setCurrentPlanData(result.data);
+            if (result.data.result === false) {
+
+            }
+            else {
+
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    //function for fetching partner prefernce data
+    const fetchPartnerPrefernce = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                Authorization: `Bearer ${token}`,
+            };
+            const result = await fetchPartnerPreferenceApi(reqHeader);
+
+
+            // Update state with fetched data - CORRECTED
+            if (result.data && result.data.data && result.data.data.length > 0) {
+                const partnerData = result.data.data[0];
+                // ✅ Update state with API response
+                setPartnerPreferenceData({
+                    age: partnerData.pp_age || "",
+                    height: partnerData.pp_height || "",
+                    marital_status: partnerData.pp_marital_status || "",
+                    religion: partnerData.pp_religion || "",
+                    community: partnerData.pp_community || "",
+                    mother_tongue: partnerData.pp_mother_tongue || "",
+                    country: partnerData.pp_country || "",
+                    state: partnerData.pp_state || "",
+                    city: partnerData.pp_city || "",
+                    district: partnerData.pp_district || "",
+                    qualification: partnerData.pp_qualification || "",
+                    working_with: partnerData.pp_working_with || "",
+                    profession_area: partnerData.pp_profession_area || "",
+                    working_as: partnerData.pp_working_as || "",
+                    annual_income: partnerData.pp_annual_income || "",
+                    profile_managed_by: partnerData.pp_profile_managed_by || "",
+                    diet: partnerData.pp_diet || "",
+                });
+
+
+            } else {
+                console.warn("No partner preference data found.");
+            }
+        } catch (error) {
+            console.error("Error fetching partner preference data:", error);
+        }
+    };
+
+
+
+    const fetchProfileData = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                "Authorization": `Bearer ${token}`
+            };
+            const result = await fetchProfileDataApi(reqHeader);
+
+
+            // Update state with fetched data - CORRECTED
+            if (result.data && result.data.data && result.data.data.length > 0) {
+                const userData = result.data.data[0];
+
+                setProfileData({
+                    file: userData.u_profile_pic,
+                    created_by: userData.u_profile_for || "",
+                    gender: userData.u_gender || "",
+                    firstname: userData.u_firstname || "",
+                    lastname: userData.u_lastname || "",
+                    dob: userData.u_dob || "",
+                    userId: userData.u_id || "",
+                    religion: userData.u_religion || "",
+                    community: userData.u_community || "",
+                    father: userData.u_father || "",
+                    mother: userData.u_mother || "",
+                    no_of_sisters: userData.u_no_sisters || "",
+                    no_of_brothers: userData.u_no_brothers || "",
+                    financial_status: userData.u_financial_status || "",
+                    diet: userData.u_diet || "",
+                    hobbies: userData.u_hobbies ? userData.u_hobbies.split(',') : [],
+                    about: userData.u_about || "",
+                    mother_tongue: userData.u_mother_tongue || "",
+                    height: userData.u_height || "",
+                    marital_status: userData.u_marital_status || "",
+                    district: userData.u_district || "",
+                    profession_area: userData.u_profession_area || "",
+                    country: userData.u_country || "",
+                    state: userData.u_state || "",
+                    city: userData.u_city || "",
+                    zip: userData.u_zip || "",
+                    qualification: userData.u_qualification || "",
+                    college: userData.u_college || "",
+                    working_with: userData.u_working_with || "",
+                    working_as: userData.u_working_as || "",
+                    employer_name: userData.u_employer_name || "",
+                    annual_income: userData.u_annual_income || "",
+                    is_private: userData.u_private_income || false,
+                });
+
+
+                if (userData.u_profile_pic) {
+                    // Create full URL for the server image
+                    const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
+                    setPreview(fullImageUrl);  // Setting the complete URL
+                }
+            }
+            calculateCompletion()
+
+        } catch (error) {
+            console.log(error);
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
+
+    useEffect(() => {
+        fetchPartnerPrefernce()
+        getCurrentPlan()
+        fetchProfileData()
+    }, [])
+
+
+    const [profileData, setProfileData] = useState({
+        created_by: "",
+        gender: "",
+        firstname: "",
+        lastname: "",
+        dob: "",
+        religion: "",
+        community: "",
+        father: "",
+        mother: "",
+        no_of_sisters: "",
+        no_of_brothers: "",
+        financial_status: "",
+        diet: "",
+        hobbies: [],
+        about: "",
+        mother_tongue: "",
+        height: "",
+        marital_status: "",
+        district: "",
+        profession_area: "",
+        country: "",
+        state: "",
+        city: "",
+        zip: "",
+        qualification: "",
+        college: "",
+        working_with: "",
+        working_as: "",
+        employer_name: "",
+        annual_income: "",
+        is_private: "",
+        file: "",
+    })
+
+    const [partnerPreferenceData, setPartnerPreferenceData] = useState({
+        age: "",
+        height: "",
+        marital_status: "",
+        religion: "",
+        community: "",
+        mother_tongue: "",
+        country: "",
+        state: "",
+        city: "",
+        district: "",
+        qualification: "",
+        working_with: "",
+        profession_area: "",
+        working_as: "",
+        annual_income: "",
+        profile_managed_by: "",
+        diet: ""
+    })
+
+
+    //for calculating profile completion progress
+    const calculateCompletion = (profileData, partnerData) => {
+        const combinedData = { ...profileData, ...partnerData };
+
+        // exclude only `is_private`
+        const excludedKeys = ["is_private"];
+        const validKeys = Object.keys(combinedData).filter(
+            (key) => !excludedKeys.includes(key)
+        );
+
+        const filledCount = validKeys.filter((key) => {
+            const value = combinedData[key];
+            return (
+                value !== "" &&
+                value !== null &&
+                value !== undefined &&
+                !(Array.isArray(value) && value.length === 0)
+            );
+        }).length;
+        return Math.round((filledCount / validKeys.length) * 100);
+    };
+
+
+    useEffect(() => {
+        if (profileData && partnerPreferenceData) {
+            const percent = calculateCompletion(profileData, partnerPreferenceData);
+            setCompletionPercent(percent);
+        }
+    }, [profileData, partnerPreferenceData]);
+
+    const radius = 54;
+    const circumference = 2 * Math.PI * radius;
+    const offset = circumference - (completionPercent / 100) * circumference;
+
+
     useEffect(() => {
         listSentInterest()
         listReceivedInterest()
     }, [])
+
+
+    const calculateAge = (dob) => {
+        if (!dob) return "";
+
+        const birthDate = new Date(dob);   // parses "1999-12-13T18:30:00.000Z"
+        const today = new Date();
+
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+
+        // adjust if birthday hasn’t occurred yet this year
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        return age;
+    };
+
+
 
     return (
         <div className="flex">
@@ -100,7 +356,7 @@ function Dashboard() {
                     <div className="flex w-full md:pl-10 sm:px-0 px-2 py-10 sm:py-20">
                         <div className="max-w-[1000px] w-full px-4 sm:px-10">
 
-                            {/* search bar and filter */}
+                            {/* search bar and filter only for mobile screen */}
                             <div className="flex px-10 lg:hidden items-center justify-center gap-3 pt-18 pb-8 w-full">
                                 {/* Search Bar */}
                                 <div className="relative w-full ">
@@ -133,12 +389,19 @@ function Dashboard() {
                                     <div className="px-4 sm:px-7 py-4 sm:py-7 w-full">
                                         <div className="flex gap-7">
                                             {/* Profile Image */}
-                                            <div className="w-[140px] h-[140px] overflow-hidden rounded-lg border border-gray-200 flex-shrink-0">
-                                                <img
-                                                    className="w-full h-full object-cover"
-                                                    src={profilePic}
-                                                    alt="Profile"
-                                                />
+                                            <div className="w-[140px] h-[140px] flex items-center justify-center overflow-hidden rounded-lg border border-gray-200 bg-[#D9D9D9] flex-shrink-0">
+                                                {
+                                                    profileData.file ? (
+                                                        <img
+                                                            className="w-full h-full object-cover"
+                                                            src={`https://lunarsenterprises.com:6050${profileData.file}`}
+                                                            alt="Profile"
+                                                        />
+                                                    ) : (
+                                                        <FaRegUser className="text-[#797979] text-[24px] sm:text-[30px]" />
+                                                    )
+                                                }
+
                                             </div>
 
                                             {/* Info + Progress */}
@@ -146,10 +409,10 @@ function Dashboard() {
                                                 {/* Name & Badge */}
                                                 <div className="text-[#540D33]">
                                                     <div className="flex items-center gap-2">
-                                                        <h1 className="text-[17px] font-semibold">Calvin Sunny</h1>
+                                                        <h1 className="text-[17px] font-semibold">{profileData.firstname} {profileData.lastname}</h1>
                                                         <HiBadgeCheck className="text-[19px] text-[#3A78FF]" />
                                                     </div>
-                                                    <h1 className="text-[14px] font-medium">28 | Christian</h1>
+                                                    <h1 className="text-[14px] font-medium">{calculateAge(profileData.dob)} | {profileData.religion}</h1>
                                                 </div>
 
                                                 {/* Progress Section */}
@@ -159,18 +422,18 @@ function Dashboard() {
                                                         {/* Fill */}
                                                         <div
                                                             className="bg-[#E33183] h-2 rounded-full transition-all duration-500"
-                                                            style={{ width: `${progress}%` }}
+                                                            style={{ width: `${completionPercent}%` }}
                                                         ></div>
 
                                                         {/* Floating Label */}
                                                         <div
                                                             className="absolute -top-15 flex items-center justify-center px-6 py-3 text-white text-[11px] font-medium bg-[#E33183] rounded-full whitespace-nowrap"
                                                             style={{
-                                                                left: `${progress}%`,
+                                                                left: `${completionPercent}%`,
                                                                 transform: "translateX(-50%)",
                                                             }}
                                                         >
-                                                            {progress}% Completed
+                                                            {completionPercent}%
 
                                                             {/* Pointer */}
                                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E33183] rounded-full"></div>
@@ -181,7 +444,7 @@ function Dashboard() {
 
                                                     {/* Bottom Text */}
                                                     <p className="mt-3 text-[#540D33] text-[14px] font-medium">
-                                                        “ Your profile is {progress}% completed ”
+                                                        “ Your profile is {completionPercent}% completed ”
                                                     </p>
                                                 </div>
                                             </div>
