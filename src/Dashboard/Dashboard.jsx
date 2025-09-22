@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from '../Components/Sidebar'
 import FindYourIshtam from './FindYourIshtam';
 import MatchSuggestions from './MatchSuggestions';
@@ -14,12 +14,59 @@ import { FaSearch } from "react-icons/fa";
 import { PiSlidersBold } from "react-icons/pi";
 import ChangePassword from '../Components/ChangePassword';
 import { Link } from 'react-router-dom';
+import { listInterestApi } from '../Services/allApi';
 
 
 function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [progress, setProgress] = useState(65);
     const [showChangePassword, setShowChangePassword] = useState(false);
+    const [sentInterestCount, setSentInterestCout] = useState(0);
+    const [receivedInterestCount, setReceivedInterestCount] = useState(0);
+
+
+    const listSentInterest = async () => {
+        try {
+            const token = sessionStorage.getItem("token")
+            const reqHeader = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+            const reqBody = {
+                "status": "sent"
+            }
+            const result = await listInterestApi(reqHeader, reqBody);
+            console.log(result);
+            setSentInterestCout(result.data.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    const listReceivedInterest = async () => {
+        try {
+            const token = sessionStorage.getItem("token")
+            const reqHeader = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+            const reqBody = {
+                "status": "received"
+            }
+            const result = await listInterestApi(reqHeader, reqBody);
+            console.log(result);
+            setReceivedInterestCount(result.data.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        listSentInterest()
+        listReceivedInterest()
+    }, [])
 
     return (
         <div className="flex">
@@ -159,22 +206,22 @@ function Dashboard() {
                                     {/* Received Interest */}
                                     <div className="rounded-xl overflow-hidden border border-[#E4E4E7]">
                                         <div className="flex justify-between items-center px-4 sm:px-6 py-4 sm:py-5 bg-[#E331830F]">
-                                            <h2 className="text-[16px] sm:text-[18px] font-semibold text-[#540D33]">Received Interest</h2>
+                                            <h2 className="text-[16px] sm:text-[18px] font-semibold text-[#540D33]">Received Interests</h2>
                                             <BsArrowDownLeftCircleFill className="text-[#E33183] text-[28px] sm:text-[32px]" />
                                         </div>
                                         <div className="bg-white px-4 sm:px-7 py-4 sm:py-4">
-                                            <div className="text-center text-[28px] sm:text-[38px] font-semibold text-[#540D33]">10 +</div>
+                                            <div className="text-center text-[28px] sm:text-[38px] font-semibold text-[#540D33]">{receivedInterestCount?.length || 0}</div>
                                         </div>
                                     </div>
 
                                     {/* Sent Requests */}
                                     <div className="rounded-xl overflow-hidden border border-[#E4E4E7]">
                                         <div className="flex justify-between items-center px-4 sm:px-6 py-4 sm:py-5 bg-[#E331830F]">
-                                            <h2 className="text-[16px] sm:text-[18px] font-semibold text-[#540D33]">Sent Requests</h2>
+                                            <h2 className="text-[16px] sm:text-[18px] font-semibold text-[#540D33]">Sent interests</h2>
                                             <BsArrowUpRightCircleFill className="text-[#E33183] text-[28px] sm:text-[32px]" />
                                         </div>
                                         <div className="bg-white px-4 sm:px-7 py-4 sm:py-4">
-                                            <div className="text-center text-[28px] sm:text-[38px] font-semibold text-[#540D33]">100 +</div>
+                                            <div className="text-center text-[28px] sm:text-[38px] font-semibold text-[#540D33]">{sentInterestCount?.length || 0}</div>
                                         </div>
                                     </div>
                                 </div>

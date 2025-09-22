@@ -47,6 +47,9 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
       console.log("Login result ::", result);
       if (result?.data?.result === true) {
         sessionStorage.setItem("token", result.data.data.token)
+      
+        sessionStorage.setItem("user_id", result.data.data.user_id)
+       
         onClose()
         await Swal.fire({
           title: 'Login Successful!',
@@ -111,7 +114,7 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
             </div>
 
             <div className='flex flex-col items-center justify-center gap-3'>
-        
+
               <div className="w-full relative">
                 <label className="block text-sm font-medium mb-1 text-[#490B22]">
                   Password

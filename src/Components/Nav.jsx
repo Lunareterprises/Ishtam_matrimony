@@ -7,6 +7,8 @@ import LoginWithOtp from './LoginWithOtp';
 import Registration from './Registration';
 import VerifyOtp from './VerifyOtp';
 import ForgotPassword from '../Components/ForgotPassword';
+import { Link } from 'react-scroll';
+import { HashLink } from 'react-router-hash-link';
 
 
 function Nav() {
@@ -39,11 +41,11 @@ function Nav() {
 
                     {/* Desktop Nav */}
                     <ul className="hidden lg:flex gap-10 font-medium text-gray-700">
-                        <li className="cursor-pointer">Home</li>
-                        <li className="cursor-pointer">About us</li>
-                        <li className="cursor-pointer">FAQ</li>
-                        <li className="cursor-pointer">Guide</li>
-                        <li className="cursor-pointer">Contact</li>
+                        <Link to='home' smooth={true} duration={500} className="cursor-pointer hover:text-[#E33183] transition-all">Home</Link>
+                        <HashLink smooth to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
+                        <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</Link>
+                        <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">Guide</Link>
+                        <HashLink smooth to="/#contactUs" className="cursor-pointer hover:text-[#E33183] transition-all">Contact</HashLink>
                     </ul>
 
                     {/* Buttons - Hidden on small screens */}

@@ -15,9 +15,9 @@ function DashboardNav() {
 
                 <div onClick={() => setMenuOpen(!menuOpen)} >
                     {menuOpen ? (
-                        <RxCross2 className="text-3xl text-pink-600" />
+                        <RxCross2 className="text-3xl text-[#E33183]" />
                     ) : (
-                        <HiMiniBars3BottomRight className="text-3xl text-pink-600" />
+                        <HiMiniBars3BottomRight className="text-3xl text-[#E33183]" />
                     )}
                 </div>
 

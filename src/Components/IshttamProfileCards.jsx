@@ -5,6 +5,7 @@ import { FaCamera } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom';
 import ConnectNowModal from './ConnectNowModal';
+import { sendInterestApi } from '../Services/allApi';
 
 function IshttamProfileCards({ item }) {
     const [showConnectNowModal, setShowConnectNowModal] = useState(false);
@@ -36,6 +37,9 @@ function IshttamProfileCards({ item }) {
         return age;
     };
 
+
+   
+
     return (
         <>
             <div
@@ -58,7 +62,7 @@ function IshttamProfileCards({ item }) {
 
                 {/* Profile image */}
                 <img
-                    onClick={() => navigateToParnerProfile(item.m_matched_user_id)}
+                    onClick={() => navigateToParnerProfile(item.u_id)}
                     src={profilecardimg}
                     alt="Profile"
                     className="w-full h-72 object-cover"
@@ -96,7 +100,7 @@ function IshttamProfileCards({ item }) {
             </div>
             {/* Show modal */}
             {showConnectNowModal && (
-                <ConnectNowModal onClose={() => setShowConnectNowModal(false)} />
+                <ConnectNowModal receiver_id={item.u_id} onClose={() => setShowConnectNowModal(false)} />
             )}
         </>
     )

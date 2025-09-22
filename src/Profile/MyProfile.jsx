@@ -14,6 +14,35 @@ function MyProfile() {
     const [completionPercent, setCompletionPercent] = useState(0);
     const [currentPlanData, setCurrentPlanData] = useState({})
 
+
+
+    const getCurrentPlan = async () => {
+        try {
+            console.log("inside get current plan");
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                Authorization: `Bearer ${token}`,
+            };
+            const result = await getCurrentPlanApi(reqHeader)
+            console.log("consoling result ::", result.data.data);
+            setCurrentPlanData(result.data);
+            if (result.data.result === false) {
+                console.log("ni mandan aada");
+            }
+            else {
+                console.log("pottta");
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getCurrentPlan()
+    }, [])
+
+
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
         try {
@@ -57,32 +86,6 @@ function MyProfile() {
         }
     };
 
-
-    const getCurrentPlan = async () => {
-        try {
-            console.log("inside get current plan");
-            const token = sessionStorage.getItem("token");
-            const reqHeader = {
-                Authorization: `Bearer ${token}`,
-            };
-            const result = await getCurrentPlanApi(reqHeader)
-            console.log("consoling result ::", result.data.data);
-            setCurrentPlanData(result.data);
-            if (result.data.result === false) {
-                console.log("ni mandan aada");
-            }
-            else {
-                console.log("pottta");
-            }
-        }
-        catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getCurrentPlan()
-    }, [])
 
 
     const fetchProfileData = async () => {

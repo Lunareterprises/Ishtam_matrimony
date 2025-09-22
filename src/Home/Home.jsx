@@ -37,7 +37,7 @@ function Home() {
   return (
     <>
       <Nav />
-      <div className='pt-[80px]' >
+      <div name="home" className='pt-[80px]' >
         <section className="relative w-full h-[80vh] sm:h-[90vh] overflow-hidden">
           <img
             src={banners[current]}
@@ -66,10 +66,14 @@ function Home() {
       </div>
 
       <WhyIshttamMarry />
-      <AboutUs />
+      <section id="aboutUs">
+        <AboutUs  />
+      </section>
       <RealStories />
       <OurProcess />
-      <HomeContactSection />
+      <section id="contactUs">
+        <HomeContactSection />
+      </section>
       <AppFeatures />
       <TrustUs />
       <Footer />

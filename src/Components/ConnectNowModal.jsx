@@ -1,11 +1,51 @@
 import React, { useState } from 'react'
 import { IoCloseOutline, IoEye, IoEyeOff } from 'react-icons/io5';
 import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
+import { sendInterestApi } from '../Services/allApi';
+import Swal from 'sweetalert2';
 
-function ConnectNowModal({ onClose }) {
+function ConnectNowModal({ onClose, receiver_id }) {
     const [message, setMessage] = useState(
         "Hi, I found your profile interesting and would like to connect with you."
     );
+    console.log("Receiver ID:", receiver_id);
+    const handleSendInterest = async (e) => {
+        e.preventDefault()
+        try {
+            const token = sessionStorage.getItem("token")
+            const reqHeader = {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            };
+            const reqBody = {
+                message: message,
+                receiver_id: receiver_id
+            }
+            
+            const result = await sendInterestApi(reqHeader, reqBody)
+            if (result?.data?.result === true) {
+                await Swal.fire({
+                    title: 'Interest send Successfully!',
+                    text: 'Here’s to finding your special someone!',
+                    icon: 'success',
+                    iconColor: '#E33183',
+                    confirmButtonText: 'OK',
+                });
+                 onClose()
+            } else {
+                Swal.fire({
+                    title: 'failed',
+                    text: result?.data?.message || 'Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+               
+            }
+        }
+        catch (error) {
+            alert(error)
+        }
+    }
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-40 px-4">
@@ -23,7 +63,7 @@ function ConnectNowModal({ onClose }) {
                     </h1>
                 </div>
 
-                <form className="flex flex-col sm:gap-6 gap-4 sm:w-75 w-65">
+                <form onSubmit={handleSendInterest} className="flex flex-col sm:gap-6 gap-4 sm:w-75 w-65">
                     <div className="flex flex-col items-center justify-center gap-3 w-full">
                         <label className="block text-sm font-medium mb-1 text-[#490B22]">
                             Message
@@ -35,6 +75,7 @@ function ConnectNowModal({ onClose }) {
                         />
                     </div>
                     <button
+
                         type="submit"
                         className="w-full bg-[#E33183] text-white py-2 rounded-lg font-semibold hover:bg-pink-700"
                     >

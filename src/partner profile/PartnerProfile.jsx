@@ -35,7 +35,7 @@ function PartnerProfile() {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             };
-            const reqBody = { partner_id: profileId };
+            const reqBody = { partner_id: parseInt(profileId) };
             const result = await getPartnerProfileApi(reqBody, reqHeader);
             console.log("consoling result of fetching partner profile::", result);
 

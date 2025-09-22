@@ -35,10 +35,10 @@ export const userLoginApi = async (reqBody) => {
 
 //update profile 
 export const updateProfileApi = async (reqBody, reqHeader) => {
-    console.log("inside profile update api");
+   /*  console.log("inside profile update api");
     for (let [key, value] of reqBody.entries()) {
         console.log(`${key}:`, value);
-    }
+    } */
     return await commonApi("POST", `${BASE_URL}/profile/update`, reqBody, reqHeader);
 };
 
@@ -60,7 +60,7 @@ export const fetchProfileDataApi = async (reqHeader) => {
 
 //for sending contact request
 export const sendEnquiryRequestApi = async (reqBody) => {
-    console.log("Inside send send enquiry request::: api", reqBody);
+    
     return await commonApi("POST", `${BASE_URL}/contactus`, reqBody, "")
 }
 
@@ -82,8 +82,7 @@ export const listAllStoriesApi = async (reqBody, reqHeader) => {
 
 //for fetching partner profile
 export const getPartnerProfileApi = async (reqBody, reqHeader) => {
-    console.log("consoling reqHeader", reqHeader);
-    console.log("consoling reqBody",reqBody);
+    
     return await commonApi("POST", `${BASE_URL}/partner/profile`, reqBody, reqHeader);
 }
 
@@ -102,12 +101,21 @@ export const getMyMatchesApi = async (reqHeader) => {
 
 //for fetching todays match
 export const getTodaysMatchApi = async (reqHeader, reqBody) => {
-    console.log("Inside Todays match api");
+   
     return await commonApi("POST", `${BASE_URL}/partner/list`, reqBody, reqHeader)
 }
 
 //for listing visited history
 export const listVisitedHistoryApi = async (reqHeader, reqBody) => {
-    console.log("Inside list visited history");
+
     return await commonApi("POST", `${BASE_URL}/profile/visited`, reqBody, reqHeader)
+}
+
+//for sending send interest
+export const sendInterestApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/interest/send`, reqBody, reqHeader)
+}
+
+export const listInterestApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/interest/list`, reqBody, reqHeader)
 }

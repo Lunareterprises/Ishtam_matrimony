@@ -100,27 +100,35 @@ function ViewSuccessStory() {
           </div>
         </div>
 
-        <div className="overflow-hidden w-full sm:py-10 py-5">
-          <div className="flex gap-6 animate-marquee">
-            {realStories.concat(realStories).map((item, index) => (
-              <div
-                key={index}
-                className="w-full sm:max-w-[400px] md:max-w-[380px] lg:max-w-[380px] flex-shrink-0"
-              >
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-auto"
-                />
-                <div className="px-1 pt-4">
-                  <h2 className="text-xl font-semibold">{item.name}</h2>
-                  <p className="italic text-[16px]">"{item.story}"</p>
-                  <h3 className="pt-1 underline">Read more</h3>
-                </div>
-              </div>
-            ))}
-          </div>
+<div className="overflow-hidden w-full sm:py-10 py-5">
+  <div className="flex gap-6 animate-marquee">
+    {realStories.concat(realStories).map((item, index) => (
+      <div
+        key={index}
+        className="
+          flex-shrink-0 
+          w-[85%] max-w-[280px]   /* 👈 cap size on small screens */
+          sm:max-w-[400px] 
+          md:max-w-[380px] 
+          lg:max-w-[380px]
+        "
+      >
+        <img
+          src={item.image}
+          alt={item.name}
+          className="w-full h-auto object-cover rounded"
+        />
+        <div className="px-1 pt-4">
+          <h2 className="text-xl font-semibold">{item.name}</h2>
+          <p className="italic text-[16px]">"{item.story}"</p>
+          <h3 className="pt-1 underline">Read more</h3>
         </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+        
       </div>
       <Footer/>
     </div>
