@@ -32,11 +32,11 @@ function WhyIshttamMarry() {
 
   return (
     <div className='sm:py-15 py-10'  >
-      <div  className='flex flex-col items-center text-center gap-4' >
-        <h1 className="text-3xl font-semibold text-[#490b22]">
+      <div  className='flex px-6 flex-col items-center text-center gap-4' >
+        <h1 className="sm:text-3xl text-2xl font-semibold text-[#490b22]">
           Why Choose ishttam Marry
         </h1>
-        <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >We understand that marriage is more than just a match — it's a divine connection between families, faith, and futures. Here's why thousands trust ishttam Marry on their journey to find true love:</p>
+        <p className='max-w-[1200px] text-[14px] sm:text-[20px]  text-[#490b22]' >We understand that marriage is more than just a match — it's a divine connection between families, faith, and futures. Here's why thousands trust ishttam Marry on their journey to find true love:</p>
       </div>
 
       <div className="relative w-full px-6 pt-7 sm:pt-20">

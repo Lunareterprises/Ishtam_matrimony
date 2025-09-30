@@ -32,11 +32,14 @@ function Nav() {
     const openLoginForm = () => {
         setShowRegistration(false)
         setShowLogin(true)
+        setShowSidebar(false)
+
     }
 
     const openRegistrationForm = () => {
         setShowLogin(false)
         setShowRegistration(true)
+        setShowSidebar(false)
     }
 
 
@@ -151,10 +154,10 @@ function Nav() {
                             to='/#contactUs' className="cursor-pointer hover:text-[#E33183] transition-all">Contact</HashLink>
                        
                         <div className="sm:hidden flex flex-col gap-4 items-center mt-6">
-                            <button onClick={() => setShowRegistration(true)} className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
+                            <button onClick={openRegistrationForm} className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
                                 Registration
                             </button>
-                            <button onClick={() => setShowLogin(true)} className="w-[150px] h-[39px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
+                            <button onClick={openLoginForm} className="w-[150px] h-[39px] border border-pink-600 text-pink-600 rounded-full font-medium hover:bg-pink-50">
                                 Sign In
                             </button>
                         </div>

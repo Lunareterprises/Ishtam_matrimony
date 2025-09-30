@@ -74,7 +74,7 @@ function FindYourIshtam() {
             <div className='flex flex-col sm:items-start items-center gap-7 w-full'  >
                 {
                     myMatchData?.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 pt-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 pt-10">
                             {myMatchData.map((item, index) => (
                                 <IshttamProfileCards item={item} />
                             ))}

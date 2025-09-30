@@ -416,7 +416,7 @@ function Dashboard() {
                                                 </div>
 
                                                 {/* Progress Section */}
-                                                <div className="w-full pt-17">
+                                                <div className="w-full pt-10">
                                                     {/* Progress Container */}
                                                     <div className="relative w-full bg-gray-200 rounded-full h-2">
                                                         {/* Fill */}
@@ -427,7 +427,7 @@ function Dashboard() {
 
                                                         {/* Floating Label */}
                                                         <div
-                                                            className="absolute -top-15 flex items-center justify-center px-6 py-3 text-white text-[11px] font-medium bg-[#E33183] rounded-full whitespace-nowrap"
+                                                            className="absolute -top-15 flex items-center justify-center px-4 py-3 text-white text-[11px] font-medium bg-[#E33183] rounded-full whitespace-nowrap"
                                                             style={{
                                                                 left: `${completionPercent}%`,
                                                                 transform: "translateX(-50%)",
@@ -435,7 +435,7 @@ function Dashboard() {
                                                         >
                                                             {completionPercent}%
 
-                                                            {/* Pointer */}
+                                                           
                                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E33183] rounded-full"></div>
                                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white rounded-full scale-75"></div>
                                                         </div>

@@ -283,7 +283,7 @@ function MyProfile() {
                     <DashboardHeader />
 
                     <div className='flex flex-col w-full md:pl-20 sm:px-0 px-2 py-10 sm:py-20'>
-                        <div className='max-w-[800px] w-full px-4 sm:px-10' >
+                        <div className='max-w-[800px] w-full px-4 sm:px-10 sm:mt-0 mt-15' >
 
                             <div className="flex justify-start my-2 w-full">
                                 <div className="relative w-full max-w-[120px] md:max-w-[150px] aspect-square">
