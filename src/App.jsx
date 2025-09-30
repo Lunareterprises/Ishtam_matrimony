@@ -21,6 +21,7 @@ import ViewSuccessStory from './all stories/ViewSuccessStory'
 import PartnerProfile from './partner profile/PartnerProfile'
 import "react-datepicker/dist/react-datepicker.css";
 import ProfileVisits from './Profile visits/ProfileVisits'
+import Shortlisted from './Shortlisted/Shortlisted'
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
         <Route path='/view-success-story' element={<ViewSuccessStory />} />
         <Route path='/partner-profile/:profileId' element={<PartnerProfile/>} />
         <Route path='/profile-vists' element={<ProfileVisits/>}  />
+        <Route path='shortlisted' element={<Shortlisted/>}  />
       </Routes>
 
     </>

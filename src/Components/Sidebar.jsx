@@ -91,7 +91,7 @@ function Sidebar() {
             Todays Match
           </Link>
           <Link to="/myMatch" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
-            My Match (12)
+            My Match
           </Link>
           <Link to="/moreMatch" className='block py-2 pl-12 hover:bg-[#e3318455] duration-300'>
             More Matches
@@ -115,10 +115,14 @@ function Sidebar() {
           <h1 className={`${HeaderCss}`}>Subscription</h1>
         </div>
       </Link>
-      <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
-        <FaRegHeart className='text-[18px]' />
-        <h1 className={`${HeaderCss}`}>Wishlists</h1>
-      </div>
+      
+      <Link to='/shortlisted' >
+        <div className='flex px-6 py-2 items-center gap-3 cursor-pointer hover:bg-pink-50 duration-200'>
+          <FaRegHeart className='text-[18px]' />
+          <h1 className={`${HeaderCss}`}>Shortlisted</h1>
+        </div>
+      </Link>
+
 
       {/* Profile visits */}
       <Link to="/profile-vists"  >

@@ -4,35 +4,73 @@ import { BsBalloonHeart } from 'react-icons/bs'
 import addStoryImg from '../assets/addStoryImg.png'
 import { FiUploadCloud } from "react-icons/fi";
 import Footer from '../Components/Footer';
+import { addSuccesstoryApi } from '../Services/allApi';
+import DoubleHearts from '../assets/DoubleHearts.png';
 
 function AddNewSuccessStory() {
+
     const [formData, setFormData] = useState({
-        groomName: "",
-        brideName: "",
-        weddingDate: "",
-        email: "",
-        mobile: "",
+        groom_id: "",
+        bride_id: "",
+        wedding_date: "",
         story: "",
-        couplePhoto: null,
-        consent: false,
+        file: null,
+        preview: null,
     });
 
+    // Handle change
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
+
         if (type === "checkbox") {
             setFormData({ ...formData, [name]: checked });
         } else if (type === "file") {
-            setFormData({ ...formData, [name]: files[0] });
+            const file = files[0];
+            setFormData({
+                ...formData,
+                file: file,
+                preview: URL.createObjectURL(file),
+            });
         } else {
             setFormData({ ...formData, [name]: value });
         }
     };
 
-    const handleSubmit = (e) => {
+    // Submit
+    const submitSuccessStory = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        alert("Form submitted!");
+        console.log("Before building reqBody ::");
+        const reqBody = new FormData();
+        reqBody.append("groom_id", formData.groom_id);
+        reqBody.append("bride_id", formData.bride_id);
+        reqBody.append("wedding_date", formData.wedding_date);
+        reqBody.append("story", formData.story);
+        if (formData.file) {
+            reqBody.append("file", formData.file);
+        }
+
+        // Log FormData contents
+        for (let [key, value] of reqBody.entries()) {
+            console.log("FormData entry:", key, value);
+        }
+
+        console.log("Before api call ::");
+        try {
+            const result = await addSuccesstoryApi(reqBody);
+            console.log("After function call");
+            console.log("Result :::", result);
+
+            if (result?.data?.result === true) {
+                alert("Profile updated successfully");
+            } else {
+                alert(result?.data?.message || "Update failed");
+            }
+        } catch (error) {
+            console.error("API Error :::", error);
+            alert(error.message);
+        }
     };
+
 
     return (
         <div>
@@ -44,6 +82,7 @@ function AddNewSuccessStory() {
                             {/* Left Section - Text */}
                             <div className="max-w-[900px]  text-[#490B22]">
                                 <div className="flex items-center gap-2 mb-4">
+
                                     <h1 className="text-2xl font-semibold">Add your Success Story</h1>
                                     <span className="text-3xl">
                                         <BsBalloonHeart />
@@ -67,17 +106,21 @@ function AddNewSuccessStory() {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center min-h-screen bg-gray-100 px-4 py-10">
+                <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 px-4 py-10">
                     <form
-                        onSubmit={handleSubmit}
+                        onSubmit={submitSuccessStory}
                         className="w-full max-w-6xl bg-white rounded-2xl shadow-md p-6 md:p-10 space-y-6"
                     >
-                        <h2 className="text-2xl font-bold text-center text-pink-600">
-                            Ishttam Marry Success Story
-                        </h2>
+                        <div className='flex flex-col items-center justify-center gap-2' >
+                            <img src={DoubleHearts} width={33} alt="" />
+                            <h2 className="text-2xl font-bold text-center text-pink-600">
+                                Ishttam Marry Success Story
+                            </h2>
+                        </div>
+
 
                         {/* SINGLE ROW - Groom, Bride, Date, Mobile */}
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-5">
                             {/* Groom ID */}
                             <div>
                                 <label className="block text-gray-700 font-medium mb-1">
@@ -85,9 +128,9 @@ function AddNewSuccessStory() {
                                 </label>
                                 <input
                                     type="text"
-                                    name="groomId"
+                                    name="groom_id"
                                     placeholder="Enter Groom’s Ishttam ID"
-                                    value={formData.groomId}
+                                    value={formData.groom_id}
                                     onChange={handleChange}
                                     className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
                                     required
@@ -101,9 +144,9 @@ function AddNewSuccessStory() {
                                 </label>
                                 <input
                                     type="text"
-                                    name="brideId"
+                                    name="bride_id"
                                     placeholder="Enter Bride’s Ishttam ID"
-                                    value={formData.brideId}
+                                    value={formData.bride_id}
                                     onChange={handleChange}
                                     className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
                                     required
@@ -117,8 +160,8 @@ function AddNewSuccessStory() {
                                 </label>
                                 <input
                                     type="date"
-                                    name="weddingDate"
-                                    value={formData.weddingDate}
+                                    name="wedding_date"
+                                    value={formData.wedding_date}
                                     onChange={handleChange}
                                     className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
                                     required
@@ -126,33 +169,48 @@ function AddNewSuccessStory() {
                             </div>
                         </div>
 
+                        <div>
+                            <label className="block text-gray-700 font-medium mb-1">
+                                Your Story
+                            </label>
+                            <textarea
+                                name="story"
+                                placeholder="Share your success story..."
+                                value={formData.story}
+                                onChange={handleChange}
+                                rows={5}
+                                className="w-full border text-gray-700 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-pink-400 resize-none"
+                                required
+                            />
+                        </div>
+
 
                         {/* Upload Box */}
-                        <div>
+                        <div className='flex flex-col items-center justify-center' >
                             <label className="block text-gray-700 font-medium mb-2">
                                 Couple Photo
                             </label>
 
                             {/* Upload Box */}
-                            <label className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-pink-400 rounded-xl cursor-pointer bg-pink-50 hover:bg-pink-100 transition relative overflow-hidden">
-                                {formData.couplePhotoPreview ? (
-                                    // ✅ Show image INSIDE box but not stretched
+                            {/* <label className="flex flex-col items-center justify-center sm:w-100 w-full h-40 border-2 border-dashed border-pink-400 rounded-xl cursor-pointer bg-pink-50 hover:bg-pink-100 transition relative overflow-hidden">
+                                {formData.file ? (
+                                   
                                     <img
-                                        src={formData.couplePhotoPreview}
+                                        src={formData.file}
                                         alt="Couple Preview"
                                         className="max-h-full max-w-full object-contain rounded-lg py-10"
                                     />
                                 ) : (
-                                    // Default view
+                                   
                                     <>
                                         <FiUploadCloud className="text-pink-500 text-3xl mb-2" />
-                                        <span className="text-sm text-gray-600">
+                                        <span className="text-sm text-gray-600 text-center p-3">
                                             Click or drag & drop to upload couple photo
                                         </span>
                                     </>
                                 )}
 
-                                {/* File input */}
+                               
                                 <input
                                     type="file"
                                     name="couplePhoto"
@@ -163,7 +221,42 @@ function AddNewSuccessStory() {
                                             setFormData({
                                                 ...formData,
                                                 couplePhoto: file,
-                                                couplePhotoPreview: URL.createObjectURL(file),
+                                                file: URL.createObjectURL(file),
+                                            });
+                                        }
+                                    }}
+                                    className="hidden"
+                                    required
+                                />
+                            </label> */}
+
+
+                            <label className="flex flex-col items-center justify-center sm:w-100 w-full h-40 border-2 border-dashed border-pink-400 rounded-xl cursor-pointer bg-pink-50 hover:bg-pink-100 transition relative overflow-hidden">
+                                {formData.preview ? (
+                                    <img
+                                        src={formData.preview}
+                                        alt="Couple Preview"
+                                        className="max-h-full max-w-full object-contain rounded-lg py-2"
+                                    />
+                                ) : (
+                                    <>
+                                        <FiUploadCloud className="text-pink-500 text-3xl mb-2" />
+                                        <span className="text-sm text-gray-600 text-center p-3">
+                                            Click or drag & drop to upload couple photo
+                                        </span>
+                                    </>
+                                )}
+
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(e) => {
+                                        const file = e.target.files[0];
+                                        if (file) {
+                                            setFormData({
+                                                ...formData,
+                                                file,                        // ✅ keep the real file
+                                                preview: URL.createObjectURL(file), // ✅ preview separately
                                             });
                                         }
                                     }}
@@ -171,12 +264,14 @@ function AddNewSuccessStory() {
                                     required
                                 />
                             </label>
+
+
                         </div>
 
 
 
                         {/* Checkbox */}
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2 py-5">
                             <input
                                 type="checkbox"
                                 name="consent"

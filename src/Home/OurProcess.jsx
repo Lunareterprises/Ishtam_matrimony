@@ -12,7 +12,7 @@ import processImg from '../assets/processImg.png'
 function OurProcess() {
     return (
         <>
-            <div className='bg-[#F5F5F5] pb-56 hidden lg:block' >
+            <div id='ourProcess' className='bg-[#F5F5F5] pb-56 scroll-mt-20 hidden lg:block' >
                 <div className='flex flex-col items-center text-center gap-4' >
                     <h1 className="text-3xl font-semibold text-[#490b22] sm:pt-[80px] pt-[60px]">
                         Our Process

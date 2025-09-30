@@ -29,7 +29,7 @@ function FindYourIshtam() {
             };
             const result = await getMyMatchesApi(reqHeader, reqBody)
             console.log("match data ::", result);
-            setMyMatchData(result.data.data)
+            setMyMatchData(result.data.updated)
         }
         catch (error) {
             console.log("Error in fetching my match", error);
@@ -41,6 +41,7 @@ function FindYourIshtam() {
     }, [])
 
     const navigate = useNavigate()
+    
     const navigateToParnerProfile = (id) => {
         navigate(`/partner-profile/${id}`)
     }

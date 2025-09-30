@@ -82,9 +82,6 @@ export const listAllStoriesApi = async (reqBody, reqHeader) => {
 
 //for fetching partner profile
 export const getPartnerProfileApi = async (reqBody, reqHeader) => {
-    console.log("partner profile ::: reqbody", reqBody);
-    console.log("req header :: ", reqHeader);
-
     return await commonApi("POST", `${BASE_URL}/partner/profile`, reqBody, reqHeader);
 }
 
@@ -108,17 +105,42 @@ export const getTodaysMatchApi = async (reqHeader, reqBody) => {
 
 //for listing visited history
 export const listVisitedHistoryApi = async (reqHeader, reqBody) => {
-    console.log("Visited History body::", reqBody);
-    console.log("visited history header", reqHeader);
     return await commonApi("POST", `${BASE_URL}/profile/visited`, reqBody, reqHeader)
 }
 
 //for sending send interest
 export const sendInterestApi = async (reqHeader, reqBody) => {
-    console.log("req body for send request", reqBody);
     return await commonApi("POST", `${BASE_URL}/interest/send`, reqBody, reqHeader)
 }
 
+//for listing interest
 export const listInterestApi = async (reqHeader, reqBody) => {
     return await commonApi("POST", `${BASE_URL}/interest/list`, reqBody, reqHeader)
+}
+
+export const getContactDataApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/contact/send`, reqHeader, reqBody)
+}
+
+//get shortlisted profiles
+export const getWishlistedProfilesApi = async (reqHeader) => {
+    console.log("inside wishlisted user api :::");
+    return await commonApi("GET", `${BASE_URL}/wishlist/list`, "", reqHeader)
+}
+
+//add and remove profiles to wishlist 
+export const addRemoveWishlistApi = async (reqBody, reqHeader) => {
+    return await commonApi("POST", `${BASE_URL}/wishlist/add`, reqBody, reqHeader)
+}
+
+//for update status for inbox :: accept request, sent request etc...
+export const UpdateStatusApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/interest/updatestatus`, reqBody, reqHeader)
+}
+
+export const addSuccesstoryApi = async ( reqBody) => {
+    for (let [key, value] of reqBody.entries()) {
+  console.log(`${key}:`, value);
+}
+return await commonApi("POST", `${BASE_URL}/success_story/add`,reqBody,"")
 }

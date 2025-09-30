@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../Components/Sidebar'
-import FindYourIshtam from '../Dashboard/FindYourIshtam';
-import MatchSuggestions from '../Dashboard/MatchSuggestions';
-import WhoViewedMyProfile from '../Dashboard/WhoViewedMyProfile';
 import DashboardHeader from '../Components/DashboardHeader';
 import ChatMessages from '../Components/ChatMessages';
 import DashboardNav from '../Components/DashboardNav';
@@ -11,9 +8,6 @@ import { PiSlidersBold } from "react-icons/pi";
 import IshttamProfileCards from '../Components/IshttamProfileCards';
 import { useNavigate } from 'react-router-dom';
 import { getTodaysMatchApi } from '../Services/allApi';
-import profilecardimg from '../assets/ishtam-profilecard.jpg'
-import { FaCamera } from "react-icons/fa";
-import { BsThreeDotsVertical } from "react-icons/bs";
 import DoubleHearts from '../assets/DoubleHearts.png';
 
 
@@ -41,7 +35,7 @@ function TodaysMatch() {
             };
             const result = await getTodaysMatchApi(reqHeader, reqBody)
             console.log("todays match data ::", result);
-            setTodaysMatchData(result.data.data)
+            setTodaysMatchData(result?.data?.data)
         }
         catch (error) {
             console.log("Error in fetching todays match", error);
@@ -128,7 +122,7 @@ function TodaysMatch() {
 
                             {/* profile cards section */}
                             <div className='pt-10' >
-                                <div className='flex flex-col  sm:items-start items-center  '>
+                                <div className='flex flex-col sm:items-start items-center text-center '>
                                     <h1 className='text-[22px] text-[#530F29] font-semibold' >Todays Match</h1>
                                     <p className='text-[16px font-semibold text-[#787878]' >we found {todaysMatchData.length} new profiles matching your preferance</p>
                                 </div>
@@ -137,7 +131,7 @@ function TodaysMatch() {
 
                                     {todaysMatchData?.length > 0 ? (
                                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 pt-10">
-                                            {todaysMatchData.map((item, index) => (
+                                            {todaysMatchData?.map((item, index) => (
                                                 <IshttamProfileCards item={item} />
                                             ))}
                                         </div>

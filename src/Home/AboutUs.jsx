@@ -3,7 +3,7 @@ import aboutImg from "../assets/Group1171276261.png"
 
 function AboutUs() {
     return (
-        <div id='aboutUs' className='sm:py-15 py-5' >
+        <div id='aboutUs' className='sm:py-15 py-5 scroll-mt-20' >
             <div className='flex flex-col md:flex-row w-full sm:px-15 px-6 gap-15 items-center' >
                 <div className='w-full md:w-6/10 flex flex-col gap-3' >
                     <div className='flex w-full sm:justify-start justify-center' >

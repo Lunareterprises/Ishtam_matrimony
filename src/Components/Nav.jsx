@@ -21,12 +21,24 @@ function Nav() {
     const [showEnterOtp, setShowEnterOtp] = useState(false);
     const [showVerifyOtp, setShowVerifyOtp] = useState(false);
     const [emailToVerify, setEmailToVerify] = useState("");
-
+    const closeMenu = () => setShowSidebar(false);
     //for Registration
     const [showRegistration, setShowRegistration] = useState(false)
 
     //for forgot password
     const [showForgotPassword, setShowForgotPassword] = useState(false);
+
+
+    const openLoginForm = () => {
+        setShowRegistration(false)
+        setShowLogin(true)
+    }
+
+    const openRegistrationForm = () => {
+        setShowLogin(false)
+        setShowRegistration(true)
+    }
+
 
     return (
         <>
@@ -41,19 +53,46 @@ function Nav() {
 
                     {/* Desktop Nav */}
                     <ul className="hidden lg:flex gap-10 font-medium text-gray-700">
-                        <Link to='home' smooth={true} duration={500} className="cursor-pointer hover:text-[#E33183] transition-all">Home</Link>
-                        <HashLink smooth to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
+                        <HashLink smooth scroll={el => {
+                            const yOffset = -80;
+                            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }}
+                            to='/#home' duration={500} className="cursor-pointer hover:text-[#E33183] transition-all">Home</HashLink>
+
+                        <HashLink smooth scroll={el => {
+                            const yOffset = -80;
+                            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }} to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
+
+
                         <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</Link>
-                        <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">Guide</Link>
-                        <HashLink smooth to="/#contactUs" className="cursor-pointer hover:text-[#E33183] transition-all">Contact</HashLink>
+
+                        <HashLink
+                            smooth scroll={el => {
+                                const yOffset = -80;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: 'smooth' });
+                            }}
+                            to='/#ourProcess' className="cursor-pointer hover:text-[#E33183] transition-all">Guide</HashLink>
+
+
+                        <HashLink smooth
+                            scroll={el => {
+                                const yOffset = -80;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: 'smooth' });
+                            }}
+                            to='/#contactUs' className="cursor-pointer hover:text-[#E33183] transition-all">Contact</HashLink>
                     </ul>
 
                     {/* Buttons - Hidden on small screens */}
                     <div className="hidden sm:flex gap-5">
-                        <button onClick={() => setShowRegistration(true)} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
+                        <button onClick={openRegistrationForm} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
                             Registration
                         </button>
-                        <button onClick={() => setShowLogin(true)} className="w-[90px]  h-[36px] sm:h-[40px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
+                        <button onClick={openLoginForm} className="w-[90px]  h-[36px] sm:h-[40px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
                             Sign In
                         </button>
                     </div>
@@ -72,12 +111,45 @@ function Nav() {
             {/* Mobile Menu */}
             {showSidebar && (
                 <div className="bg-white w-full shadow-lg xl:hidden h-[470px]  fixed inset-0 z-[50] ">
-                    <ul className="flex flex-col items-center gap-4 font-medium text-gray-700 pt-25">
-                        <li>Home</li>
-                        <li>About us</li>
-                        <li>FAQ</li>
-                        <li>Guide</li>
-                        <li>Contact</li>
+                    <ul className="flex flex-col items-center gap-4 font-medium text-gray-700 pt-25 cursor-pointer"   >
+                        <HashLink smooth scroll={el => {
+                            const yOffset = -80;
+                            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }}
+                        onClick={closeMenu}
+                            to='/#home' duration={500} className="cursor-pointer hover:text-[#E33183] transition-all" >Home</HashLink>
+
+                        <HashLink smooth scroll={el => {
+                            const yOffset = -80;
+                            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }} 
+                        onClick={closeMenu}
+                        to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
+
+
+                        <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</Link>
+
+                        <HashLink
+                            smooth scroll={el => {
+                                const yOffset = -80;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: 'smooth' });
+                            }}
+                            onClick={closeMenu}
+                            to='/#ourProcess' className="cursor-pointer hover:text-[#E33183] transition-all">Guide</HashLink>
+
+
+                        <HashLink smooth
+                            scroll={el => {
+                                const yOffset = -80;
+                                const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                                window.scrollTo({ top: y, behavior: 'smooth' });
+                            }}
+                            onClick={closeMenu}
+                            to='/#contactUs' className="cursor-pointer hover:text-[#E33183] transition-all">Contact</HashLink>
+                       
                         <div className="sm:hidden flex flex-col gap-4 items-center mt-6">
                             <button onClick={() => setShowRegistration(true)} className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
                                 Registration

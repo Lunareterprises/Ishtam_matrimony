@@ -1,6 +1,8 @@
 data-aos="zoom-in" data-aos-duration="1600"
 
 
+{item.age || "24"} yrs, {item.height || "5’ 6”"}
+
 
 {/* Process Steps on Zigzag Path */}
                     <div className="absolute inset-0 flex flex-col">
