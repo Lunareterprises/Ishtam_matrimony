@@ -43,7 +43,7 @@ function WhoViewedMyProfile() {
 
                 {
                     whoViewedMyProfile?.length > 0 ? (
-                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pt-10">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-4 pt-10">
                             {whoViewedMyProfile.map((item, index) => (
                                 <IshttamProfileCards item={item} />
                             ))}

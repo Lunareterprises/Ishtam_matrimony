@@ -67,7 +67,7 @@ function MatchSuggestions() {
     return (
         <div className='pt-10' >
             <div className='flex flex-col items-center sm:items-start'>
-                <h1 className='text-[22px] text-[#530F29] font-semibold' >Match Suggestions (Todays Matches-{todaysMatchData?.length})</h1>
+                <h1 className='text-[22px] text-[#530F29] font-semibold' >Match Suggestions ({todaysMatchData?.length})</h1>
 
             </div>
 
