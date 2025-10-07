@@ -12,6 +12,7 @@ import { FaCamera } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import DoubleHearts from '../assets/DoubleHearts.png';
 import IshttamProfileCards from '../Components/IshttamProfileCards';
+import MyMatchHeader from './MyMatchHeader';
 
 function MyMatch() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -99,7 +100,7 @@ function MyMatch() {
                 {/* Topbar with menu button (mobile only) */}
                 <DashboardNav />
                 <div className='flex flex-col justify-center' >
-                    <DashboardHeader />
+                    <MyMatchHeader/>
                     {/* Page content */}
                     <div className="flex w-full md:pl-10 sm:px-0 px-2 py-10 sm:py-20">
                         <div className="max-w-[1000px] w-full px-4 sm:px-10">

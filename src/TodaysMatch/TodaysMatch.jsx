@@ -9,6 +9,7 @@ import IshttamProfileCards from '../Components/IshttamProfileCards';
 import { useNavigate } from 'react-router-dom';
 import { getTodaysMatchApi } from '../Services/allApi';
 import DoubleHearts from '../assets/DoubleHearts.png';
+import TodaysMatchHeader from './TodaysMatchHeader';
 
 
 function TodaysMatch() {
@@ -96,7 +97,7 @@ function TodaysMatch() {
                 {/* Topbar with menu button (mobile only) */}
                 <DashboardNav />
                 <div className='flex flex-col justify-center' >
-                    <DashboardHeader />
+                    <TodaysMatchHeader />
                     {/* Page content */}
                     <div className="flex w-full md:pl-10 sm:px-0 px-2 py-10 sm:py-20">
                         <div className="max-w-[1000px] w-full px-4 sm:px-10">

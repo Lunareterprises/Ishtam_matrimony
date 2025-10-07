@@ -74,14 +74,14 @@ function AcceptedRequestCard({ item }) {
                     {
                         item.u_profile_pic ?
                             <img
-                               
+
                                 src={`https://lunarsenterprises.com:6050${item.u_profile_pic}`}
                                 alt="Profile"
                                 className="w-45 h-50 object-cover"
                             />
                             :
                             <div
-                              
+
                                 alt="Profile"
                                 className="border-gray-200 bg-[#D9D9D9]  w-45 h-50 flex items-center justify-center object-cover"
                             >
@@ -133,7 +133,18 @@ function AcceptedRequestCard({ item }) {
             {/* Mobile Layout */}
             <div className="flex flex-col md:hidden bg-white shadow-lg rounded-lg overflow-hidden w-65 max-w-sm mb-4">
                 <div className="relative">
-                    <img src={profilecardimg} alt="Profile" className="w-full h-64 object-cover" />
+                    {
+                        item.u_profile_pic ?
+                            <img src={`https://lunarsenterprises.com:6050${item.u_profile_pic}`} alt="Profile" className="w-full h-64 object-cover" />
+                            :
+                            <div
+
+                                alt="Profile"
+                                className="border-gray-200 bg-[#D9D9D9] w-full h-64 flex items-center justify-center object-cover"
+                            >
+                                <FaRegUser className="text-[#797979] text-[24px] sm:text-[48px]" />
+                            </div>
+                    }
                     <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
                         PREMIUM
                     </div>

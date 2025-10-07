@@ -4,22 +4,31 @@ import { PiSlidersBold } from "react-icons/pi";
 import { HiBadgeCheck } from "react-icons/hi";
 import defaultProfilePic from "../assets/profilePic.jpg";
 
-function DashboardHeader() {
+function TodaysMatchHeader() {
+
   const email = sessionStorage.getItem("email");
   const name = sessionStorage.getItem("name");
   const profilePic = sessionStorage.getItem("profilePic");
   const user_id = sessionStorage.getItem("user_id");
-
   const hasProfilePic = profilePic && profilePic !== "null";
 
   return (
     <div className="hidden lg:flex bg-white w-full h-auto min-h-[80px] items-center justify-evenly gap-4 px-4 fixed z-20 top-0 left-20">
       {/* Left Section - Search + Filter */}
       <div className="flex flex-wrap sm:flex-nowrap items-center justify-center gap-3 sm:gap-5 w-full md:w-auto">
-        <div className="relative w-full sm:w-[100px] md:w-[380px]">
-       
+        <div className="relative w-full sm:w-[100px] md:w-[350px]">
+         
+          <input
+            type="text"
+            placeholder="Search Profile ID"
+            className="w-full rounded-full border border-[#E4E4E7] pl-12 pr-4 py-2 text-[#787878] placeholder-gray-400 focus:outline-none"
+          />
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          
         </div>
-       
+        <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+          <PiSlidersBold className="text-xl text-[#787878]" />
+        </div>
       </div>
 
       {/* Right Section - User Info */}
@@ -52,7 +61,7 @@ function DashboardHeader() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export default DashboardHeader;
+export default TodaysMatchHeader

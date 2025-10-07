@@ -11,13 +11,12 @@ import DoubleHearts from '../assets/DoubleHearts.png';
 
 function ProfileVisits() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [activeTab, setActiveTab] = useState("i_visited");
+    const [activeTab, setActiveTab] = useState("visited_me");
     const [visitHistoryList, setVisitHistoryList] = useState([])
 
     const tabs = [
-        { key: "i_visited", label: "Profiles I Viewed" },
         { key: "visited_me", label: "Profiles Who Viewed Me" },
-
+        { key: "i_visited", label: "Profiles I Viewed" }
     ];
 
 
