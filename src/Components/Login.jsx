@@ -49,10 +49,8 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
         sessionStorage.setItem("token", result.data.data.token)
         sessionStorage.setItem("profilePic", result.data.data.profile_pic)
         sessionStorage.setItem("user_id", result.data.data.user_id)
-        sessionStorage.setItem("email",result.data.data.email)
-        sessionStorage.setItem("name",result.data.data.name)
-  
-
+        sessionStorage.setItem("email", result.data.data.email)
+        sessionStorage.setItem("name", result.data.data.name)
         onClose()
         await Swal.fire({
           title: 'Login Successful!',
@@ -61,7 +59,13 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
           iconColor: '#E33183',
           confirmButtonText: 'OK',
         });
-        navigate("/myProfile");
+        if (result?.data?.data?.role === "admin") {
+          navigate("/admin-dashboard");
+        }
+        else {
+          navigate("/dashboard");
+        }
+
       } else {
         Swal.fire({
           title: 'Login failed',

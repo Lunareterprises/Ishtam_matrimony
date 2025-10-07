@@ -37,26 +37,65 @@ function AddNewSuccessStory() {
     };
 
     // Submit
+    /*  const submitSuccessStory = async (e) => {
+         e.preventDefault();
+         console.log("Before building reqBody ::");
+         const reqBody = new FormData();
+         reqBody.append("groom_id", formData.groom_id);
+         reqBody.append("bride_id", formData.bride_id);
+         reqBody.append("wedding_date", formData.wedding_date);
+         reqBody.append("story", formData.story);
+         if (formData.file) {
+             reqBody.append("file", formData.file);
+         }
+ 
+ 
+         console.log("Before api call ::");
+         try {
+             const result = await addSuccesstoryApi(reqBody);
+             console.log("After function call");
+             console.log("Result :::", result);
+ 
+             if (result?.data?.result === true) {
+                 alert("Profile updated successfully");
+             } else {
+                 alert(result?.data?.message || "Update failed");
+             }
+         } catch (error) {
+             console.error("API Error :::", error);
+             alert(error.message);
+         }
+     }; */
+
     const submitSuccessStory = async (e) => {
         e.preventDefault();
         console.log("Before building reqBody ::");
+
         const reqBody = new FormData();
         reqBody.append("groom_id", formData.groom_id);
         reqBody.append("bride_id", formData.bride_id);
-        reqBody.append("wedding_date", formData.wedding_date);
+
+        // Convert date properly
+        const formattedDate = new Date(formData.wedding_date)
+            .toISOString()
+            .split("T")[0];
+        reqBody.append("wedding_date", formattedDate);
+
         reqBody.append("story", formData.story);
         if (formData.file) {
             reqBody.append("file", formData.file);
         }
 
-        // Log FormData contents
-        for (let [key, value] of reqBody.entries()) {
-            console.log("FormData entry:", key, value);
-        }
-
         console.log("Before api call ::");
         try {
             const result = await addSuccesstoryApi(reqBody);
+            
+            // ✅ Log the full response object
+            console.log("Full API Response :::", result);
+
+            // ✅ Log only the backend's data part
+            console.log("Backend Response Data :::", result.data);
+
             console.log("After function call");
             console.log("Result :::", result);
 
@@ -70,6 +109,7 @@ function AddNewSuccessStory() {
             alert(error.message);
         }
     };
+
 
 
     return (

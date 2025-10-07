@@ -1,6 +1,7 @@
 import React from 'react'
 import profilecardimg from '../assets/ishtam-profilecard.jpg'
 import { useNavigate } from 'react-router-dom';
+import { FaRegUser } from 'react-icons/fa';
 
 function ContactRequestCard({ item }) {
 
@@ -21,7 +22,7 @@ function ContactRequestCard({ item }) {
     };
 
     const navigate = useNavigate()
-     const navigateToParnerProfile = (id) => {
+    const navigateToParnerProfile = (id) => {
         navigate(`/partner-profile/${id}`)
     }
 
@@ -30,14 +31,35 @@ function ContactRequestCard({ item }) {
             <div className="hidden md:flex bg-white shadow-lg rounded-lg overflow-hidden w-full mb-4">
                 {/* Left - Image */}
                 <div className="relative">
-                    <img src={profilecardimg} alt="Profile" className="w-45 h-full object-cover" />
+                    {/* <img
+                               src={profilecardimg}
+                               alt="Profile"
+                               className="w-45 h-full object-cover"
+                           /> */}
+                    {
+                        item.u_profile_pic ?
+                            <img
+
+                                src={`https://lunarsenterprises.com:6050${item.u_profile_pic}`}
+                                alt="Profile"
+                                className="w-45 h-50 object-cover"
+                            />
+                            :
+                            <div
+
+                                alt="Profile"
+                                className="border-gray-200 bg-[#D9D9D9] w-45 h-50 flex items-center justify-center object-cover"
+                            >
+                                <FaRegUser className="text-[#797979] text-[24px] sm:text-[48px]" />
+                            </div>
+                    }
                     <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
                         PREMIUM
                     </div>
                 </div>
 
                 {/* Middle - Details */}
-                <div className="p-5 flex flex-col justify-center items-center gap-4">
+                <div className="p-5 flex flex-col justify-between items-center gap-4">
                     <div>
                         <h2 className="text-lg font-semibold text-gray-800">
                             {item.u_firstname} {item.u_lastname}
@@ -51,22 +73,29 @@ function ContactRequestCard({ item }) {
                             {item.language || "Malayalam"} | {item.religion || "Hindu, Nair"} | {item.location || "Alappuzha, Kerala"}
                         </p>
                     </div>
-                </div>
-
-                {/* Right - Action Buttons */}
-                <div className="flex flex-col items-center justify-center px-7 space-y-4">
                     <div>
-                        <button onClick={()=>navigateToParnerProfile(item.u_id)} className="bg-[#E33183] text-white px-4 py-2 rounded-full text-sm font-medium">
+                        <button onClick={() => navigateToParnerProfile(item.u_id)} className="bg-[#E33183] text-white px-4 py-2 rounded-full text-sm font-medium">
                             View Profile
                         </button>
                     </div>
                 </div>
-            </div>
+            </div >
 
             {/* Mobile Layout */}
-            <div className="flex flex-col md:hidden bg-white shadow-lg rounded-lg overflow-hidden w-65 max-w-sm mb-4">
+            < div className="flex flex-col md:hidden bg-white shadow-lg rounded-lg overflow-hidden w-65 max-w-sm mb-4" >
                 <div className="relative">
-                    <img src={profilecardimg} alt="Profile" className="w-full h-64 object-cover" />
+                    {
+                        item.u_profile_pic ?
+                            <img src={`https://lunarsenterprises.com:6050${item.u_profile_pic}`} alt="Profile" className="w-full h-64 object-cover" />
+                            :
+                            <div
+
+                                alt="Profile"
+                                className="border-gray-200 bg-[#D9D9D9] w-full h-64 flex items-center justify-center object-cover"
+                            >
+                                <FaRegUser className="text-[#797979] text-[24px] sm:text-[48px]" />
+                            </div>
+                    }
                     <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
                         PREMIUM
                     </div>
@@ -85,12 +114,12 @@ function ContactRequestCard({ item }) {
                         {item.language || "Malayalam"} | {item.religion || "Hindu, Nair"} | {item.location || "Alappuzha, Kerala"}
                     </p>
 
-                    <button onClick={()=>navigateToParnerProfile(item.u_id)} className="bg-[#E33183] text-white px-4 py-2 rounded-full text-[13px] font-medium w-full mt-4">
+                    <button onClick={() => navigateToParnerProfile(item.u_id)} className="bg-[#E33183] text-white px-4 py-2 rounded-full text-[13px] font-medium w-full mt-4">
                         View Profile
                     </button>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 

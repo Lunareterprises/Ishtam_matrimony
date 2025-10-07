@@ -139,8 +139,16 @@ export const UpdateStatusApi = async (reqHeader, reqBody) => {
 }
 
 export const addSuccesstoryApi = async ( reqBody) => {
+    console.log("Inside success stories api:::");
     for (let [key, value] of reqBody.entries()) {
   console.log(`${key}:`, value);
 }
 return await commonApi("POST", `${BASE_URL}/success_story/add`,reqBody,"")
+}
+
+
+//for fetching contact history
+export const listContactHistoryApi = async (reqHeader, reqBody) => {
+    console.log("inside contact history api :::");
+    return await commonApi("POST", `${BASE_URL}/contact/list`, reqBody, reqHeader)
 }

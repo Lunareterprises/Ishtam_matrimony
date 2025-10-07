@@ -131,17 +131,34 @@ function SentRequestCard({ item }) {
 
                 {/* Right - Action Buttons */}
                 <div className="flex flex-col items-center justify-center px-7 space-y-4 border-l">
-                    <div className="flex flex-col gap-2 items-center justify-center">
-                        <button onClick={() => cancelRequest(item.i_id)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-                            <RxCross1 className="text-2xl" />
-                        </button>
-                        <h1 className="text-[13px] font-semibold">Cancel</h1>
-                    </div>
+                    {
+                        item.i_status === "cancelled" ? (
+                            <div className="flex flex-col items-center">
+
+                                <button
+                                    className="border-2 border-gray-400 text-gray-600 px-4 py-2 rounded-full text-[13px] font-medium"
+                                    disabled
+                                >
+                                    Declined
+                                </button>
+                            </div>
+                        ) : (
+
+                            <div className="flex flex-col gap-2 items-center justify-center">
+                                <button onClick={() => cancelRequest(item.i_id)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+                                    <RxCross1 className="text-2xl" />
+                                </button>
+                                <h1 className="text-[13px] font-semibold">Cancel</h1>
+                            </div>
+                        )
+
+                    }
+
                 </div>
-            </div>
+            </div >
 
             {/* Mobile Layout */}
-            <div className="flex flex-col md:hidden bg-white shadow-lg rounded-lg overflow-hidden w-65 max-w-sm mb-4">
+            < div className="flex flex-col md:hidden bg-white shadow-lg rounded-lg overflow-hidden w-65 max-w-sm mb-4" >
                 <div className="relative">
                     {
                         item.u_profile_pic ?
@@ -179,15 +196,34 @@ function SentRequestCard({ item }) {
                 </div>
 
                 <div className="flex justify-around p-4 border-t">
-                    <div className="flex flex-col items-center gap-2">
-                        <button onClick={() => cancelRequest(item.i_id)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-                            <RxCross1 className="text-xl" />
-                        </button>
-                        <h1 className="text-[13px] font-semibold">Cancel</h1>
-                    </div>
+                    {
+                        item.i_status === "cancelled" ? (
+
+                            <div className="flex flex-col items-center gap-2">
+
+                                <button
+                                    className="border-2 border-gray-400 text-gray-600 px-4 py-2 rounded-full text-[13px] font-medium"
+                                    disabled
+                                >
+                                    Cancelled
+                                </button>
+                            </div>
+                        ) :
+
+                            (
+                                <div className="flex flex-col items-center gap-2">
+                                    <button onClick={() => cancelRequest(item.i_id)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+                                        <RxCross1 className="text-xl" />
+                                    </button>
+                                    <h1 className="text-[13px] font-semibold">Cancel</h1>
+                                </div>
+                            )
+
+                    }
+
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     )
 }
 
