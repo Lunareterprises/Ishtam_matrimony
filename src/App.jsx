@@ -23,6 +23,14 @@ import "react-datepicker/dist/react-datepicker.css";
 import ProfileVisits from './Profile visits/ProfileVisits'
 import Shortlisted from './Shortlisted/Shortlisted'
 import AdminDashboard from './Admin/AdminPages/AdminDashboard'
+import SubscriptionManagement from './Admin/AdminPages/SubscriptionManagement'
+import Enquiries from './Admin/AdminPages/Enquiries'
+import UserManagement from './Admin/AdminPages/UserManagement'
+import AdminSuccessStories from './Admin/AdminPages/AdminSuccessStories'
+import AdminProfile from './Admin/AdminPages/AdminProfile'
+import BannerSettings from './Admin/AdminPages/BannerSettings'
+import UserProfileView from './Admin/AdminPages/UserProfileView'
+import AdminSuccessStoryView from './Admin/AdminPages/AdminSuccessStoryView'
 
 
 function App() {
@@ -46,10 +54,19 @@ function App() {
         <Route path='/all-Success-Stories' element={<AllSuccessStories />} />
         <Route path='/add-New-success-Story' element={<AddNewSuccessStory />} />
         <Route path='/view-success-story' element={<ViewSuccessStory />} />
-        <Route path='/partner-profile/:profileId' element={<PartnerProfile/>} />
-        <Route path='/profile-vists' element={<ProfileVisits/>}  />
-        <Route path='shortlisted' element={<Shortlisted/>}  />
-        <Route path='/admin-dashboard'  element={<AdminDashboard/>} />
+        <Route path='/partner-profile/:profileId' element={<PartnerProfile />} />
+        <Route path='/profile-vists' element={<ProfileVisits />} />
+        <Route path='/shortlisted' element={<Shortlisted />} />
+
+        <Route path='/admin-dashboard' element={<AdminDashboard />} />
+        <Route path='/subscription-management' element={<SubscriptionManagement />} />
+        <Route path='/enquiries' element={<Enquiries />} />
+        <Route path='/userManagement' element={<UserManagement />} />
+        <Route path='/admin-succestories' element={<AdminSuccessStories />} />
+        <Route path='/admin-profile' element={<AdminProfile />} />
+        <Route path='/banner-settings' element={<BannerSettings />} />
+        <Route path='/user-profileView' element={<UserProfileView/>} />
+        <Route path='/admin-successStoryView' element={<AdminSuccessStoryView/>}  />
       </Routes>
 
     </>

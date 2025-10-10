@@ -33,8 +33,8 @@ function Sidebar() {
         navigate('/')
       }
     });
-
   }
+  
   const HeaderCss = `hover:text-pink-600 font-semibold`
   const headerIcon = `hover:text-pink-600 font-semibold text-xl`
 
