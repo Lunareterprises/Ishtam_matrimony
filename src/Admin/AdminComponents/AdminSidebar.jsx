@@ -16,6 +16,7 @@ import { FaImage } from "react-icons/fa6";
 import { IoMdHeart } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { BiHomeHeart } from "react-icons/bi";
 
 
 function AdminSidebar({ isOpen, setIsOpen }) {
@@ -45,9 +46,9 @@ function AdminSidebar({ isOpen, setIsOpen }) {
         <>
             {/* ✅ Desktop Sidebar — unchanged */}
             <div className="md:px-5 hidden md:block">
-                <aside className="flex flex-col w-59 bg-white shadow-sm py-6 px-4 rounded-xl">
+                <aside className="flex flex-col w-59 bg-white shadow-sm py-8 px-4 rounded-xl">
                     <nav className="flex-1">
-                        <ul className="space-y-5">
+                        <ul className="space-y-3">
                             {/* <li
                                     key={i}
                                     className={`flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition ${item.label === "User Safety"
@@ -106,6 +107,12 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                             >
                                 <span className="text-lg"><FaUserCog /></span>
                                 <span>Admin Roles</span>
+                            </Link>
+                            <Link to='/'
+                                className='flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition '
+                            >
+                                <span className="text-lg"><BiHomeHeart /></span>
+                                <span>Back to Home</span>
                             </Link>
 
                             <Link onClick={handleLogout}
@@ -179,6 +186,11 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition ">
                             <span className="text-lg"><FaUserCog /></span>
                             <span>Admin Roles</span>
+                        </Link>
+                        <Link to="/"
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition ">
+                            <span className="text-lg"><BiHomeHeart /></span>
+                            <span>Back to Home</span>
                         </Link>
 
                         <Link onClick={handleLogout}

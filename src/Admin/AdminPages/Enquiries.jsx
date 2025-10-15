@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AdminNavbar from '../AdminComponents/AdminNavbar';
 import AdminSidebar from '../AdminComponents/AdminSidebar';
+import { getEnquiriesApi } from '../../Services/allApi';
 
 function Enquiries() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [enquiryData, setEnquiryData] = useState([])
     const pendingProfiles = [
         {
             id: "#12567",
@@ -30,6 +32,50 @@ function Enquiries() {
             date: "26 Aug 25",
         },
     ];
+
+
+    //for managing timings
+    function getTimeAgo(isoDate) {
+        const now = new Date();
+        const createdAt = new Date(isoDate);
+        const diffInSeconds = Math.floor((now - createdAt) / 1000);
+
+        if (diffInSeconds < 60) return `${diffInSeconds} sec ago`;
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `${diffInMinutes} min ago`;
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 7) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+        const diffInWeeks = Math.floor(diffInDays / 7);
+        if (diffInWeeks < 4) return `${diffInWeeks} week${diffInWeeks > 1 ? 's' : ''} ago`;
+        const diffInMonths = Math.floor(diffInDays / 30);
+        if (diffInMonths < 12) return `${diffInMonths} month${diffInMonths > 1 ? 's' : ''} ago`;
+        const diffInYears = Math.floor(diffInDays / 365);
+        return `${diffInYears} year${diffInYears > 1 ? 's' : ''} ago`;
+    }
+
+
+    // for listing enquiries
+    const listEnquries = async () => {
+        try {
+            const token = sessionStorage.getItem("token")
+            const reqHeader = {
+                Authorization: `Bearer ${token}`,
+            };
+            const result = await getEnquiriesApi(reqHeader);
+            console.log(result);
+            setEnquiryData(result.data.data);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        listEnquries()
+    }, [])
+
     return (
         <div className="flex h-screen bg-pink-50 overflow-hidden">
             <div className="flex-1 flex flex-col overflow-hidden">
@@ -56,40 +102,31 @@ function Enquiries() {
                                 <table className="w-full text-left border-collapse min-w-[640px]">
                                     <thead>
                                         <tr className="bg-gray-800 text-white text-sm">
-                                            <th className="p-3 rounded-l-lg">Profile ID</th>
+                                            <th className="p-3 rounded-l-lg">S.No</th>
                                             <th className="p-3">Name</th>
-                                            <th className="p-3">Age</th>
-                                            <th className="p-3">Gender</th>
-                                            <th className="p-3">Location</th>
-                                            <th className="p-3">Date Joined</th>
-                                            <th className="p-3 rounded-r-lg">Actions</th>
+                                            <th className="p-3">Email</th>
+                                            <th className="p-3">Phone</th>
+                                            <th  className="p-3" >Enquired At</th>
+                                            <th className="p-3">Message</th>
+
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        {pendingProfiles.map((profile, i) => (
+                                    <tbody className="text-[14px]" >
+                                        {enquiryData.map((item, i) => (
                                             <tr
                                                 key={i}
                                                 className="border-b last:border-b-0 hover:bg-pink-50 transition-colors"
                                             >
                                                 <td className="p-3 text-gray-700">
-                                                    <input type="checkbox" className="mr-2" />
-                                                    {profile.id}
+                                                    {item.cu_id}
                                                 </td>
-                                                <td className="p-3 text-gray-700">{profile.name}</td>
-                                                <td className="p-3 text-gray-700">{profile.age}</td>
-                                                <td className="p-3 text-gray-700">{profile.gender}</td>
-                                                <td className="p-3 text-gray-700">{profile.location}</td>
-                                                <td className="p-3 text-gray-700">{profile.date}</td>
-                                                <td className="p-3">
-                                                    <div className="flex gap-3 flex-wrap">
-                                                        <button className="bg-green-500 text-white px-4 py-1 rounded-lg hover:bg-green-600 transition whitespace-nowrap">
-                                                            Approve
-                                                        </button>
-                                                        <button className="text-green-700 font-medium hover:underline whitespace-nowrap">
-                                                            View
-                                                        </button>
-                                                    </div>
-                                                </td>
+                                                <td className="p-3 text-gray-700">{item.cu_name}</td>
+                                                <td className="p-3 text-gray-700">{item.cu_phone}</td>
+                                                <td className="p-3 text-gray-700">{item.cu_phone}</td>
+                                                <td className="p-3 text-gray-700">{getTimeAgo(item.cu_created_at)}</td>
+                                                <td className="p-3 text-gray-700">{item.cu_message}</td>
+
+
                                             </tr>
                                         ))}
                                     </tbody>

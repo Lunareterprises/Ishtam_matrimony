@@ -1,8 +1,13 @@
 import React, { useState } from 'react';
 import { MdCheckCircleOutline, MdQrCode2 } from 'react-icons/md';
 
+
 function AdminSubscriptionPlanCards({ plan }) {
     const [flipped, setFlipped] = useState(false);
+    
+
+
+
 
     return (
         <div className="w-full md:w-72 h-[450px] pt-13" style={{ perspective: '1000px' }}>
@@ -14,7 +19,7 @@ function AdminSubscriptionPlanCards({ plan }) {
                 }}
             >
                 {/* Front Side */}
-                <div 
+                <div
                     className="absolute w-full h-full rounded-lg border-2 border-[#5A0A1D] shadow-lg bg-white text-gray-800"
                     style={{
                         backfaceVisibility: 'hidden',
@@ -52,7 +57,7 @@ function AdminSubscriptionPlanCards({ plan }) {
                 </div>
 
                 {/* Back Side */}
-                <div 
+                <div
                     className="absolute w-full h-full rounded-lg border-2 border-[#5A0A1D] shadow-lg bg-white flex items-center justify-center"
                     style={{
                         backfaceVisibility: 'hidden',

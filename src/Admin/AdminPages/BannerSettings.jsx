@@ -1,62 +1,238 @@
 import React, { useEffect, useState } from "react";
 import AdminNavbar from "../AdminComponents/AdminNavbar";
 import AdminSidebar from "../AdminComponents/AdminSidebar";
-import BannerImage1 from "../../assets/Property 1=Default (1).png";
-import BannerImage2 from "../../assets/Property 1=Default (2).png";
-import BannerImage3 from "../../assets/Property 1=Default (3).png";
-import BannerImage4 from "../../assets/Property 1=Default (4).png";
-import BannerImage5 from "../../assets/Property 1=Default (5).png";
 import { MdAddPhotoAlternate } from "react-icons/md";
 import { IoTrashBin } from "react-icons/io5";
-import DoubleHeartsCredentials from '../../assets/DoubleHeartsCredentials.png';
+import { FaEyeSlash } from "react-icons/fa6";
+import { FaEye } from "react-icons/fa6";
+
+import DoubleHeartsCredentials from "../../assets/DoubleHeartsCredentials.png";
+
+
+import {
+    deleteBannerApi,
+    insertBannerApi,
+    listAdminBannerApi,
+    listBannersApi,
+    updateBannerStatusApi,
+} from "../../Services/allApi";
+import Swal from "sweetalert2";
 
 function BannerSettings() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [banners, setBanners] = useState([
-        BannerImage1,
-        BannerImage2,
-        BannerImage3,
-        BannerImage4,
-        BannerImage5,
-    ]);
-
+    const [banners, setBanners] = useState([]);
+    const [bannerPreview, setBannerPreview] = useState([]);
     const [current, setCurrent] = useState(0);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newBanner, setNewBanner] = useState(null);
+    const [selectedFile, setSelectedFile] = useState(null);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % banners.length);
-        }, 4000);
-        return () => clearInterval(interval);
-    }, [banners.length]);
+        if (bannerPreview.length === 0) return;
 
-    const handleDeleteBanner = (index) => {
-        if (window.confirm("Are you sure you want to delete this banner?")) {
-            const updated = banners.filter((_, i) => i !== index);
-            setBanners(updated);
-        }
-    };
+        const interval = setInterval(() => {
+            setCurrent((prev) => (prev + 1) % bannerPreview.length);
+        }, 3000);
+
+        return () => clearInterval(interval);
+    }, [bannerPreview]);
 
     const handleAddBanner = () => setIsModalOpen(true);
-
-    const handleUploadBanner = () => {
-        if (newBanner) {
-            setBanners((prev) => [...prev, newBanner]);
-            setIsModalOpen(false);
-            setNewBanner(null);
-        } else {
-            alert("Please select an image first!");
-        }
-    };
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
+            setSelectedFile(file);
             const imageUrl = URL.createObjectURL(file);
             setNewBanner(imageUrl);
         }
     };
+
+    const handleUploadBanner = async () => {
+        if (!newBanner) {
+            Swal.fire({
+                title: "No Image Selected",
+                text: "Please select an image before uploading.",
+                icon: "warning",
+            });
+            return;
+        }
+
+        await insertBanner();
+        setIsModalOpen(false);
+        setNewBanner(null);
+    };
+
+    // ✅ Upload banner
+    const insertBanner = async () => {
+        try {
+            if (!selectedFile) return;
+            const formData = new FormData();
+            formData.append("file", selectedFile);
+            const token = sessionStorage.getItem("token");
+            const reqHeader = { Authorization: `Bearer ${token}` };
+
+            const result = await insertBannerApi(reqHeader, formData);
+            console.log(result);
+
+            if (result?.data?.result === true) {
+                Swal.fire({
+                    title: "Banner Uploaded!",
+                    text: "The banner has been uploaded successfully.",
+                    icon: "success",
+                    iconColor: '#E33183',
+                    confirmButtonColor: "#E33183",
+                });
+                listBanners();
+                listAdminBanners();
+            }
+            else {
+                Swal.fire({
+                    title: "Failed!",
+                    text: result?.data?.message,
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+            }
+        } catch (error) {
+            console.log("Error inserting banner:", error);
+            Swal.fire({
+                title: "Upload Failed",
+                text: "Something went wrong. Please try again.",
+                icon: "error",
+                confirmButtonColor: "#E33183",
+            });
+        }
+    };
+
+    // ✅ Public banner list (for preview carousel)
+    const listBanners = async () => {
+        try {
+            const result = await listBannersApi();
+            console.log("Result for list banners ::: ", result);
+
+            const bannersFromApi =
+                result?.data?.data?.map((item) => ({
+                    id: item.b_id,
+                    banner: `https://lunarsenterprises.com:6050${item.b_file}`,
+                })) || [];
+            setBannerPreview(bannersFromApi);
+            console.log("listBanners", listBanners);
+        } catch (error) {
+            console.log("Error fetching banners:", error);
+        }
+    };
+
+    // ✅ Admin banner list
+    const listAdminBanners = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = { Authorization: `Bearer ${token}` };
+
+            const result = await listAdminBannerApi(reqHeader);
+            const adminBannerFromApi =
+                result?.data?.data?.map((item) => ({
+                    id: item.b_id,
+                    b_status: item.b_status,
+                    banner: `https://lunarsenterprises.com:6050${item.b_file}`,
+                })) || [];
+            setBanners(adminBannerFromApi);
+        } catch (error) {
+            console.log("Error listing admin banners:", error);
+        }
+    };
+
+    // ✅ Delete banner
+    const handleDeleteBanner = async (b_id) => {
+        try {
+            const confirm = await Swal.fire({
+                title: "Are you sure?",
+                text: "This banner will be permanently deleted.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#E33183",
+                cancelButtonColor: "#aaa",
+                confirmButtonText: "Yes, delete it!",
+            });
+
+            if (!confirm.isConfirmed) return;
+
+            const reqBody = { banner_id: b_id };
+            const token = sessionStorage.getItem("token");
+            const reqHeader = { Authorization: `Bearer ${token}` };
+            const result = await deleteBannerApi(reqHeader, reqBody);
+            console.log("Delete for banner ", result);
+
+            if (result?.data?.result === true) {
+                Swal.fire({
+                    title: "Deleted!",
+                    text: "Banner deleted successfully.",
+                    icon: "success",
+                    iconColor: '#E33183',
+                    confirmButtonColor: "#E33183",
+                });
+                listBanners();
+                listAdminBanners();
+            } else {
+                Swal.fire({
+                    title: "Failed!",
+                    text: result?.data?.message,
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+                result?.data?.message
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Failed!",
+                text: "Something went wrong, please try again!",
+                icon: 'error',
+                confirmButtonText: 'Retry',
+            });
+        }
+    };
+
+    // ✅ Update banner status
+    const updateBannerStatus = async (b_id) => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = { Authorization: `Bearer ${token}` };
+            const result = await updateBannerStatusApi(reqHeader, { banner_id: b_id });
+            if (result?.data?.result === true) {
+                Swal.fire({
+                    title: "Updated!",
+                    text: "Banner status updated successfully.",
+                    icon: "success",
+                    iconColor: '#E33183',
+                    confirmButtonColor: "#E33183",
+                });
+                listBanners();
+                listAdminBanners();
+            }
+            else {
+                Swal.fire({
+                    title: "Failed!",
+                    text: result?.data?.message,
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+                result?.data?.message
+            }
+        } catch (error) {
+            Swal.fire({
+                title: "Failed!",
+                text: "Something went wrong, please try again!",
+                icon: 'error',
+                confirmButtonText: 'Retry',
+            });
+            result?.data?.message
+        }
+    };
+
+    useEffect(() => {
+        listBanners();
+        listAdminBanners();
+    }, []);
 
     return (
         <div className="flex h-screen bg-pink-50 overflow-hidden">
@@ -73,49 +249,41 @@ function BannerSettings() {
                         </p>
 
                         <div className="bg-white/80 backdrop-blur-sm rounded-3xl shadow-md p-8 mb-10 border border-gray-100">
-                            <h2 className="text-[20px] font-semibold text-center text-gray-800 mb-6">
-                                Banner Preview
-                            </h2>
 
-                          
-                            {/* Preview Section - Fixed Responsive */}
+                            <div className="flex flex-col  items-center justify-center  py-5"  >
+                                <h2 className="text-[20px] font-semibold text-center text-gray-800">
+                                    Banner Preview
+                                </h2>
+                                <p className="text-gray-500">
+                                    A glimpse of banners gracing your homepage
+                                </p>
+                            </div>
+
+
+                            {/* ✅ Carousel Preview */}
                             <div className="flex justify-center px-2">
-                                <section className="relative w-full max-w-2xl aspect-[16/9] overflow-hidden rounded-xl shadow-lg group transition-transform duration-300 hover:scale-[1.02]">
-                                    <img
-                                        src={banners[current]}
-                                        alt={`Slide ${current + 1}`}
-                                        className="absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ease-in-out"
-                                    />
-
-                                    <div className="relative z-10 flex flex-col gap-2 sm:gap-3 md:gap-4 items-center justify-center text-center h-full bg-black/10 px-4 sm:px-6 md:px-8">
-                                        <h1 className="text-white text-xs sm:text-base md:text-xl lg:text-2xl font-bold leading-tight">
-                                            Find Your Ishtam –<br />
-                                            <span className="text-white text-[10px] sm:text-sm md:text-base lg:text-lg font-light">
-                                                A Match Made in Heart & Heaven
-                                            </span>
-                                        </h1>
-
-                                        <p className="text-white italic text-[8px] sm:text-xs md:text-sm max-w-[90%] sm:max-w-xs md:max-w-sm">
-                                            Begin your journey with trusted matches, family values, and soulful connections.
-                                        </p>
-
-                                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-1 sm:mt-2">
-                                            <button className="bg-pink-600 text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 rounded-full font-semibold hover:bg-pink-700 transition whitespace-nowrap">
-                                                JOIN ISHTAM MARRY
-                                            </button>
-                                            <button className="border border-white text-white text-[8px] sm:text-[10px] md:text-xs lg:text-sm px-3 sm:px-4 md:px-6 py-1.5 sm:py-2 md:py-2.5 rounded-full hover:bg-white hover:text-pink-600 transition whitespace-nowrap">
-                                                FREE REGISTRATION
-                                            </button>
-                                        </div>
-                                    </div>
+                                <section className="relative w-full max-w-2xl aspect-[16/9] overflow-hidden rounded-xl shadow-lg group transition-transform duration-300">
+                                    {bannerPreview.length > 0 && (
+                                        <img
+                                            src={bannerPreview[current]?.banner}
+                                            alt={`Slide ${current + 1}`}
+                                            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+                                        />
+                                    )}
                                 </section>
                             </div>
 
-                            {/* Thumbnail Manager */}
+                            {/* ✅ Manage Banners */}
                             <div className="pt-10">
-                                <h3 className="text-[18px] font-semibold text-gray-700 mb-3">
-                                    Manage Banners
-                                </h3>
+                                <div className="flex flex-col  items-start  py-5" >
+                                    <h3 className="text-[18px] font-semibold text-gray-700">
+                                        Manage Banners
+                                    </h3>
+                                    <p className="text-gray-500">
+                                        Control which banners appear on your homepage
+                                    </p>
+                                </div>
+
 
                                 <div className="flex gap-6 overflow-x-auto pb-3 scrollbar-thin scrollbar-thumb-pink-300">
                                     {/* Add New Banner */}
@@ -123,15 +291,13 @@ function BannerSettings() {
                                         onClick={handleAddBanner}
                                         className="flex flex-col justify-center items-center w-44 h-28 rounded-2xl border-2 border-dashed border-pink-400 text-pink-500 hover:bg-pink-50 hover:border-pink-500 cursor-pointer transition-all duration-300 flex-shrink-0"
                                     >
-                                        <span className="text-4xl font-bold leading-none">
-                                            <MdAddPhotoAlternate />
-                                        </span>
+                                        <MdAddPhotoAlternate className="text-4xl" />
                                         <p className="text-xs mt-1 font-medium">Add Banner</p>
                                     </div>
 
                                     {banners.map((banner, index) => (
                                         <div
-                                            key={index}
+                                            key={banner.id || index}
                                             onClick={() => setCurrent(index)}
                                             className={`relative group flex-shrink-0 w-44 h-28 rounded-2xl overflow-hidden shadow-md border ${current === index
                                                 ? "border-pink-500 ring-2 ring-pink-200"
@@ -139,20 +305,36 @@ function BannerSettings() {
                                                 } cursor-pointer hover:shadow-lg transition-all duration-300`}
                                         >
                                             <img
-                                                src={banner}
+                                                src={banner.banner}
                                                 alt={`Banner ${index + 1}`}
                                                 className="w-full h-full object-cover"
                                             />
+                                            <div className="absolute inset-0 flex items-center justify-center gap-4 bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300">
+                                                {/* for displaying delete icon for active banners */}
 
-                                            <button
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    handleDeleteBanner(index);
-                                                }}
-                                                className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-all duration-300"
-                                            >
-                                                <IoTrashBin className="text-white text-lg hover:text-pink-400 transition" />
-                                            </button>
+                                                <button
+                                                    onClick={() => handleDeleteBanner(banner.id)}
+                                                    className="p-2 transition"
+                                                >
+                                                    <IoTrashBin className="text-white text-lg hover:text-pink-400" />
+                                                </button>
+                                                {
+                                                    banner.b_status === "active" ?
+                                                        <button
+                                                            onClick={() => updateBannerStatus(banner.id)}
+                                                            className="p-2 transition"
+                                                        >
+                                                            <FaEyeSlash className="text-white text-2xl hover:text-pink-400" />
+                                                        </button> :
+                                                        <button
+                                                            onClick={() => updateBannerStatus(banner.id)}
+                                                            className="p-2 transition"
+                                                        >
+                                                            <FaEye className="text-white text-2xl hover:text-pink-400" />
+                                                        </button>
+                                                }
+
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
@@ -161,8 +343,6 @@ function BannerSettings() {
                     </main>
                 </div>
             </div>
-
-            {/* Modal for Adding Banner */}
 
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center z-50 px-4 bg-black/40 backdrop-blur-sm">
@@ -240,6 +420,7 @@ function BannerSettings() {
                     </div>
                 </div>
             )}
+
 
         </div>
     );

@@ -36,6 +36,7 @@ export const userLoginApi = async (reqBody) => {
 //update profile 
 export const updateProfileApi = async (reqBody, reqHeader) => {
     console.log("inside profile update api");
+    console.log("reqbody of update profle::", reqBody);
     for (let [key, value] of reqBody.entries()) {
         console.log(`${key}:`, value);
     }
@@ -79,19 +80,16 @@ export const listAllStoriesApi = async (reqBody, reqHeader) => {
     return await commonApi("GET", `${BASE_URL}/success_story/list`, reqBody, reqHeader)
 }
 
-
 //for fetching partner profile
 export const getPartnerProfileApi = async (reqBody, reqHeader) => {
     return await commonApi("POST", `${BASE_URL}/partner/profile`, reqBody, reqHeader);
 }
-
 
 //for fetching current plan 
 export const getCurrentPlanApi = async (reqHeader) => {
     console.log("Inside get current plan api ");
     return await commonApi("GET", `${BASE_URL}/myplan`, "", reqHeader)
 }
-
 
 //for fetching my matches 
 export const getMyMatchesApi = async (reqHeader) => {
@@ -138,17 +136,106 @@ export const UpdateStatusApi = async (reqHeader, reqBody) => {
     return await commonApi("POST", `${BASE_URL}/interest/updatestatus`, reqBody, reqHeader)
 }
 
-export const addSuccesstoryApi = async ( reqBody) => {
+export const addSuccesstoryApi = async (reqBody) => {
     console.log("Inside success stories api:::");
     for (let [key, value] of reqBody.entries()) {
-  console.log(`${key}:`, value);
+        console.log(`${key}:`, value);
+    }
+    return await commonApi("POST", `${BASE_URL}/success_story/add`, reqBody, "")
 }
-return await commonApi("POST", `${BASE_URL}/success_story/add`,reqBody,"")
-}
-
 
 //for fetching contact history
 export const listContactHistoryApi = async (reqHeader, reqBody) => {
     console.log("inside contact history api :::");
     return await commonApi("POST", `${BASE_URL}/contact/list`, reqBody, reqHeader)
+}
+
+
+
+
+
+//admin side API
+
+
+//for listing users
+export const listAllUsersApi = async (reqHeader) => {
+    return await commonApi("GET", `${BASE_URL}/admin/users/list`, "", reqHeader)
+}
+
+//for upadating active-inactive status of user
+export const updateUserStatusApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/admin/users/update`, reqBody, reqHeader)
+}
+
+//for fetching subscription plan
+export const fetchSubscriptionPlansApi = async (reqHeader) => {
+    return await commonApi("GET", `${BASE_URL}/admin/plan/list`, "", reqHeader)
+}
+
+//for assigning plan to user
+export const assignSubscriptionPlanApi = async (reqHeader, reqBody) => {
+    console.log("Plan data", reqBody);
+    return await commonApi("POST", `${BASE_URL}/admin/plan/assign`, reqBody, reqHeader)
+}
+
+//for listing enquiries
+export const getEnquiriesApi = async (reqHeader) => {
+    console.log("Get enquiries");
+    return await commonApi("GET", `${BASE_URL}/admin/enquiries`, "", reqHeader)
+}
+
+//for listing success stories
+export const listSuccessStoriesApi = async (reqHeader) => {
+    return await commonApi("GET", `${BASE_URL}/admin/success_story/list`, "", reqHeader)
+}
+
+//update success stories
+export const updateStoryStatus = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/admin/success_story/update`, reqBody, reqHeader)
+}
+
+//approve success stories
+export const HandleSuccessStoriesApi = async (reqHeader, reqBody) => {
+    console.log(reqBody, reqHeader);
+    return await commonApi("POST", `${BASE_URL}/admin/success_story/update`, reqBody, reqHeader);
+}
+
+//for deleting success stories 
+export const deleteSuccessStoriesApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/admin/success_story/delete`, reqBody, reqHeader)
+}
+
+//for inserting banner 
+export const insertBannerApi = async (reqHeader, reqBody) => {
+    console.log("req body :::", reqBody);
+    return await commonApi("POST", `${BASE_URL}/admin/banner/add`, reqBody, reqHeader);
+}
+
+//for listing banner images for landing page & admin side preview and also for landing page
+export const listBannersApi = async () => {
+    return await commonApi("GET", `${BASE_URL}/banner`, "", "")
+}
+
+//for listing uploaded banners in admin side for manage banners
+export const listAdminBannerApi = async (reqHeader) => {
+
+    return await commonApi("GET", `${BASE_URL}/admin/banner/list`, "", reqHeader)
+}
+
+//for updating banner status
+export const updateBannerStatusApi = async (reqHeader, reqBody) => {
+    console.log("inside banner status", reqBody);
+    return await commonApi("POST", `${BASE_URL}/admin/banner/update`, reqBody, reqHeader)
+}
+
+//for deleting banner
+export const deleteBannerApi = async (reqHeader, reqBody) => {
+    console.log(reqHeader);
+    return await commonApi("POST", `${BASE_URL}/admin/banner/delete`, reqBody, reqHeader)
+}
+
+//for dashboard data
+export const getDashboardDataApi = async (reqHeader) => {
+    console.log("Inside get dashboard datataaaaaa")
+    return await commonApi("GET", `${BASE_URL}/admin/dashboard`, "", reqHeader)
 }

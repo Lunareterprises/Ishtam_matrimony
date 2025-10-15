@@ -7,12 +7,52 @@ import { fetchProfileDataApi, getCurrentPlanApi, updateProfileApi } from '../Ser
 
 
 function ProfileSection() {
+
     const [currentPlanData, setCurrentPlanData] = useState({});
     const [isEditing, setIsEditing] = useState(false);
     const [editingSection, setEditingSection] = useState(null);
-    const [preview, setPreview] = useState(null)
+    const [preview, setPreview] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [galleryImages, setGalleryImages] = useState([]);
+    const galleryFileInputRefs = useRef([]);
 
-    //for fetching current plan
+    const [profileData, setProfileData] = useState({
+        created_by: "",
+        gender: "",
+        firstname: "",
+        lastname: "",
+        dob: "",
+        religion: "",
+        community: "",
+        father: "",
+        mother: "",
+        no_of_sisters: "",
+        no_of_brothers: "",
+        financial_status: "",
+        diet: "",
+        hobbies: [],
+        about: "",
+        mother_tongue: "",
+        height: "",
+        marital_status: "",
+        district: "",
+        profession_area: "",
+        country: "",
+        state: "",
+        city: "",
+        zip: "",
+        qualification: "",
+        college: "",
+        working_with: "",
+        working_as: "",
+        employer_name: "",
+        annual_income: "",
+        is_private: false,
+        file: "",
+        images: "",
+        userId: ""
+    })
+
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
@@ -35,9 +75,6 @@ function ProfileSection() {
         }
     }
 
-
-
-    //function for fetching profile data
     const fetchProfileData = async () => {
         try {
             const token = sessionStorage.getItem("token");
@@ -47,7 +84,6 @@ function ProfileSection() {
             const result = await fetchProfileDataApi(reqHeader);
             console.log("result for fetching profile Data:", result);
 
-            // Update state with fetched data - CORRECTED
             if (result.data && result.data.data && result.data.data.length > 0) {
                 const userData = result.data.data[0];
 
@@ -87,13 +123,24 @@ function ProfileSection() {
                     is_private: userData.u_private_income || false,
                 });
 
-                
                 if (userData.u_profile_pic) {
-                    // Create full URL for the server image
                     const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
-                    setPreview(fullImageUrl);  // Setting the complete URL
+                    setPreview(fullImageUrl);
                 }
 
+                if (userData.u_images) {
+                    const imagesArray = typeof userData.u_images === 'string'
+                        ? userData.u_images.split(',').filter(img => img.trim())
+                        : userData.u_images;
+
+                    const formattedImages = imagesArray.map(imgPath => ({
+                        preview: `https://lunarsenterprises.com:6050${imgPath}`,
+                        isNew: false,
+                        serverPath: imgPath
+                    }));
+
+                    setGalleryImages(formattedImages);
+                }
             }
 
         } catch (error) {
@@ -108,44 +155,25 @@ function ProfileSection() {
         fetchProfileData()
     }, []);
 
+    const handleGalleryImageChange = (event, index) => {
+        const file = event.target.files[0];
+        if (file) {
+            const imageUrl = URL.createObjectURL(file);
+            const updatedImages = [...galleryImages];
+            updatedImages[index] = {
+                file: file,
+                preview: imageUrl,
+                isNew: true
+            };
+            setGalleryImages(updatedImages);
+        }
+    };
 
-    const [profileData, setProfileData] = useState({
-        created_by: "",
-        gender: "",
-        firstname: "",
-        lastname: "",
-        dob: "",
-        religion: "",
-        community: "",
-        father: "",
-        mother: "",
-        no_of_sisters: "",
-        no_of_brothers: "",
-        financial_status: "",
-        diet: "",
-        hobbies: [],
-        about: "",
-        mother_tongue: "",
-        height: "",
-        marital_status: "",
-        district: "",
-        profession_area: "",
-        country: "",
-        state: "",
-        city: "",
-        zip: "",
-        qualification: "",
-        college: "",
-        working_with: "",
-        working_as: "",
-        employer_name: "",
-        annual_income: "",
-        is_private: false,
-        file: "",
-        images: "",
-        userId: ""
-    })
-
+    const handleDeleteGalleryImage = (index) => {
+        const updatedImages = [...galleryImages];
+        updatedImages[index] = null;
+        setGalleryImages(updatedImages);
+    };
 
     const fileInputRef = useRef(null);
     const handleFileChange = (event) => {
@@ -157,35 +185,40 @@ function ProfileSection() {
         }
     };
 
-
-    //function for updating profile 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         console.log("handle update profile function::");
 
         try {
             const token = sessionStorage.getItem("token");
-
-            // Don’t set Content-Type manually, let browser handle it
             const reqHeader = {
                 "Authorization": `Bearer ${token}`,
             };
 
             const reqBody = new FormData();
 
-            // Append all fields including image
             for (let key in profileData) {
-                if (profileData[key]) {
+                if (profileData[key] && key !== 'images') {
                     reqBody.append(key, profileData[key]);
                 }
             }
 
+            galleryImages.forEach((image, index) => {
+                if (image && image.isNew && image.file) {
+                    reqBody.append('images', image.file);
+                } else if (image && !image.isNew && image.serverPath) {
+                    reqBody.append('images', image.serverPath);
+                }
+            });
+
             const result = await updateProfileApi(reqBody, reqHeader);
             setIsEditing(false);
+            setEditingSection(null);
 
             if (result?.data?.result === true) {
                 alert("Profile updated successfully");
                 console.log(result);
+                fetchProfileData();
             } else {
                 console.log(result);
                 alert(result?.data?.message || "Update failed");
@@ -195,8 +228,6 @@ function ProfileSection() {
             alert("Something went wrong while updating profile");
         }
     };
-
-
 
     return (
         <>
@@ -290,10 +321,11 @@ function ProfileSection() {
                 }
             </div>
 
+
+
             <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7]">
-                {/* Header */}
                 <div className="flex justify-between items-center px-6 py-6 bg-white">
-                    <h2 className="text-lg font-bold text-[#540D33]">Add more photos (2/4)</h2>
+                    <h2 className="text-lg font-bold text-[#540D33]">Add more photos ({galleryImages.filter(img => img).length}/4)</h2>
                     <div
                         className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
                         onClick={() => setEditingSection(editingSection === "photos" ? null : "photos")}
@@ -302,99 +334,90 @@ function ProfileSection() {
                     </div>
                 </div>
 
-                {/* Body - Only show when editing */}
                 {editingSection === "photos" ? (
                     <div className="bg-[#F5F5F5] px-7 py-7">
                         <div className="grid grid-cols-2 gap-4">
-                            {/* Photo 1 - With delete button */}
-                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
-                                <img
-                                    src="https://placehold.co/200x200/540d33/white?text=Photo+1"
-                                    alt="Profile photo 1"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
-                                    <span className="text-xs font-bold text-[#540D33]">1</span>
-                                </div>
-                                {/* Delete button */}
-                                <div className="absolute top-2 left-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors">
-                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </div>
-                            </div>
-
-                            {/* Photo 2 - With delete button */}
-                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
-                                <img
-                                    src="https://placehold.co/200x200/540d33/white?text=Photo+2"
-                                    alt="Profile photo 2"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
-                                    <span className="text-xs font-bold text-[#540D33]">2</span>
-                                </div>
-                                {/* Delete button */}
-                                <div className="absolute top-2 left-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors">
-                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                    </svg>
-                                </div>
-                            </div>
-
-                            {/* Add Photo Button */}
-                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-                                <div className="w-12 h-12 rounded-full bg-[#540D33] flex items-center justify-center mb-2">
-                                    <TiCameraOutline className="text-white text-xl" />
-                                </div>
-                                <span className="text-sm font-medium text-[#540D33]">Add Photo</span>
-                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
-                                    <span className="text-xs font-bold text-[#540D33]">3</span>
-                                </div>
-                            </div>
-
-                            {/* Add Photo Button */}
-                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors">
-                                <div className="w-12 h-12 rounded-full bg-[#540D33] flex items-center justify-center mb-2">
-                                    <TiCameraOutline className="text-white text-xl" />
-                                </div>
-                                <span className="text-sm font-medium text-[#540D33]">Add Photo</span>
-                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
-                                    <span className="text-xs font-bold text-[#540D33]">4</span>
-                                </div>
-                            </div>
+                            {[0, 1, 2, 3].map((index) => {
+                                const image = galleryImages[index];
+                                return (
+                                    <div key={index} className="relative">
+                                        {image ? (
+                                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
+                                                <img
+                                                    src={image.preview}
+                                                    alt={`Profile photo ${index + 1}`}
+                                                    className="w-full h-full object-cover"
+                                                    onError={(e) => {
+                                                        console.log(`Image ${index + 1} failed to load`);
+                                                        e.target.src = "https://placehold.co/200x200/e5e7eb/9ca3af?text=Failed";
+                                                    }}
+                                                />
+                                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                                    <span className="text-xs font-bold text-[#540D33]">{index + 1}</span>
+                                                </div>
+                                                <div
+                                                    className="absolute top-2 left-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
+                                                    onClick={() => handleDeleteGalleryImage(index)}
+                                                >
+                                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
+                                                    </svg>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            <div
+                                                className="relative bg-white rounded-lg overflow-hidden h-40 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 transition-colors"
+                                                onClick={() => galleryFileInputRefs.current[index]?.click()}
+                                            >
+                                                <div className="w-12 h-12 rounded-full bg-[#540D33] flex items-center justify-center mb-2">
+                                                    <TiCameraOutline className="text-white text-xl" />
+                                                </div>
+                                                <span className="text-sm font-medium text-[#540D33]">Add Photo</span>
+                                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                                    <span className="text-xs font-bold text-[#540D33]">{index + 1}</span>
+                                                </div>
+                                                <input
+                                                    type="file"
+                                                    ref={el => galleryFileInputRefs.current[index] = el}
+                                                    onChange={(e) => handleGalleryImageChange(e, index)}
+                                                    className="hidden"
+                                                    accept="image/*"
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 ) : (
                     <div className="bg-[#F5F5F5] px-7 py-7">
                         <div className="grid grid-cols-2 gap-4">
-                            {/* Display only the first two photos in view mode */}
-                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
-                                <img
-                                    src="https://placehold.co/200x200/540d33/white?text=Photo+1"
-                                    alt="Profile photo 1"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
-                                    <span className="text-xs font-bold text-[#540D33]">1</span>
-                                </div>
-                            </div>
-
-                            <div className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
-                                <img
-                                    src="https://placehold.co/200x200/540d33/white?text=Photo+2"
-                                    alt="Profile photo 2"
-                                    className="w-full h-full object-cover"
-                                />
-                                <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
-                                    <span className="text-xs font-bold text-[#540D33]">2</span>
-                                </div>
-                            </div>
+                            {[0, 1].map((index) => {
+                                const image = galleryImages[index];
+                                return (
+                                    <div key={index} className="relative bg-white rounded-lg overflow-hidden h-40 border border-gray-200">
+                                        {image ? (
+                                            <img
+                                                src={image.preview}
+                                                alt={`Profile photo ${index + 1}`}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-gray-400">
+                                                No photo
+                                            </div>
+                                        )}
+                                        <div className="absolute top-2 right-2 bg-white rounded-full w-6 h-6 flex items-center justify-center">
+                                            <span className="text-xs font-bold text-[#540D33]">{index + 1}</span>
+                                        </div>
+                                    </div>
+                                );
+                            })}
                         </div>
                     </div>
                 )}
             </div>
-
 
             {/* user pofile section */}
             <div className='flex flex-col gap-10' >
@@ -1051,7 +1074,7 @@ function ProfileSection() {
                                             <option value="Veg">Veg</option>
                                             <option value="Non Veg">Non Veg</option>
                                         </select>
-        
+
                                     ) : (
                                         <span>{profileData.diet || "Not specified"}</span>
                                     )}
@@ -1061,8 +1084,8 @@ function ProfileSection() {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
-                    {/* Header */}
+               {/*  <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
+
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">HOBBIES & INTEREST</h2>
                         <div
@@ -1075,18 +1098,17 @@ function ProfileSection() {
                         </div>
                     </div>
 
-                    {/* Body */}
                     <div className="bg-[#F5F5F5] px-7 py-7">
                         {editingSection === "hobbies" ? (
                             <div className="flex flex-wrap gap-3">
                                 {profileData.hobbies.map((hobby, index) => (
                                     <div key={index} className="relative inline-block">
-                                        {/* Hidden span to calculate text width */}
+
                                         <span
                                             className="invisible absolute whitespace-pre px-4 py-2 text-sm font-medium"
                                             ref={(el) => {
                                                 if (el) {
-                                                    el.textContent = hobby || " "; // Mirror input value
+                                                    el.textContent = hobby || " ";
                                                     const input = el.nextSibling;
                                                     if (input) input.style.width = `${el.offsetWidth}px`;
                                                 }
@@ -1095,7 +1117,7 @@ function ProfileSection() {
                                             {hobby || " "}
                                         </span>
 
-                                        {/* Input */}
+
                                         <input
                                             type="text"
                                             value={hobby}
@@ -1112,7 +1134,7 @@ function ProfileSection() {
                                 ))}
 
 
-                                {/* Add new hobby */}
+
                                 <button
                                     type="button"
                                     onClick={() =>
@@ -1145,7 +1167,127 @@ function ProfileSection() {
                             </div>
                         )}
                     </div>
-                </div>
+                </div> */}
+
+
+                <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
+    {/* Header */}
+    <div className="flex justify-between items-center px-6 py-6 bg-white">
+        <h2 className="text-lg font-bold text-[#540D33]">HOBBIES & INTEREST</h2>
+        <div
+            className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
+            onClick={() =>
+                setEditingSection(editingSection === "hobbies" ? null : "hobbies")
+            }
+        >
+            <FaPen className="text-white text-[10px]" />
+        </div>
+    </div>
+
+    {/* Body */}
+    <div className="bg-[#F5F5F5] px-7 py-7">
+        {editingSection === "hobbies" ? (
+            <div className="flex flex-wrap gap-3">
+                {profileData.hobbies.map((hobby, index) => (
+                    <div
+                        key={index}
+                        className="relative inline-flex items-center gap-2 bg-pink-50 rounded-lg border border-pink-400"
+                    >
+                        {/* Hidden span to match width */}
+                        <span
+                            className="invisible absolute whitespace-pre px-4 py-2 text-sm font-medium"
+                            ref={(el) => {
+                                if (el) {
+                                    el.textContent = hobby || "Enter hobby";
+                                    const input = el.nextSibling;
+                                    if (input) input.style.width = `${el.offsetWidth}px`;
+                                }
+                            }}
+                        >
+                            {hobby || "Enter hobby"}
+                        </span>
+
+                        {/* Input */}
+                        <input
+                            type="text"
+                            value={hobby}
+                            placeholder="Enter hobby"
+                            onChange={(e) => {
+                                const updated = [...profileData.hobbies];
+                                updated[index] = e.target.value;
+                                setProfileData({ ...profileData, hobbies: updated });
+                            }}
+                            onBlur={() => {
+                                // Auto remove empty on blur
+                                if (hobby.trim() === "") {
+                                    const updated = profileData.hobbies.filter(
+                                        (_, i) => i !== index
+                                    );
+                                    setProfileData({ ...profileData, hobbies: updated });
+                                }
+                            }}
+                            className="px-4 py-2 rounded-lg text-[#540D33] text-sm font-medium 
+                                       bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 inline-block"
+                            style={{ width: "auto" }}
+                        />
+
+                        {/* Delete Button */}
+                        <button
+                            type="button"
+                            onClick={() => {
+                                const updated = profileData.hobbies.filter(
+                                    (_, i) => i !== index
+                                );
+                                setProfileData({ ...profileData, hobbies: updated });
+                            }}
+                            className="text-pink-500 hover:text-pink-700 px-2 font-bold"
+                        >
+                            ✕
+                        </button>
+                    </div>
+                ))}
+
+                {/* Add New Hobby */}
+                <button
+                    type="button"
+                    onClick={() => {
+                        const last = profileData.hobbies[profileData.hobbies.length - 1];
+                        // allow adding if no hobbies or last one is filled
+                        if (profileData.hobbies.length === 0 || (last && last.trim() !== "")) {
+                            setProfileData({
+                                ...profileData,
+                                hobbies: [...profileData.hobbies, ""],
+                            });
+                        }
+                    }}
+                    className="px-4 py-2 rounded-lg border border-dashed border-pink-400 
+                               text-pink-500 text-sm font-medium bg-white hover:bg-pink-50 transition"
+                >
+                    + Add Hobby
+                </button>
+            </div>
+        ) : (
+            <div className="flex flex-wrap gap-3">
+                {profileData.hobbies.filter((h) => h.trim() !== "").length > 0 ? (
+                    profileData.hobbies
+                        .filter((h) => h.trim() !== "")
+                        .map((hobby, index) => (
+                            <span
+                                key={index}
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg 
+                                           border border-pink-400 bg-pink-50 text-[#540D33] text-sm font-medium"
+                            >
+                                {hobby}
+                            </span>
+                        ))
+                ) : (
+                    <span className="text-gray-500 text-sm">No hobbies added</span>
+                )}
+            </div>
+        )}
+    </div>
+</div>
+
 
 
 
