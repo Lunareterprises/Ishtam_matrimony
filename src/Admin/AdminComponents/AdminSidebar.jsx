@@ -183,7 +183,7 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                         </Link>
 
                         <Link to='/admin-profile'
-                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition ">
+                            className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 :bg-pink-100 hover:text-pink-700 cursor-pointer transition ">
                             <span className="text-lg"><FaUserCog /></span>
                             <span>Admin Roles</span>
                         </Link>

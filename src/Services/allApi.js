@@ -138,6 +138,7 @@ export const UpdateStatusApi = async (reqHeader, reqBody) => {
 
 export const addSuccesstoryApi = async (reqBody) => {
     console.log("Inside success stories api:::");
+    console.log("success stories :::", reqBody);
     for (let [key, value] of reqBody.entries()) {
         console.log(`${key}:`, value);
     }
@@ -238,4 +239,34 @@ export const deleteBannerApi = async (reqHeader, reqBody) => {
 export const getDashboardDataApi = async (reqHeader) => {
     console.log("Inside get dashboard datataaaaaa")
     return await commonApi("GET", `${BASE_URL}/admin/dashboard`, "", reqHeader)
+}
+
+
+//for view user profile 
+export const getUserProfileDataApi = async (reqHeader, reqBody) => {
+    console.log("Inside get userprofile");
+    console.log("user id ::: ", reqBody);
+
+    return await commonApi("POST", `${BASE_URL}/admin/users/profile`, reqBody, reqHeader)
+}
+
+//add new subscription plan
+export const addNewSubscriptionPlanApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/admin/plan/add`, reqBody, reqHeader)
+}
+
+//get subscription plan
+export const getSubscriptionPlanApi = async (reqHeader) => {
+    return await commonApi("GET", `${BASE_URL}/admin/plan/list`, "", reqHeader)
+}
+
+//edit subscription plan 
+export const editSubscriptionPlanApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/admin/plan/update`, reqBody, reqHeader)
+}
+
+//delete subscription plan 
+export const deleteSubscriptionPlanApi = async (reqHeader, reqBody) => {
+    console.log("inside deletesub", reqBody);
+return await commonApi("POST",`${BASE_URL}/admin/plan/delete`, reqBody, reqHeader)
 }

@@ -4,13 +4,19 @@
   font-family: "Poppins";
 }
 
+.animate-marquee {
+  display: flex;
+  animation: marquee 10s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+  transition: transform 1s ease-out; /* smooth deceleration */
+}
+
+/* Example marquee animation */
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
-}
-
-.animate-marquee {
-  display: flex;
-  width: max-content;
-  animation: marquee 30s linear infinite;
 }

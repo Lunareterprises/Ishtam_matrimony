@@ -8,7 +8,9 @@ import { HiMiniBars3BottomRight } from "react-icons/hi2";
 
 
 function AdminNavbar({ onMenuClick }) {
-    
+
+    const email = sessionStorage.getItem("email");
+    /* const email = sessionStorage.getItem("email"); */
 
     return (
         <div className="flex items-center justify-center py-5 px-5" >
@@ -73,7 +75,7 @@ function AdminNavbar({ onMenuClick }) {
                                         <span className="font-semibold text-[#540D33]">Admin</span>
                                     </h1>
                                 </div>
-                                <h1 className="text-[#787878] text-[13px] ">ITM234</h1>
+                                <h1 className="text-[#787878] text-[13px] ">{email}</h1>
                             </div>
                         </div>
                        

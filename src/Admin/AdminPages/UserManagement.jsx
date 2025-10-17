@@ -14,9 +14,6 @@ function UserManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userData, setUserData] = useState([])
   const navigate = useNavigate()
-  const userProfileView = () => {
-    navigate("/user-profileView")
-  }
 
 
   const getAllUsersList = async () => {
@@ -36,11 +33,18 @@ function UserManagement() {
     }
   }
 
+  //for navigation to user profile view
+  const userProfileView = (u_id) => {
+    console.log("userid on user management :::", u_id);
+    navigate('/user-profileView', { state: { userId: u_id } });
+
+  }
+
 
   const updateUserStatus = async (u_id) => {
     const token = sessionStorage.getItem("token");
     try {
-      console.log(u_id);
+      console.log("update user status :::", u_id);
       const payload = { user_id: u_id };
       const reqHeader = { Authorization: `Bearer ${token}` };
       const result = await updateUserStatusApi(reqHeader, payload);
@@ -67,7 +71,6 @@ function UserManagement() {
           confirmButtonText: 'Retry',
         });
       }
-
 
     } catch (error) {
       Swal.fire({
@@ -124,7 +127,7 @@ function UserManagement() {
                 <h2 className="text-lg font-semibold text-gray-800">
                   User Management
                 </h2>
-                
+
               </div>
 
               <div className="overflow-x-auto">
@@ -199,7 +202,7 @@ function UserManagement() {
                             </div>
 
                             {/* View Button */}
-                            <button onClick={userProfileView} className="bg-gray-400 hover:bg-gray-500 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300 ">
+                            <button onClick={() => userProfileView(profile.u_id)} className="bg-gray-400 hover:bg-gray-500 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300 ">
                               <div className="flex items-center justify-center gap-2">
                                 <FaEye />
                                 <span className="text-[14px]">View</span>
@@ -224,8 +227,6 @@ function UserManagement() {
                 </table>
               </div>
             </div>
-
-
           </main>
         </div>
       </div>

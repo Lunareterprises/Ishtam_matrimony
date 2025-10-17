@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AdminSidebar from '../AdminComponents/AdminSidebar'
 import AdminNavbar from '../AdminComponents/AdminNavbar'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { deleteSuccessStoriesApi, HandleSuccessStoriesApi, listSuccessStoriesApi } from '../../Services/allApi'
 import Swal from 'sweetalert2'
 import { MdOutlineHourglassEmpty } from 'react-icons/md'
@@ -12,6 +12,7 @@ import DoubleHearts from '../../assets/DoubleHearts.png';
 function AdminSuccessStories() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [successStoryData, setSuccessStoryData] = useState([])
+    const navigate = useNavigate();
 
     //for listing success stories 
     const listSuccessStory = async () => {
@@ -189,7 +190,7 @@ function AdminSuccessStories() {
                                                     <img
                                                         src={`https://lunarsenterprises.com:6050${item.ss_image}`}
                                                         alt={item.name}
-                                                        className="w-full h-auto transform group-hover:scale-105 transition-transform duration-500"
+                                                        className="w-80 h-70 object-cover transform group-hover:scale-105 transition-transform duration-500"
                                                     />
                                                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                                                     <div className="absolute top-4 right-4 bg-[#E33183] text-white px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide shadow-lg">
@@ -205,11 +206,11 @@ function AdminSuccessStories() {
                                                             ? `${item.ss_story.substring(0, 200)}...`
                                                             : item.ss_story}
                                                     </p>
-                                                    <Link to='/admin-successStoryView'>
+                                                    <button onClick={() => navigate('/admin-successStoryView', { state: { storyData: item } })} >
                                                         <button className="text-left text-pink-600 hover:text-pink-700 font-semibold text-sm transition-colors flex items-center pb-2 gap-2">
                                                             Read Full Story →
                                                         </button>
-                                                    </Link>
+                                                    </button>
 
                                                     <div className='flex flex-col gap-3 pt-4 border-t border-gray-200'>
                                                         <div className='flex gap-3 w-full'>
@@ -244,7 +245,6 @@ function AdminSuccessStories() {
 
                             <div className='flex justify-start items-start' >
                                 <div className="flex flex-wrap gap-6 py-2  w-full">
-
                                     {successStoryData.filter(item => item.ss_status === "approved").length > 0 ?
                                         successStoryData
                                             .filter(item => item.ss_status === "approved")
@@ -257,7 +257,7 @@ function AdminSuccessStories() {
                                                         <img
                                                             src={`https://lunarsenterprises.com:6050${item.ss_image}`}
                                                             alt={item.name}
-                                                            className="w-full h-auto transform group-hover:scale-105 transition-transform duration-500"
+                                                            className="w-80 h-70 object-cover transform group-hover:scale-105 transition-transform duration-500"
                                                         />
                                                         <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -271,11 +271,11 @@ function AdminSuccessStories() {
                                                                 ? `${item.ss_story.substring(0, 200)}...`
                                                                 : item.ss_story}
                                                         </p>
-                                                        <Link to='/admin-successStoryView'>
+                                                        <button onClick={() => navigate('/admin-successStoryView', { state: { storyData: item } })}  >
                                                             <button className="text-left text-pink-600 hover:text-pink-700 font-semibold text-sm transition-colors flex items-center pb-2 gap-2">
                                                                 Read Full Story →
                                                             </button>
-                                                        </Link>
+                                                        </button>
 
                                                         <div className='flex flex-col items-center justify-center gap-3 pt-4 border-t border-gray-200'>
                                                             <button onClick={() => deleteSuccessStories(item.ss_id)} className='bg-[#f82222] hover:bg-[#bc1e1e] text-white px-4 py-2.5 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md'  >

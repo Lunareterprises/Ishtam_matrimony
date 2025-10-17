@@ -3,7 +3,7 @@ import AdminNavbar from "../AdminComponents/AdminNavbar";
 import AdminSidebar from "../AdminComponents/AdminSidebar";
 import { FaCreditCard, FaEye, FaUser } from "react-icons/fa";
 import AssignPlanModal from "../AdminComponents/AssignPlanModal";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { getDashboardDataApi, listAllUsersApi, updateUserStatusApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
 
@@ -26,7 +26,6 @@ function AdminDashboard() {
             console.log(result);
             // Filter users with u_role = "user"
             const usersOnly = result?.data?.data?.filter(user => user.u_role === "user");
-
             setUserData(usersOnly);
         } catch (error) {
             console.log(error);
@@ -64,8 +63,6 @@ function AdminDashboard() {
                     confirmButtonText: 'Retry',
                 });
             }
-
-
         } catch (error) {
             Swal.fire({
                 title: 'Something went wrong',
@@ -94,18 +91,14 @@ function AdminDashboard() {
 
     const calculateAge = (dob) => {
         if (!dob) return null;
-
         const birthDate = new Date(dob);   // "2025-09-17T04:07:10.000Z"
         const today = new Date();
-
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
-
         // adjust if birthday hasn't happened yet this year
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--;
         }
-
         return age;
     };
 
@@ -115,44 +108,15 @@ function AdminDashboard() {
         getDashboardData();
     }, [])
 
+    
+    //for navigation to user profile view
+    const navigate = useNavigate();
 
-    const stats = [
-        {
-            title: "Active users",
-            value: "456K",
-            change: "+3%",
-            color: "text-green-600",
-            desc: "Total registered users",
-        },
-        {
-            title: "Recent Enquiries",
-            value: "124K",
-            change: "-2%",
-            color: "text-red-600",
-            desc: "Active subscriptions",
-        },
-        {
-            title: "New Registrations",
-            value: "320",
-            change: "+12%",
-            color: "text-green-600",
-            desc: "Joined today",
-        },
-        {
-            title: "New Stories to manage",
-            value: "120",
-            change: "+8%",
-            color: "text-green-600",
-            desc: "Profiles reported this week",
-        },
-    ];
-
-
-
-    const navigate = useNavigate()
-    const userProfileView = () => {
-        navigate("/user-profileView")
+    const userProfileView = (u_id) => {
+        console.log("userid on user management :::", u_id);
+        navigate('/user-profileView', { state: { userId: u_id } });
     }
+
 
 
     return (
@@ -220,7 +184,7 @@ function AdminDashboard() {
                                     Enquiries from the last 7 days
                                 </p>
                             </div>
-                            
+
                             <div className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition">
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-gray-600 font-medium flex items-center gap-1">
@@ -353,7 +317,7 @@ function AdminDashboard() {
                                                         </div>
 
                                                         {/* View Button */}
-                                                        <button onClick={userProfileView} className="bg-gray-400 hover:bg-gray-500 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300 ">
+                                                        <button onClick={() => userProfileView(profile.u_id)} className="bg-gray-400 hover:bg-gray-500 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300 ">
                                                             <div className="flex items-center justify-center gap-2">
                                                                 <FaEye />
                                                                 <span className="text-[14px]">View</span>

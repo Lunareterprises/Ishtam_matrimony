@@ -1,67 +1,117 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import AdminNavbar from '../AdminComponents/AdminNavbar';
 import AdminSidebar from '../AdminComponents/AdminSidebar';
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io';
 import { FiUploadCloud } from 'react-icons/fi';
 import { BsBalloonHeart, BsQrCode } from 'react-icons/bs';
-import addStoryImg from '../../assets/addStoryImg.png'
+import addStoryImg from '../../assets/addStoryImg.png';
 import DoubleHearts from '../../assets/DoubleHearts.png';
+import { addNewSubscriptionPlanApi, getSubscriptionPlanApi } from '../../Services/allApi';
+import Swal from 'sweetalert2';
+import EditSubscriptionPlanModal from '../AdminComponents/EditSubscriptionPlanModal';
 import AdminSubscriptionPlanCards from '../AdminComponents/AdminSubscriptionPlanCards';
 
-
-function SubscriptionManagement() {
+function SubscriptionManagement({ plans: subscriptionPlans }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [plans, setPlans] = useState([]);
+    const [planData, setPlanData] = useState({
+        name: "",
+        price: "",
+        duration: "",
+        contact_limit: "",
+    });
+    const [flippedIndex, setFlippedIndex] = useState(null);
 
-    const plans = [
-        {
-            name: "Basic",
-            price: "₹1500",
-            duration: "6 Month Duration",
-            features: [
-                "Unlimited Chat",
-                "Unlimited Connection Requests",
-                "3 Contact View Per Day",
-                "Chat Support",
-            ],
-            buttonColor: "bg-[#5A0A1D] text-white", // Brown
-            highlight: false,
-        },
-        {
-            name: "Advance",
-            price: "₹9",
-            duration: "User/Month",
-            features: [
-                "App Management",
-                "Attendance Management",
-                "Leave System Management",
-                "Employee Management",
-                "Expense Tracking",
-                "Chat Support",
-                "Invoice Generate",
-            ],
-            buttonColor: "bg-white text-[#5A0A1D]",
-            highlight: true, // highlighted like hover
-        },
-        {
-            name: "Premium",
-            price: "₹12",
-            duration: "User/Month",
-            features: [
-                "App Management",
-                "Attendance Management",
-                "Leave System Management",
-                "Employee Management",
-                "Expense Tracking",
-                "Chat Support",
-                "Invoice Generate",
-                "Purchase Generate",
-                "Payroll",
-            ],
-            buttonColor: "bg-blue-100 text-[#5A0A1D]",
-            highlight: false,
-        },
-    ];
+    // For editing subscription plan
+    const [viewEditModal, setViewEditModal] = useState(false);
+    const [selectedPlan, setSelectedPlan] = useState(null);
 
+    const handleEditClick = (plan) => {
+        setSelectedPlan(plan);
+        setViewEditModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setViewEditModal(false);
+        setSelectedPlan(null);
+    };
+
+    const addSubscriptionPlan = async (planData) => {
+        console.log("Plan data ::", planData); // Console log for planData
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = { Authorization: `Bearer ${token}` };
+            const result = await addNewSubscriptionPlanApi(reqHeader, planData);
+            if (result?.data?.result === true) {
+                await Swal.fire({
+                    title: 'Plan Added Successfully!',
+                    text: `The "${planData.name}" subscription plan has been added.`,
+                    icon: 'success',
+                    iconColor: '#E33183',
+                    confirmButtonText: 'OK',
+                });
+                selectedPlan({
+                    name: "",
+                    price: "",
+                    duration: "",
+                    contact_limit: "",
+                })
+                getSubscriptionPlan();
+            } else {
+                Swal.fire({
+                    title: 'Failed to Add Plan',
+                    text: 'Unable to add the subscription plan. Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'Retry',
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                title: 'Failed',
+                text: 'Something went wrong, please try again!',
+                icon: 'error',
+                confirmButtonText: 'Retry',
+            });
+        }
+    };
+
+    // For fetching subscription plan data
+    const getSubscriptionPlan = async () => {
+        try {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = { Authorization: `Bearer ${token}` };
+            const result = await getSubscriptionPlanApi(reqHeader);
+            console.log("API Result:", result); // Log the full result
+            if (result?.data?.data) {
+                setPlans(result.data.data); // Set plans from API response
+                console.log("Fetched Plans:", result.data.data); // Log fetched plans
+            } else {
+                console.log("No plans data found in response");
+                setPlans([]); // Fallback to empty array if no data
+            }
+        } catch (error) {
+            console.log("Error fetching plans:", error);
+        }
+    };
+
+    useEffect(() => {
+        getSubscriptionPlan();
+    }, []);
+
+    // State-based increment/decrement for add form
+    const updateDuration = (delta) => {
+        setPlanData(prev => ({
+            ...prev,
+            duration: Math.max(1, (parseInt(prev.duration) || 0) + delta).toString()
+        }));
+    };
+
+    const updateContactLimit = (delta) => {
+        setPlanData(prev => ({
+            ...prev,
+            contact_limit: Math.max(1, (parseInt(prev.contact_limit) || 0) + delta).toString()
+        }));
+    };
 
     return (
         <div className="flex h-screen bg-pink-50 overflow-hidden">
@@ -87,13 +137,14 @@ function SubscriptionManagement() {
 
                                 {/* SINGLE ROW - Groom, Bride, Date */}
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 pt-5">
-
                                     {/* Plan Name */}
                                     <div>
                                         <label className="block text-gray-700 font-medium mb-1">
                                             Plan Name
                                         </label>
                                         <input
+                                            value={planData.name}
+                                            onChange={(e) => setPlanData({ ...planData, name: e.target.value })}
                                             type="text"
                                             placeholder="Enter New Plan Name"
                                             className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
@@ -106,6 +157,8 @@ function SubscriptionManagement() {
                                             Subscription Price
                                         </label>
                                         <input
+                                            value={planData.price}
+                                            onChange={(e) => setPlanData({ ...planData, price: e.target.value })}
                                             type="text"
                                             placeholder="Enter the Price for This Plan"
                                             className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
@@ -117,31 +170,26 @@ function SubscriptionManagement() {
                                         <label className="block text-gray-700 font-medium mb-1">
                                             Plan Duration (Months)
                                         </label>
-                                        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full  px-2">
+                                        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full px-2">
                                             <button
                                                 type="button"
                                                 className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
-                                                onClick={() => {
-                                                    const input = document.getElementById("planDuration");
-                                                    input.stepDown();
-                                                }}
+                                                onClick={() => updateDuration(-1)}
                                             >
                                                 -
                                             </button>
                                             <input
                                                 type="number"
-                                                id="planDuration"
                                                 placeholder="Enter Duration"
                                                 min={1}
+                                                value={planData.duration}
+                                                onChange={(e) => setPlanData({ ...planData, duration: e.target.value })}
                                                 className="w-full text-center p-2 focus:ring-2 focus:ring-pink-400 outline-none"
                                             />
                                             <button
                                                 type="button"
                                                 className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
-                                                onClick={() => {
-                                                    const input = document.getElementById("planDuration");
-                                                    input.stepUp();
-                                                }}
+                                                onClick={() => updateDuration(1)}
                                             >
                                                 +
                                             </button>
@@ -153,73 +201,36 @@ function SubscriptionManagement() {
                                         <label className="block text-gray-700 font-medium mb-1">
                                             Contact Limit
                                         </label>
-                                        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full  px-2">
+                                        <div className="flex items-center border border-gray-300 rounded-lg overflow-hidden w-full px-2">
                                             <button
                                                 type="button"
                                                 className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
-                                                onClick={() => {
-                                                    const input = document.getElementById("contactLimit");
-                                                    input.stepDown();
-                                                }}
+                                                onClick={() => updateContactLimit(-1)}
                                             >
                                                 -
                                             </button>
                                             <input
                                                 type="number"
-                                                id="contactLimit"
                                                 placeholder="Enter Contact Limit"
+                                                value={planData.contact_limit}
+                                                onChange={(e) => setPlanData({ ...planData, contact_limit: e.target.value })}
                                                 min={1}
                                                 className="w-full text-center p-2 focus:ring-2 focus:ring-pink-400 outline-none"
                                             />
                                             <button
                                                 type="button"
                                                 className="px-3 py-1 rounded-lg bg-gray-200 hover:bg-gray-300"
-                                                onClick={() => {
-                                                    const input = document.getElementById("contactLimit");
-                                                    input.stepUp();
-                                                }}
+                                                onClick={() => updateContactLimit(1)}
                                             >
                                                 +
                                             </button>
                                         </div>
                                     </div>
-
-                                </div>
-
-
-                                <div>
-                                    <label className="block text-gray-700 font-medium mb-1">
-                                        Enter Plan Features
-                                    </label>
-                                    <textarea
-                                        placeholder="Share your success story..."
-                                        rows={5}
-                                        className="w-full border text-gray-700 border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-pink-400 resize-none"
-                                    />
-                                </div>
-
-                                {/* Upload Box */}
-                                <div className='flex flex-col items-center justify-center'>
-                                    <label className="block text-gray-700 font-medium mb-2">
-                                        QR CODE
-                                    </label>
-
-                                    <label className="flex flex-col items-center justify-center sm:w-100 w-full h-40 border-2 border-dashed border-gray-400 rounded-xl cursor-pointer bg-gray-50 hover:bg-pink-100 transition relative overflow-hidden">
-                                        <BsQrCode className="text-gray-500 text-3xl mb-2" />
-                                        <span className="text-sm text-gray-600 text-center p-3">
-                                            Click or drag & drop to payment QR code
-                                        </span>
-                                        <input
-                                            type="file"
-                                            accept="image/*"
-                                            className="hidden"
-                                        />
-                                    </label>
                                 </div>
 
                                 {/* Submit Button */}
                                 <div className='flex items-center justify-center pt-5'>
-                                    <button
+                                    <button onClick={() => addSubscriptionPlan(planData)}
                                         type="button"
                                         className="px-5 py-2 bg-pink-600 text-white font-medium rounded-lg hover:bg-pink-700 transition"
                                     >
@@ -237,20 +248,39 @@ function SubscriptionManagement() {
                                 All active plans currently available on Ishttam Marry
                             </p>
                             <div className="flex flex-col sm:items-start items-center w-full">
-                                <div className="flex flex-col md:flex-row sm:items-start gap-6">
+                                <div className="grid gap-6 py-10 px-4 
+                grid-cols-1 
+                md:grid-cols-2 
+                xl:grid-cols-3 
+                sm:justify-items-start justify-items-center">
                                     {plans.map((plan, index) => (
-                                        <AdminSubscriptionPlanCards key={index} plan={plan} />
+                                        <AdminSubscriptionPlanCards
+                                            key={index}
+                                            plan={plan}
+                                            flipped={flippedIndex === index}
+                                            onFlip={() => setFlippedIndex(index)}
+                                            onBack={() => setFlippedIndex(null)}
+                                            onEdit={() => handleEditClick(plan)}
+                                            onDeleteSuccess={getSubscriptionPlan}
+                                        />
                                     ))}
                                 </div>
                             </div>
-
                         </div>
-
                     </main>
                 </div>
             </div>
+
+            {viewEditModal && (
+                <EditSubscriptionPlanModal
+                    isOpen={viewEditModal}
+                    onClose={handleCloseModal}
+                    plan={selectedPlan}
+                    onUpdateSuccess={getSubscriptionPlan}
+                />
+            )}
         </div>
-    )
+    );
 }
 
-export default SubscriptionManagement
+export default SubscriptionManagement;

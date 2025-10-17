@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Nav from '../Components/Nav'
 import { BsBalloonHeart } from "react-icons/bs";
 import realStoriesImg1 from '../assets/Property 1=Frame 1000008792 (1).png'
@@ -8,42 +8,32 @@ import realStoriesImg4 from '../assets/Property 11=Frame 1000008796.png'
 import realStoriesImg5 from '../assets/Property 12=Frame 1000008796.png'
 import realStoriesImg6 from '../assets/Property 17=Frame 1000008796.png'
 import Footer from '../Components/Footer';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { listAllStoriesApi } from '../Services/allApi';
 
 function AllSuccessStories() {
-    const realStories = [
-        {
-            image: realStoriesImg1,
-            name: 'Anita & Joseph',
-            story: 'Through Ishttam Marry. I found a partner who shares my faith and values. We felt spiritually connected from the first meeting.'
-        },
-        {
-            image: realStoriesImg2,
-            name: 'Sarah & Michael',
-            story: '"Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely."'
-        },
-        {
-            image: realStoriesImg3,
-            name: 'Maria & David',
-            story: '"Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together."'
-        },
-        {
-            image: realStoriesImg4,
-            name: 'Anita & Joseph',
-            story: 'Through Ishttam Marry. I found a partner who shares my faith and values. We felt spiritually connected from the first meeting.'
-        },
-        {
-            image: realStoriesImg5,
-            name: 'Sarah & Michael',
-            story: '"Ishttam Marry introduced me to my soulmate. Our shared beliefs and goals have strengthened our relationship immensely."'
-        },
-        {
-            image: realStoriesImg6,
-            name: 'Maria & David',
-            story: '"Finding love through Ishttan Marry was a blessing. We not only bonded over our traditions but also built a future together."'
-        },
 
-    ];
+
+    const [successStoriesData, setSuccessStoriesData] = useState([]);
+    const fetchSuccessStories = async () => {
+        try {
+            const result = await listAllStoriesApi();
+            setSuccessStoriesData(result.data.data); // ✅ use the array inside
+            console.log("consoling success sotories result ::", result.data.data);
+        } catch (error) {
+            console.log("Error in fetching success stories", error);
+        }
+    };
+
+    const navigate = useNavigate()
+    const navigateToStoryView = () => {
+        navigate('/view-success-story')
+    }
+
+    useEffect(() => {
+        fetchSuccessStories()
+    }, [])
+      
 
     return (
         <div>
@@ -82,20 +72,30 @@ function AllSuccessStories() {
                 </div>
 
                 <div className="flex flex-wrap justify-between w-full gap-y-6 sm:px-35 px-10 sm:py-20 py-10">
-                    {realStories.map((item, index) => (
+                    {successStoriesData.map((item, index) => (
                         <div
                             key={index}
-                            className="w-full sm:max-w-[400px] md:max-w-[380px] lg:max-w-[380px]"
+                            className="
+          flex-shrink-0 
+          w-[85%] max-w-[280px]   /* 👈 cap size on small screens */
+          sm:max-w-[400px] 
+          md:max-w-[350px] 
+          lg:max-w-[350px] overflow-hidden
+        "
                         >
                             <img
-                                src={item.image}
+                               
+                                src={`https://lunarsenterprises.com:6050${item.ss_image}`}
                                 alt={item.name}
-                                className="w-full h-auto"
+                                className="object-cover h-60 w-full shadow-md"
                             />
-                            <div className="px-1 pt-4">
-                                <h2 className="text-xl font-semibold">{item.name}</h2>
-                                <p className="italic text-[16px]">"{item.story}"</p>
-                                <h3 className="pt-1 underline">Read more</h3>
+                            <div className="w-full pt-4">
+                                <h2 className="text-xl font-semibold">{item.bride_firstname} & {item.groom_firstname}</h2>
+                                <p className="italic text-[16px] break-words"> {item.ss_story.length > 80
+                                    ? `${item.ss_story.substring(0, 150)}...`
+                                    : item.ss_story}</p>
+                                <h3 onClick={() => navigate('/view-success-story', { state: { storyData: item } })}
+                                    className="pt-1 underline cursor-pointer">Read more</h3>
                             </div>
                         </div>
                     ))}

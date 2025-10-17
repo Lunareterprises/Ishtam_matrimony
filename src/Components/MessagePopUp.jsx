@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaTimes } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 
 function MessagePopUp({ isOpen, onClose }) {
     const messages = [
@@ -8,10 +9,14 @@ function MessagePopUp({ isOpen, onClose }) {
         { name: "Diana Prince", message: "Hi there! I noticed your work in the industry and would love to conne...", img: "https://via.placeholder.com/40" },
         { name: "Barbara Gordon", message: "Greetings! Your profile caught my attention and I would appreciate...", img: "https://via.placeholder.com/40" },
         { name: "Paula Irving", message: "Hi! I found your expertise quite fascinating and would love to co...", img: "https://via.placeholder.com/40" },
-       
     ];
 
     if (!isOpen) return null;
+
+    const navigate = useNavigate()
+    const navigateToChatWindow = () => {
+        navigate('/chatWindow')
+    }
 
     return (
         <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50 px-4">
@@ -28,7 +33,7 @@ function MessagePopUp({ isOpen, onClose }) {
                 {/* Messages List */}
                 <div className="max-h-[460px] overflow-y-auto custom-scroll">
                     {messages.map((msg, index) => (
-                        <div
+                        <div onClick={navigateToChatWindow}
                             key={index}
                             className="flex items-center gap-3 px-5 sm:py-3 py-2 border-b last:border-none hover:bg-[#E331830F] cursor-pointer transition"
                         >
@@ -44,7 +49,7 @@ function MessagePopUp({ isOpen, onClose }) {
                 {/* Footer */}
                 <div className="p-3 text-center ">
                     <button
-                        
+
                         className="px-5  text-white font-medium "
                     >
                         Close

@@ -3,6 +3,8 @@ import { BsBalloonHeart } from 'react-icons/bs'
 import realStoriesImg3 from '../../assets/Property 1=Frame 1000008797.png'
 import AdminSidebar from '../AdminComponents/AdminSidebar';
 import AdminNavbar from '../AdminComponents/AdminNavbar';
+import { useLocation } from 'react-router-dom';
+
 
 function AdminSuccessStoryView() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -12,8 +14,13 @@ function AdminSuccessStoryView() {
     const textContainerRef = useRef(null);
     const headerRef = useRef(null);
 
-    // Your story data - replace with dynamic data from props or API
-    const story = `ChavaraMatrimony is a wonderful platform for families to find each other and soul mates to meet and start the journey of life together. Wishing all the very best to Team Chavara! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Nisi, cupiditate? Porro in optio dolorem modi, necessitatibus voluptates amet totam repudiandae accusantium excepturi esse non dolor itaque aliquid, distinctio iusto obcaecati! Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed beatae labore sunt adipisci expedita atque explicabo! Dolor, doloremque. Labore quia quod rem animi quidem autem ipsam, sunt molestiae itaque officiis! Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestias ut beatae ex officiis corrupti earum. A repellat vel quam nihil similique natus modi. Iusto modi vero reprehenderit culpa velit mollitia? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex nulla omnis facilis quae tenetur quisquam quibusdam fuga debitis nisi, officia, ipsam magnam rem beatae! Expedita debitis rem molestiae animi maxime.`;
+
+    const location = useLocation();
+    const { storyData } = location.state || {};
+    const story = storyData.ss_story;
+    const storyImage = storyData.ss_image;
+    console.log("Received story:", storyData);
+    const BASE_URL = 'https://lunarsenterprises.com:6050/ishtam_marry'
 
     useEffect(() => {
         const calculateTextSplit = () => {
@@ -22,7 +29,6 @@ function AdminSuccessStoryView() {
                 setSecondPart('');
                 return;
             }
-
             if (!imageRef.current || !textContainerRef.current || !headerRef.current) return;
 
             const imageHeight = imageRef.current.offsetHeight;
@@ -30,7 +36,6 @@ function AdminSuccessStoryView() {
 
             // slightly increase available height (fills more words)
             const availableHeight = imageHeight - headerHeight + 3; // add 20px buffer for extra text
-
             // Binary search to find best split point
             let low = 0;
             let high = story.length;
@@ -113,9 +118,10 @@ function AdminSuccessStoryView() {
                                             <div className="w-full xl:w-1/2">
                                                 <img
                                                     ref={imageRef}
-                                                    src={realStoriesImg3}
+                                                    src={`https://lunarsenterprises.com:6050${storyData.ss_image}`}
+                                                   /*  src={realStoriesImg3} */
                                                     alt="Couple"
-                                                    className="w-full h-auto rounded-md object-cover"
+                                                    className="w-150 h-100 rounded-md object-cover"
                                                 />
                                             </div>
 
@@ -132,17 +138,24 @@ function AdminSuccessStoryView() {
                                                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-[#fff0f5] border border-pink-100 rounded-md py-4 sm:py-5 md:py-7 px-3 sm:px-4 md:px-5 mb-3 md:mb-4">
                                                         <div>
                                                             <p className="text-pink-700 font-medium text-sm sm:text-base">
-                                                                Bijil K S <span className="text-gray-500">(CM1046238)</span>
+                                                                {storyData.bride_firstname} {storyData.bride_lastname} <span className="text-gray-500">(ITM{storyData.ss_bride_id})</span>
                                                             </p>
                                                             <p className="text-pink-700 font-medium text-sm sm:text-base">
-                                                                Susanna Wilson <span className="text-gray-500">(CM1023452)</span>
+                                                                {storyData.groom_firstname} {storyData.groom_lastname} <span className="text-gray-500">(ITM{storyData.ss_groom_id})</span>
                                                             </p>
                                                         </div>
 
                                                         {/* Wedding Date Section */}
                                                         <div className="mt-2 sm:mt-0 text-left sm:text-right">
                                                             <p className="text-xs sm:text-sm text-gray-600">Wedding Date</p>
-                                                            <p className="font-semibold text-sm sm:text-base text-gray-800">26 May 2025</p>
+                                                            <p className="text-gray-600 text-sm">
+                                                                {new Date(storyData.ss_wedding_date).toLocaleDateString('en-US', {
+                                                                    weekday: 'long',  // e.g., "Wednesday"
+                                                                    year: 'numeric',
+                                                                    month: 'long',    // e.g., "October"
+                                                                    day: 'numeric'    // e.g., "15"
+                                                                })}
+                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
