@@ -43,7 +43,7 @@ function ConnectNowModal({ onClose, receiver_id }) {
             }
         }
         catch (error) {
-            alert(error)
+           
         }
     }
 

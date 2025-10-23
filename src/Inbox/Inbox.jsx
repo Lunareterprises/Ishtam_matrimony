@@ -44,6 +44,7 @@ function Inbox() {
                     // Send "me" or "else" in type key
                     const reqBody = { type: contactOption === "me" ? "me" : "else" };
                     const result = await listContactHistoryApi(reqHeader, reqBody);
+                    console.log("result for contact history",result);
                     setInterestList(result.data.data || []);
                 } else {
                     const reqBody = { status: activeTab };

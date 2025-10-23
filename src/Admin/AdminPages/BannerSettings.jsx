@@ -7,8 +7,6 @@ import { FaEyeSlash } from "react-icons/fa6";
 import { FaEye } from "react-icons/fa6";
 
 import DoubleHeartsCredentials from "../../assets/DoubleHeartsCredentials.png";
-
-
 import {
     deleteBannerApi,
     insertBannerApi,
@@ -26,6 +24,8 @@ function BannerSettings() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [newBanner, setNewBanner] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [validate, setValidate] = useState("");
+
 
     useEffect(() => {
         if (bannerPreview.length === 0) return;
@@ -39,14 +39,69 @@ function BannerSettings() {
 
     const handleAddBanner = () => setIsModalOpen(true);
 
+    
+
     const handleFileChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if (!file) return;
+
+        // 1️⃣ Validate file type
+        const validTypes = ["image/jpeg", "image/png"];
+        if (!validTypes.includes(file.type)) {
+            Swal.fire({
+                title: "Invalid File Type",
+                text: "Only JPG and PNG formats are allowed.",
+                icon: "warning",
+                confirmButtonColor: "#E33183",
+            });
+            e.target.value = ""; // reset input
+            return;
+        }
+
+        // 2️⃣ Validate file size (max 5MB)
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            Swal.fire({
+                title: "File Too Large",
+                text: "Please upload an image smaller than 5MB.",
+                icon: "warning",
+                confirmButtonColor: "#E33183",
+            });
+            e.target.value = "";
+            return;
+        }
+
+        // 3️⃣ Validate aspect ratio
+        const img = new Image();
+        img.onload = () => {
+            const width = img.width;
+            const height = img.height;
+            const ratio = width / height;
+
+            console.log("Image dimensions:", width, height, "Ratio:", ratio.toFixed(2));
+
+            // Example: Allow around 2:1 ratio (e.g., 1.8 to 2.2)
+            if (ratio < 1.8 || ratio > 2.2) {
+                Swal.fire({
+                    title: "Invalid Image Ratio",
+                    text: "Please upload an image with a 2:1 ratio (e.g., 1440x720).",
+                    icon: "warning",
+                    confirmButtonColor: "#E33183",
+                });
+                e.target.value = "";
+                return;
+            }
+
+            // ✅ All validations passed
             setSelectedFile(file);
             const imageUrl = URL.createObjectURL(file);
             setNewBanner(imageUrl);
-        }
+        };
+
+        // Trigger image loading
+        img.src = URL.createObjectURL(file);
     };
+
 
     const handleUploadBanner = async () => {
         if (!newBanner) {
@@ -71,7 +126,6 @@ function BannerSettings() {
             formData.append("file", selectedFile);
             const token = sessionStorage.getItem("token");
             const reqHeader = { Authorization: `Bearer ${token}` };
-
             const result = await insertBannerApi(reqHeader, formData);
             console.log(result);
 
@@ -368,9 +422,12 @@ function BannerSettings() {
                             </h1>
                         </div>
 
-                        <h3 className="text-lg font-semibold text-gray-800 mb-2 text-center">
-                            Upload New Banner
-                        </h3>
+                        <div className="flex flex-col items-center justify-center"  >
+                            <h3 className="text-lg font-semibold text-gray-800 mb-2 text-center">
+                                Upload New Banner
+                            </h3>
+                        </div>
+
 
                         {/* Image Preview */}
                         {newBanner ? (

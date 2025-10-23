@@ -190,7 +190,7 @@ function ReceivedRequestCard({ item }) {
                                 className="border-2 border-gray-400 text-gray-600 px-4 py-2 rounded-full text-[13px] font-medium"
                                 disabled
                             >
-                                Declined
+                                Rejected
                             </button>
                         </div>
                     </div>

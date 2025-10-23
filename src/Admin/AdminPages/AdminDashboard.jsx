@@ -6,6 +6,7 @@ import AssignPlanModal from "../AdminComponents/AssignPlanModal";
 import { Navigate, useNavigate } from "react-router-dom";
 import { getDashboardDataApi, listAllUsersApi, updateUserStatusApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,15 +15,14 @@ function AdminDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userData, setUserData] = useState([]);
     const [dashboardData, setDashbordData] = useState([])
-
-
     const getAllUsersList = async () => {
         const token = sessionStorage.getItem("token");
         try {
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
-            const result = await listAllUsersApi(reqHeader);
+            const reqBody = { page: 1, limit: 10, search: "" };
+            const result = await listAllUsersApi(reqHeader, reqBody);
             console.log(result);
             // Filter users with u_role = "user"
             const usersOnly = result?.data?.data?.filter(user => user.u_role === "user");
@@ -31,7 +31,6 @@ function AdminDashboard() {
             console.log(error);
         }
     }
-
 
     const updateUserStatus = async (u_id) => {
         const token = sessionStorage.getItem("token");
@@ -73,6 +72,7 @@ function AdminDashboard() {
         }
     }
 
+    
 
     const getDashboardData = async () => {
         try {
@@ -108,7 +108,7 @@ function AdminDashboard() {
         getDashboardData();
     }, [])
 
-    
+
     //for navigation to user profile view
     const navigate = useNavigate();
 
@@ -240,9 +240,12 @@ function AdminDashboard() {
                                 <h2 className="text-lg font-semibold text-gray-800">
                                     User Management
                                 </h2>
-                                <button className="text-sm font-medium text-gray-600 border border-gray-300 px-4 py-1.5 rounded-full hover:bg-gray-100 transition whitespace-nowrap">
-                                    View all
-                                </button>
+                                <Link to="/userManagement" >
+                                    <button className="text-sm font-medium text-gray-600 border border-gray-300 px-4 py-1.5 rounded-full hover:bg-gray-100 transition whitespace-nowrap">
+                                        View all
+                                    </button>
+                                </Link>
+
                             </div>
 
                             <div className="overflow-x-auto">
@@ -260,18 +263,18 @@ function AdminDashboard() {
                                         </tr>
                                     </thead>
                                     <tbody className="text-[14px]" >
-                                        {userData.slice(0, 5).map((profile, i) => (
+                                        {userData?.slice(0, 5).map((profile, i) => (
                                             <tr
                                                 key={i}
                                                 className="border-b last:border-b-0 hover:bg-pink-50 transition-colors"
                                             >
-                                                <td className="p-3 text-gray-700 whitespace-nowrap">ITM{profile.u_id}</td>
-                                                <td className="p-3 text-gray-700 whitespace-nowrap">{profile.u_firstname} {profile.u_lastname}</td>
+                                                <td className="p-3 text-gray-700 whitespace-nowrap">ITM{profile?.u_id}</td>
+                                                <td className="p-3 text-gray-700 whitespace-nowrap">{profile?.u_firstname} {profile?.u_lastname}</td>
                                                 <td className="p-3 text-gray-700 whitespace-nowrap">
-                                                    {profile.u_profile_pic ? (
+                                                    {profile?.u_profile_pic ? (
                                                         <img
                                                             className="sm:w-20 sm:h-20 w-15 h-15 object-cover rounded-xl"
-                                                            src={`https://lunarsenterprises.com:6050${profile.u_profile_pic}`}
+                                                            src={`https://lunarsenterprises.com:6050${profile?.u_profile_pic}`}
                                                             alt="Profile"
                                                         />
                                                     ) : (
@@ -281,11 +284,11 @@ function AdminDashboard() {
                                                     )}
 
                                                 </td>
-                                                <td className="p-3 text-gray-700 whitespace-nowrap">{calculateAge(profile.u_dob)}</td>
-                                                <td className="p-3 text-gray-700 whitespace-nowrap">{profile.u_gender}</td>
-                                                <td className="p-3 text-gray-700 whitespace-nowrap">{profile.u_district ? profile.u_district : "Not specified"}</td>
+                                                <td className="p-3 text-gray-700 whitespace-nowrap">{calculateAge(profile?.u_dob)}</td>
+                                                <td className="p-3 text-gray-700 whitespace-nowrap">{profile?.u_gender}</td>
+                                                <td className="p-3 text-gray-700 whitespace-nowrap">{profile?.u_district ? profile?.u_district : "Not specified"}</td>
                                                 <td className="p-3 text-gray-700 whitespace-nowrap">
-                                                    {new Date(profile.u_created_at).toLocaleDateString("en-GB", {
+                                                    {new Date(profile?.u_created_at).toLocaleDateString("en-GB", {
                                                         day: "2-digit",
                                                         month: "short", // use "long" for full month name
                                                         year: "numeric"
@@ -297,19 +300,19 @@ function AdminDashboard() {
                                                         {/* Toggle */}
                                                         <div className="flex flex-col items-center gap-1 shrink-0">
                                                             <span
-                                                                className={`text-sm font-medium ${profile.u_status === "active" ? "text-green-600" : "text-gray-600"}`}
+                                                                className={`text-sm font-medium ${profile?.u_status === "active" ? "text-green-600" : "text-gray-600"}`}
                                                             >
-                                                                {profile.u_status === "active" ? "Active" : "Inactive"}
+                                                                {profile?.u_status === "active" ? "Active" : "Inactive"}
                                                             </span>
 
 
                                                             <button
-                                                                onClick={() => updateUserStatus(profile.u_id)}
-                                                                className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors ${profile.u_status === "active" ? "bg-green-500" : "bg-gray-400"
+                                                                onClick={() => updateUserStatus(profile?.u_id)}
+                                                                className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors ${profile?.u_status === "active" ? "bg-green-500" : "bg-gray-400"
                                                                     }`}
                                                             >
                                                                 <span
-                                                                    className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform ${profile.u_status === "active" ? "translate-x-7" : "translate-x-0"
+                                                                    className={`bg-white w-5 h-5 rounded-full shadow-md transform transition-transform ${profile?.u_status === "active" ? "translate-x-7" : "translate-x-0"
                                                                         }`}
                                                                 ></span>
                                                             </button>
@@ -317,7 +320,7 @@ function AdminDashboard() {
                                                         </div>
 
                                                         {/* View Button */}
-                                                        <button onClick={() => userProfileView(profile.u_id)} className="bg-gray-400 hover:bg-gray-500 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300 ">
+                                                        <button onClick={() => userProfileView(profile?.u_id)} className="bg-gray-400 hover:bg-gray-500 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300 ">
                                                             <div className="flex items-center justify-center gap-2">
                                                                 <FaEye />
                                                                 <span className="text-[14px]">View</span>
@@ -326,7 +329,7 @@ function AdminDashboard() {
 
                                                         {/* Activate Button */}
                                                         <button onClick={() => {
-                                                            setSelectedUser(profile.u_id); // pass clicked user
+                                                            setSelectedUser(profile?.u_id); // pass clicked user
                                                             setIsModalOpen(true); // open modal
                                                         }} className=" bg-[#E33183] hover:bg-pink-700 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300">
                                                             <div className="flex items-center justify-center gap-2">

@@ -198,7 +198,7 @@ function ViewSuccessStory() {
         "
               >
                 <img
-                  onClick={navigateToStoryView}
+                  onClick={() => navigate('/view-success-story', { state: { storyData: item } })}
                   src={`https://lunarsenterprises.com:6050${item.ss_image}`}
                   alt={item.name}
                   className="object-cover h-60 w-full shadow-md"

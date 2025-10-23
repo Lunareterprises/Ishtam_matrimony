@@ -7,10 +7,11 @@ import { HiBadgeCheck } from "react-icons/hi";
 import { HiMiniBars3BottomRight } from "react-icons/hi2";
 
 
-function AdminNavbar({ onMenuClick }) {
+function AdminNavbar({ onMenuClick, onSearchChange }) {
 
     const email = sessionStorage.getItem("email");
     /* const email = sessionStorage.getItem("email"); */
+    const showSearchBar = location.pathname === "/userManagement";
 
     return (
         <div className="flex items-center justify-center py-5 px-5" >
@@ -28,16 +29,20 @@ function AdminNavbar({ onMenuClick }) {
                     </div>
 
                     {/* Search bar (hidden on small screens) */}
-                    <div className="relative flex-1 max-w-[450px] ml-4 hidden md:block">
-                        <input
-                            type="text"
-                            placeholder="Search"
-                            className="w-full rounded-full border-2 border-gray-300 pl-6 pr-12 py-3 focus:outline-none text-gray-600"
-                        />
-                        <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-full w-9 h-9 flex items-center justify-center cursor-pointer">
-                            <IoSearch className="text-[17px]" />
+                    {showSearchBar && (
+                        <div className="relative flex-1 max-w-[450px] ml-4 hidden md:block">
+                            <input
+                                onChange={(e) => onSearchChange(e.target.value)}
+                                type="text"
+                                placeholder="Search"
+                                className="w-full rounded-full border-2 border-gray-300 pl-6 pr-12 py-3 focus:outline-none text-gray-600"
+                            />
+                            <div className="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-full w-9 h-9 flex items-center justify-center cursor-pointer">
+                                <IoSearch className="text-[17px]" />
+                            </div>
                         </div>
-                    </div>
+                    )}
+
                 </div>
 
 
@@ -45,15 +50,8 @@ function AdminNavbar({ onMenuClick }) {
                 <div className="flex items-center gap-4 sm:gap-6">
 
                     {/* Notification icon */}
-                    <div className="flex items-center justify-center gap-6" >
-                        <div className="relative">
-                            <button className="w-8 h-8 sm:w-11 sm:h-11 rounded-full bg-gray-100 flex items-center justify-center shadow hover:bg-gray-100 transition">
-                                <PiBellLight className="sm:text-[24px] text-[20px] text-gray-500" />
-                            </button>
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center">
-                                2
-                            </span>
-                        </div>
+                    <div className="flex items-center justify-center " >
+
                         <div onClick={onMenuClick} className="md:hidden">
                             <button className="">
                                 <HiMiniBars3BottomRight className="text-[39px] pt-2 text-gray-400" />
@@ -78,7 +76,7 @@ function AdminNavbar({ onMenuClick }) {
                                 <h1 className="text-[#787878] text-[13px] ">{email}</h1>
                             </div>
                         </div>
-                       
+
                     </div>
 
                 </div>

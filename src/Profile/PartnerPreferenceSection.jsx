@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { fetchPartnerPreferenceApi, updatePartnerPreferenceApi } from '../Services/allApi';
 import { FaPen } from "react-icons/fa";
+import Swal from 'sweetalert2';
 
 function PartnerPreferenceSection() {
     const [isEditing, setIsEditing] = useState(false);
@@ -86,15 +87,30 @@ function PartnerPreferenceSection() {
             const result = await updatePartnerPreferenceApi(partnerPreferenceData, reqHeader);
             setIsEditing(false);
             if (result?.data?.result === true) {
-                alert("Partner prefernce updated successfully");
-                console.log(result);
+                Swal.fire({
+                    title: 'Partner preference updated',
+                    text: 'We’ve saved your new partner preferences successfully.',
+                    icon: 'info',
+                    iconColor: '#E33183',
+                    confirmButtonText: 'OK',
+                });
             } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: result?.data?.message,
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                });
                 console.log(result);
-                alert(result?.data?.message || "Update failed");
             }
         } catch (error) {
-            console.error("Update prefernce failed:", error);
-            alert("Something went wrong while updating profile");
+            Swal.fire({
+                title: 'Error',
+                text: 'Something went wrong. Please try again later.',
+                icon: 'error',
+                confirmButtonText: 'OK',
+            });
+
         }
     }
 

@@ -91,7 +91,7 @@ function MatchSuggestions() {
             {todaysMatchData?.length > 0 &&
                 <Link to='/todaysMatch'  >
                     <div className='flex justify-center pt-10' >
-                        <button className="border border-[#E33183] text-[#E33183] text-[13px] px-8 py-2 rounded-l-full rounded-r-full  hover:text-black transition">
+                        <button className="border border-[#E33183] text-[#E33183] text-[13px] px-8 py-2 rounded-l-full rounded-r-full  hover:bg-[#E33183]  hover:text-white transition">
                             View All
                         </button>
                     </div>

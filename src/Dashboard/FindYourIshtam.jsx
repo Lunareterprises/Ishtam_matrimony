@@ -30,6 +30,8 @@ function FindYourIshtam() {
             const result = await getMyMatchesApi(reqHeader, reqBody)
             console.log("match data ::", result);
             setMyMatchData(result.data.updated)
+            console.log("my match data length:",myMatchData.length);
+            
         }
         catch (error) {
             console.log("Error in fetching my match", error);
@@ -69,7 +71,7 @@ function FindYourIshtam() {
         <div className='pt-10' >
             <div className='flex flex-col  sm:items-start items-center  '>
                 <h1 className='text-[22px] text-[#530F29] font-semibold' >Find your ishtam ({myMatchData?.length})</h1>
-                <p className='text-[16px font-semibold text-[#787878]' >we found 12 new profiles matching your preferance</p>
+                <p className='text-[16px font-semibold text-[#787878]' >we found {myMatchData?.length} new profiles matching your preferance</p>
             </div>
             <div className='flex flex-col sm:items-start items-center gap-7 w-full'  >
                 {
@@ -94,7 +96,7 @@ function FindYourIshtam() {
             {myMatchData?.length > 0 &&
                 <Link to='/myMatch'>
                     <div className='flex w-full justify-center pt-10' >
-                        <button className="border border-[#E33183] text-[#E33183] text-[13px] px-8 py-2 rounded-l-full rounded-r-full  hover:text-black transition">
+                        <button className="border border-[#E33183] text-[#E33183] text-[13px] px-8 py-2 rounded-l-full rounded-r-full hover:bg-[#E33183]  hover:text-white transition">
                             View All
                         </button>
                     </div>

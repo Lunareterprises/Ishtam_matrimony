@@ -14,8 +14,6 @@ function MyProfile() {
     const [completionPercent, setCompletionPercent] = useState(0);
     const [currentPlanData, setCurrentPlanData] = useState({})
 
-
-
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
@@ -85,6 +83,8 @@ function MyProfile() {
             console.error("Error fetching partner preference data:", error);
         }
     };
+
+
 
 
 
@@ -223,7 +223,6 @@ function MyProfile() {
 
         // exclude only `is_private`
         const excludedKeys = ["is_private"];
-
         const validKeys = Object.keys(combinedData).filter(
             (key) => !excludedKeys.includes(key)
         );

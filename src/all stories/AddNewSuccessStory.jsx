@@ -63,7 +63,7 @@ function AddNewSuccessStory() {
             // ✅ Log the full response object
             console.log("Full API Response :::", result);
             if (result?.data?.result === true) {
-                
+
                 Swal.fire({
                     title: 'Story Submitted!',
                     text: 'Your story has been sent to the Ishttam Marry team for review. It will be displayed on the platform after approval.',
@@ -262,6 +262,7 @@ function AddNewSuccessStory() {
                             <label className="flex flex-col items-center justify-center sm:w-100 w-full h-40 border-2 border-dashed border-pink-400 rounded-xl cursor-pointer bg-pink-50 hover:bg-pink-100 transition relative overflow-hidden">
                                 {formData.preview ? (
                                     <img
+                                        onClick={() => navigate('/view-success-story', { state: { storyData: item } })}
                                         src={formData.preview}
                                         alt="Couple Preview"
                                         className="max-h-full max-w-full object-contain rounded-lg py-2"

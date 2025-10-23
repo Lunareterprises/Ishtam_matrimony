@@ -1,6 +1,13 @@
 import { BASE_URL } from './baseUrl'
 import { commonApi } from './commonApi'
 
+
+export const fetchHomeBannersApi = async () => {
+    console.log("inside fetch banners api :::");
+
+    return await commonApi("GET", `${BASE_URL}/banner`, "", "")
+}
+
 export const RegistrationApi = async (reqBody) => {
     console.log("Registration data in Api function:::", reqBody);
     return await commonApi("post", `${BASE_URL}/register`, reqBody, "")
@@ -31,6 +38,11 @@ export const resetCredentialsApi = async (reqBody) => {
 //Login user
 export const userLoginApi = async (reqBody) => {
     return await commonApi("POST", `${BASE_URL}/login_mobile_email`, reqBody, "")
+}
+
+//for fetching subscription plans 
+export const fetchSubscriptionPlanApi = async (reqHeader) => {
+return await commonApi("GET",`${BASE_URL}/plan/list`, "", reqHeader)
 }
 
 //update profile 
@@ -92,8 +104,9 @@ export const getCurrentPlanApi = async (reqHeader) => {
 }
 
 //for fetching my matches 
-export const getMyMatchesApi = async (reqHeader) => {
-    return await commonApi("POST", `${BASE_URL}/matches`, "", reqHeader)
+export const getMyMatchesApi = async (reqHeader, reqBody) => {
+    console.log("Inside my matches apii", reqBody);
+    return await commonApi("POST", `${BASE_URL}/matches`, reqBody, reqHeader)
 }
 
 //for fetching todays match
@@ -148,19 +161,25 @@ export const addSuccesstoryApi = async (reqBody) => {
 //for fetching contact history
 export const listContactHistoryApi = async (reqHeader, reqBody) => {
     console.log("inside contact history api :::");
+    console.log("reqbody for contact history :::", reqBody);
     return await commonApi("POST", `${BASE_URL}/contact/list`, reqBody, reqHeader)
 }
 
 
-
+//for deleting profile picture
+export const deleteGalleryImagesApi = async (reqBody, reqHeader) => {
+    return await commonApi("POST", `${BASE_URL}/image/delete`, reqBody, reqHeader)
+}
 
 
 //admin side API
 
 
 //for listing users
-export const listAllUsersApi = async (reqHeader) => {
-    return await commonApi("GET", `${BASE_URL}/admin/users/list`, "", reqHeader)
+export const listAllUsersApi = async (reqHeader, reqBody) => {
+    console.log(reqBody);
+
+    return await commonApi("POST", `${BASE_URL}/admin/users/list`, reqBody, reqHeader)
 }
 
 //for upadating active-inactive status of user
@@ -268,5 +287,6 @@ export const editSubscriptionPlanApi = async (reqHeader, reqBody) => {
 //delete subscription plan 
 export const deleteSubscriptionPlanApi = async (reqHeader, reqBody) => {
     console.log("inside deletesub", reqBody);
-return await commonApi("POST",`${BASE_URL}/admin/plan/delete`, reqBody, reqHeader)
+    return await commonApi("POST", `${BASE_URL}/admin/plan/delete`, reqBody, reqHeader)
 }
+

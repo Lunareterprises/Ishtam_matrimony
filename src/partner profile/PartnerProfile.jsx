@@ -21,6 +21,7 @@ import { IoLanguage, IoLocation } from "react-icons/io5";
 import Footer from '../Components/Footer';
 import { Link } from 'react-router-dom';
 import ViewContactModal from '../Components/ViewContactModal';
+import ImageGalleryModal from '../partner profile/ImageGalleryModal'
 
 
 function PartnerProfile() {
@@ -35,6 +36,9 @@ function PartnerProfile() {
     const profilePic = sessionStorage.getItem("profilePic");
     const fullName = sessionStorage.getItem("name")
     const [ContactData, setContactData] = useState([])
+    const [showChat, setShowChat] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     const fetchPartnerProfile = async () => {
         console.log("profile id inside the function :::", profileId);
@@ -110,6 +114,13 @@ function PartnerProfile() {
             fetchPartnerProfile();
         }
     }, [profileId]);
+
+    const openModal = (index) => {
+        setCurrentIndex(index);
+        setIsOpen(true);
+        setShowChat(false);
+    };
+
 
     return (
         <>
@@ -225,6 +236,46 @@ function PartnerProfile() {
                                             <p className='text-[#1F1F1F] text-[14px]'  >{item?.u_about}</p>
                                         </div>
 
+                                        {/* Image gallery */}
+                                        <div className="flex flex-col gap-2 px-10 pt-10">
+
+                                            {/* Thumbnails Grid */}
+                                            <h1 className="text-[17px] font-semibold text-[#1F1F1F]">
+                                                Image Gallery ({item?.images?.length || 0})
+                                            </h1>
+
+                                            {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+                                                {item?.images?.map((img, i) => (
+                                                    <img
+                                                        key={i}
+                                                        src={`https://lunarsenterprises.com:6050${img?.uf_file}`}
+                                                        alt={`img-${i}`}
+                                                        className="w-full h-full aspect-square object-cover rounded-sm cursor-pointer hover:opacity-90 transition-opacity"
+                                                        onClick={() => setCurrentIndex(i)}
+                                                    />
+                                                ))}
+                                            </div> */}
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+                                                {item?.images?.map((img, i) => (
+                                                    <img
+                                                        key={i}
+                                                        src={`https://lunarsenterprises.com:6050${img?.uf_file}`}
+                                                        alt={`img-${i}`}
+                                                        className="w-full h-full aspect-square object-cover rounded-sm cursor-pointer hover:opacity-90 transition-opacity"
+                                                        onClick={() => openModal(i)}
+                                                    />
+                                                ))}
+                                            </div>
+                                            <ImageGalleryModal
+                                                images={item?.images}
+                                                currentIndex={currentIndex}
+                                                setCurrentIndex={setCurrentIndex}
+                                                isOpen={isOpen}
+                                                setIsOpen={setIsOpen}
+                                            />
+
+                                        </div>
+
 
                                         {/* hobies and interest */}
                                         <div className='flex flex-col gap-3 px-10 pt-8 sm:items-start items-center' >
@@ -243,82 +294,77 @@ function PartnerProfile() {
                                             </div>
                                         </div>
 
-                                        <div className="flex flex-col md:flex-row flex-wrap items-center md:items-center lg:items-start justify-center lg:justify-between gap-10 px-5 md:px-10 pt-10">
 
-                                            {/* Contact Details */}
-                                            {/* <div className="flex flex-col gap-4 md:w-[45%] lg:w-auto text-center md:text-center lg:text-left">
-                                                <h1 className="text-[17px] font-semibold text-[#1F1F1F]">Contact Details</h1>
-                                                <div className="bg-white rounded-lg shadow-[0_0_15px_rgba(0,0,0,0.08)] flex flex-col p-5">
-                                                    <div className="flex items-start flex-col gap-3 text-black">
-                                                        <div className="flex gap-3 items-center justify-center lg:justify-start">
-                                                            <CgPhone className="text-2xl" />
-                                                            <h1 className="text-[#1F1F1F] text-[14px]">(+33) xxx xxx xx</h1>
-                                                        </div>
-                                                        <div className="flex gap-3 items-center justify-center lg:justify-start">
-                                                            <FaEnvelope className="text-2xl" />
-                                                            <h1 className="text-[#1F1F1F] text-[14px]">curtis.weaver@example.com</h1>
+                                        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 px-6 xl:px-12 pt-12 w-full mx-auto">
+
+                                            {/* Lifestyle Card */}
+                                            <div className="group bg-white/70 backdrop-blur-lg border border-pink-200/40 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-500">
+                                                <h2 className="text-sm uppercase tracking-[0.2em] text-gray-500 font-semibold mb-8">
+                                                    Lifestyle
+                                                </h2>
+                                                <div className="flex flex-col items-center gap-5">
+                                                    <div className="relative">
+                                                        <div className="absolute inset-0 bg-pink-500 rounded-full blur-2xl opacity-20 group-hover:opacity-30 transition-opacity duration-300"></div>
+                                                        <div className="relative text-pink-600 border border-pink-400 rounded-full w-20 h-20 bg-gradient-to-br from-white to-pink-50 flex items-center justify-center text-5xl shadow-sm group-hover:scale-105 transition-transform duration-300">
+                                                            {item.u_diet === "Non Veg" ? <GiChickenOven /> : <GiFruitBowl />}
                                                         </div>
                                                     </div>
-                                                </div>
-                                            </div> */}
-
-                                            {/* Lifestyle */}
-                                            <div className="flex flex-col gap-4 w-full md:w-[30%] lg:w-auto text-center md:text-center lg:text-left">
-                                                <h1 className="text-[17px] font-semibold text-[#1F1F1F]">Lifestyle</h1>
-                                                <div className="flex flex-col items-center lg:items-start gap-3">
-                                                    <div className="text-[#E33183] border-2 border-[#E33183] rounded-2xl w-16 h-16 bg-pink-50 flex items-center justify-center">
-                                                        <div className="text-[43px]">
-                                                            {
-                                                                item.u_diet === "Non Veg" ?
-                                                                    <GiChickenOven />
-                                                                    :
-                                                                    <GiFruitBowl />
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                    {
-                                                        item.u_diet === "Non Veg" ?
-                                                            <p className="text-[14px] text-[#1F1F1F]">Non-Vegetarian</p>
-                                                            :
-                                                            <p className="text-[14px] text-[#1F1F1F]">Vegetarian</p>
-                                                    }
+                                                    <p className="text-base font-semibold text-gray-800 tracking-wide">
+                                                        {item.u_diet === "Non Veg" ? "Non-Vegetarian" : "Vegetarian"}
+                                                    </p>
                                                 </div>
                                             </div>
 
-                                            {/* Background */}
-                                            <div className="flex flex-col gap-4 w-full md:w-[30%] lg:w-auto text-center md:text-center lg:text-left">
-                                                <h1 className="text-[17px] font-semibold text-[#1F1F1F]">Background</h1>
-                                                <div className="flex flex-col gap-3 text-[#1F1F1F]">
-                                                    <div className="flex gap-1 items-center justify-center lg:justify-start">
-                                                        <IoLanguage className="text-2xl" />
-                                                        <h1 className="text-[14px]">{item.u_mother_tongue}</h1>
+                                            {/* Background Card */}
+                                            <div className="group bg-white/70 backdrop-blur-lg border border-gray-200/40 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-500">
+                                                <h2 className="text-sm uppercase tracking-[0.2em] text-gray-500 font-semibold mb-8">
+                                                    Background
+                                                </h2>
+                                                <div className="flex flex-col gap-5">
+                                                    <div className="flex gap-3 items-start group/item hover:translate-x-1 transition-transform">
+                                                        <IoLanguage className="text-2xl text-pink-500 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-800 leading-relaxed">
+                                                            {item.u_mother_tongue || "N/A"}
+                                                        </p>
                                                     </div>
-                                                    <div className="flex gap-1 items-center justify-center lg:justify-start">
-                                                        <FaStarOfDavid className="text-[21px]" />
-                                                        <h1 className="text-[14px] pl-1">{item.u_religion}, {item.u_community}</h1>
+                                                    <div className="flex gap-3 items-start group/item hover:translate-x-1 transition-transform">
+                                                        <FaStarOfDavid className="text-xl text-pink-500 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-800 leading-relaxed">
+                                                            {item.u_religion || "N/A"}, {item.u_community || "N/A"}
+                                                        </p>
                                                     </div>
-                                                    <div className="flex gap-1 items-center justify-center lg:justify-start">
-                                                        <IoLocation className="text-2xl" />
-                                                        <h1 className="text-[14px]">{item.u_city}, {item.u_district}, {item.u_state}</h1>
+                                                    <div className="flex gap-3 items-start group/item hover:translate-x-1 transition-transform">
+                                                        <IoLocation className="text-2xl text-pink-500 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-800 leading-relaxed">
+                                                            {item.u_city || "N/A"}, {item.u_district || "N/A"}, {item.u_state || "N/A"}
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            {/* Extra Contact Details */}
-                                            <div className="flex flex-col gap-4 w-full md:w-[45%] lg:w-auto text-center md:text-center lg:text-left">
-                                                <h1 className="text-[17px] font-semibold text-[#1F1F1F]">Education & Careers</h1>
-                                                <div className="flex flex-col gap-3 text-[#1F1F1F]">
-                                                    <div className="flex gap-1 items-center justify-center lg:justify-start">
-                                                        <FaGraduationCap className="text-2xl" />
-                                                        <h1 className="text-[14px]">{item.u_qualification}</h1>
+                                            {/* Education & Career Card */}
+                                            <div className="group bg-white/70 backdrop-blur-lg border border-gray-200/40 rounded-3xl p-8 shadow-md hover:shadow-xl transition-all duration-500">
+                                                <h2 className="text-sm uppercase tracking-[0.2em] text-gray-500 font-semibold mb-8">
+                                                    Education & Career
+                                                </h2>
+                                                <div className="flex flex-col gap-5">
+                                                    <div className="flex gap-3 items-start group/item hover:translate-x-1 transition-transform">
+                                                        <FaGraduationCap className="text-2xl text-pink-500 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-800 leading-relaxed">
+                                                            {item.u_qualification || "N/A"}
+                                                        </p>
                                                     </div>
-                                                    <div className="flex gap-1 items-center justify-center lg:justify-start">
-                                                        <MdOutlineWork className="text-2xl" />
-                                                        <h1 className="text-[14px]">{item.u_profession_area}</h1>
+                                                    <div className="flex gap-3 items-start group/item hover:translate-x-1 transition-transform">
+                                                        <MdOutlineWork className="text-2xl text-pink-500 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-800 leading-relaxed">
+                                                            {item.u_profession_area || "N/A"}
+                                                        </p>
                                                     </div>
-                                                    <div className="flex gap-1 items-center justify-center lg:justify-start">
-                                                        <RiCoinsFill className="text-2xl" />
-                                                        <h1 className="text-[14px]">{item.u_annual_income}</h1>
+                                                    <div className="flex gap-3 items-start group/item hover:translate-x-1 transition-transform">
+                                                        <RiCoinsFill className="text-2xl text-pink-500 mt-0.5 flex-shrink-0" />
+                                                        <p className="text-sm text-gray-800 leading-relaxed">
+                                                            {(item.u_annual_income / 100000).toFixed(2)} LPA
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -357,7 +403,7 @@ function PartnerProfile() {
 
                                                             {/* Score */}
                                                             <div className="w-13 h-13 sm:h-22 sm:w-22 rounded-full bg-[#E33183] flex items-center justify-center text-white font-semibold sm:text-lg text-sm shadow-lg">
-                                                                08/10
+                                                                {item?.matched_criteria?.length || 0}/10
                                                             </div>
 
                                                             {/* Right Profile */}
@@ -381,145 +427,139 @@ function PartnerProfile() {
 
                                                     {/* Details Section */}
                                                     <div className="flex flex-col gap-6 w-full sm:w-[57%] mt-6">
-                                                        {/* Each Row */}
+
+                                                        {/* Age */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Age</h1>
                                                                 <h1>{item.age}</h1>
                                                             </div>
-
-                                                            {
-                                                                matchedCriteria?.age
-                                                                    ? <div className="text-[#E33183] text-3xl">
-                                                                        <FaCircleCheck />
-                                                                    </div>
-                                                                    :
-                                                                    <div className="text-neutral-400 text-3xl">
-                                                                        <FaCircleMinus />
-                                                                    </div>
-                                                            }
-
+                                                            {item?.matched_criteria?.includes("age") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
-                                                        <div className="flex w-full justify-between items-center  pb-4">
+                                                        {/* Height */}
+                                                        <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Height</h1>
                                                                 <h1>{item.u_height}</h1>
                                                             </div>
-                                                            {
-                                                                matchedCriteria?.height
-                                                                    ? <div className="text-[#E33183] text-3xl">
-                                                                        <FaCircleCheck />
-                                                                    </div>
-                                                                    :
-                                                                    <div className="text-neutral-400 text-3xl">
-                                                                        <FaCircleMinus />
-                                                                    </div>
-                                                            }
+                                                            {item?.matched_criteria?.includes("height") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
-                                                        <div className="flex w-full justify-between items-center  pb-4">
+                                                        {/* Marital Status */}
+                                                        <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Marital Status</h1>
                                                                 <h1>{item.u_marital_status}</h1>
                                                             </div>
-                                                            {
-                                                                matchedCriteria?.marital_status
-                                                                    ? <div className="text-[#E33183] text-3xl">
-                                                                        <FaCircleCheck />
-                                                                    </div>
-                                                                    :
-                                                                    <div className="text-neutral-400 text-3xl">
-                                                                        <FaCircleMinus />
-                                                                    </div>
-                                                            }
+                                                            {item?.matched_criteria?.includes("marital_status") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
+                                                        {/* Religion / Community */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Religion / Community</h1>
                                                                 <h1>{item.u_religion}, {item.u_community}</h1>
                                                             </div>
-                                                            <div className="text-[#E33183] text-3xl">
-                                                                {
-                                                                    matchedCriteria?.religion_community
-                                                                        ? <div className="text-[#E33183] text-3xl">
-                                                                            <FaCircleCheck />
-                                                                        </div>
-                                                                        :
-                                                                        <div className="text-neutral-400 text-3xl">
-                                                                            <FaCircleMinus />
-                                                                        </div>
-                                                                }
-                                                            </div>
+                                                            {item?.matched_criteria?.includes("religion_community") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
-                                                        <div className="flex w-full justify-between items-center">
-                                                            <div className="flex flex-col items-start">
+                                                        {/* Mother Tongue */}
+                                                        <div className="flex w-full justify-between items-center pb-4">
+                                                            <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Mother Tongue</h1>
                                                                 <h1>{item.u_mother_tongue}</h1>
                                                             </div>
-                                                            {
-                                                                matchedCriteria?.mother_tongue
-                                                                    ? <div className="text-[#E33183] text-3xl">
-                                                                        <FaCircleCheck />
-                                                                    </div>
-                                                                    :
-                                                                    <div className="text-neutral-400 text-3xl">
-                                                                        <FaCircleMinus />
-                                                                    </div>
-                                                            }
+                                                            {item?.matched_criteria?.includes("mother_tongue") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
+                                                        {/* Country */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Country Living In</h1>
                                                                 <h1>{item.u_country}</h1>
                                                             </div>
-                                                            <div className="text-[#E33183] text-3xl">
-                                                                <FaCircleCheck />
-                                                            </div>
+                                                            {item?.matched_criteria?.includes("country") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
+                                                        {/* State */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">State Living In</h1>
                                                                 <h1>{item.u_state}</h1>
                                                             </div>
-                                                            <div className="text-[#E33183] text-3xl">
-                                                                <FaCircleCheck />
-                                                            </div>
+                                                            {item?.matched_criteria?.includes("state") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
+                                                        {/* Qualification */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Qualification</h1>
                                                                 <h1>{item.u_qualification}</h1>
                                                             </div>
-                                                            <div className="text-[#E33183] text-3xl">
-                                                                <FaCircleCheck />
-                                                            </div>
+                                                            {item?.matched_criteria?.includes("qualification") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
+
+                                                        {/* Working As */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Working As</h1>
                                                                 <h1>{item.u_working_as}</h1>
                                                             </div>
-                                                            <div className="text-[#E33183] text-3xl">
-                                                                <FaCircleCheck />
-                                                            </div>
+                                                            {item?.matched_criteria?.includes("working_as") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
+
+                                                        {/* Diet */}
                                                         <div className="flex w-full justify-between items-center pb-4">
                                                             <div className="flex flex-col items-start ">
                                                                 <h1 className="font-semibold">Diet</h1>
                                                                 <h1>{item.u_diet}</h1>
                                                             </div>
-                                                            <div className="text-neutral-400 text-3xl">
-                                                                <FaCircleMinus />
-                                                            </div>
+                                                            {item?.matched_criteria?.includes("diet") ? (
+                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
+                                                            ) : (
+                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
+                                                            )}
                                                         </div>
 
                                                     </div>
+
                                                 </div>
 
                                                 :
@@ -540,7 +580,8 @@ function PartnerProfile() {
                                                     </div>
                                                 </div>
                                         }
-                                        <ChatMessages />
+
+                                        {showChat && <ChatMessages />}
                                     </div>
                                 ))
                             ) : (
@@ -555,7 +596,10 @@ function PartnerProfile() {
                         </div>
                     </div>
                 </div>
+
+
             </div >
+
 
             {/* Show modal */}
             {showConnectNowModal && (

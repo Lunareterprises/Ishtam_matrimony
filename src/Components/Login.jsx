@@ -46,27 +46,49 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
       const result = await userLoginApi(loginData);
       console.log("Login result ::", result);
       if (result?.data?.result === true) {
-        sessionStorage.setItem("token", result.data.data.token)
-        sessionStorage.setItem("profilePic", result.data.data.profile_pic)
-        sessionStorage.setItem("user_id", result.data.data.user_id)
-        sessionStorage.setItem("email", result.data.data.email)
-        sessionStorage.setItem("name", result.data.data.name)
-        onClose()
-        await Swal.fire({
-          title: 'Login Successful!',
-          text: 'Here’s to finding your special someone!',
-          icon: 'success',
-          iconColor: '#E33183',
-          confirmButtonText: 'OK',
-        });
-        if (result?.data?.data?.role === "admin") {
-          navigate("/admin-dashboard");
-        }
-        else {
-          navigate("/dashboard");
+        const userData = result.data.data;
+        onClose();
+        // Check role and status before allowing login
+        if (userData.role !== "user") {
+          await Swal.fire({
+            title: "Access Denied",
+            text: "Only user accounts are allowed to log in here.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+          return; // stop further execution
         }
 
-      } else {
+        if (userData.status === "inactive") {
+          await Swal.fire({
+            title: "Account Blocked",
+            text: "You are blocked by admin. Please contact the Ishtam team.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+          return; // stop further execution
+        }
+
+        // ✅ Proceed with login for active user
+        sessionStorage.setItem("token", userData.token);
+        sessionStorage.setItem("profilePic", userData.profile_pic);
+        sessionStorage.setItem("user_id", userData.user_id);
+        sessionStorage.setItem("email", userData.email);
+        sessionStorage.setItem("name", userData.name);
+
+
+
+        await Swal.fire({
+          title: "Login Successful!",
+          text: "Here’s to finding your special someone!",
+          icon: "success",
+          iconColor: "#E33183",
+          confirmButtonText: "OK",
+        });
+
+        navigate("/dashboard");
+      }
+      else {
         Swal.fire({
           title: 'Login failed',
           text: result?.data?.message || 'Please try again.',
@@ -146,8 +168,8 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
 
 
               <div className="flex items-center justify-between text-sm sm:gap-15 gap-3">
-                <label className="flex items-center gap-2 text-[#490B22]">
-                  <input type="checkbox" className="w-4 h-4" />
+                <label className="flex items-center gap-2 text-white">
+                  <p  className="w-4 h-4 text-white " />
                   Remember me
                 </label>
 

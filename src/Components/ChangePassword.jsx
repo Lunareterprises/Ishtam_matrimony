@@ -6,7 +6,6 @@ import Swal from 'sweetalert2';
 
 function ChangePassword({ onClose }) {
     const [showPassword, setShowPassword] = useState(false);
-
     const [newPassword, setNewPassword] = useState({
         password: ""
     })

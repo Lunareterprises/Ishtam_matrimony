@@ -3,7 +3,9 @@ import { FaRegUser } from "react-icons/fa";
 import { TiCameraOutline } from "react-icons/ti";
 import { FaPen } from "react-icons/fa";
 import { useRef } from "react";
-import { fetchProfileDataApi, getCurrentPlanApi, updateProfileApi } from '../Services/allApi';
+import { deleteGalleryImagesApi, fetchProfileDataApi, getCurrentPlanApi, updateProfileApi } from '../Services/allApi';
+import { IoTrashBinSharp } from 'react-icons/io5';
+import Swal from 'sweetalert2';
 
 
 function ProfileSection() {
@@ -15,7 +17,6 @@ function ProfileSection() {
     const [isLoading, setIsLoading] = useState(true);
     const [galleryImages, setGalleryImages] = useState([]);
     const galleryFileInputRefs = useRef([]);
-
     const [profileData, setProfileData] = useState({
         created_by: "",
         gender: "",
@@ -128,18 +129,21 @@ function ProfileSection() {
                     setPreview(fullImageUrl);
                 }
 
-                if (userData.u_images) {
-                    const imagesArray = typeof userData.u_images === 'string'
-                        ? userData.u_images.split(',').filter(img => img.trim())
-                        : userData.u_images;
-
-                    const formattedImages = imagesArray.map(imgPath => ({
-                        preview: `https://lunarsenterprises.com:6050${imgPath}`,
-                        isNew: false,
-                        serverPath: imgPath
-                    }));
-
+                // Handle the `images` array from the API
+                if (userData.images && Array.isArray(userData.images)) {
+                    const formattedImages = userData.images
+                        .slice(0, 4) // Limit to first 4 images
+                        .map(img => ({
+                            preview: `https://lunarsenterprises.com:6050${img.uf_file}`,
+                            isNew: false,
+                            serverPath: img.uf_file,
+                            uf_id: img.uf_id // Add uf_id
+                        }));
                     setGalleryImages(formattedImages);
+                    console.log("galleryImages after set:", formattedImages);
+                } else {
+                    console.log("No images in API response");
+                    setGalleryImages([null, null, null, null]); // Initialize 4 empty slots
                 }
             }
 
@@ -169,11 +173,109 @@ function ProfileSection() {
         }
     };
 
-    const handleDeleteGalleryImage = (index) => {
+
+    const handleDeleteGalleryImage = async (image, index) => {
+        console.log("hi broooooo");
+        console.log("uf_id :::", image.uf_id);
+
+        // SweetAlert confirmation
+        const result = await Swal.fire({
+            title: 'Delete Photo?',
+            text: 'Are you sure you want to delete this image from your gallery?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#E33183',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        });
+        if (!result.isConfirmed) return;
+        const token = sessionStorage.getItem("token")
+        const reqHeader = {
+            "Authorization": `Bearer ${token}`
+        };
+        const reqBody = {
+            image_id: image.uf_id,
+            type: "gallery"
+        }
+        try {
+            const result = await deleteGalleryImagesApi(reqBody, reqHeader)
+            console.log("result :::", result);
+        }
+        catch (error) {
+            console.log(error);
+        }
         const updatedImages = [...galleryImages];
         updatedImages[index] = null;
         setGalleryImages(updatedImages);
     };
+
+
+
+
+    /*   const handleDeleteGalleryImage = async (image, index) => {
+    console.log("Delete clicked for image uf_id:", image?.uf_id);
+  
+    // SweetAlert confirmation
+    const result = await Swal.fire({
+      title: 'Delete Photo?',
+      text: 'Are you sure you want to delete this image from your gallery?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#E33183',
+      cancelButtonColor: '#6b7280',
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+    });
+  
+    if (!result.isConfirmed) return; // exit if user cancels
+  
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+    const reqBody = {
+      image_id: image.uf_id,
+      type: "gallery",
+    };
+  
+    try {
+      const apiResult = await deleteGalleryImagesApi(reqBody, reqHeader);
+      console.log("API delete result:", apiResult);
+  
+      if (apiResult?.data?.result === true) {
+        // success
+        const updatedImages = [...galleryImages];
+        updatedImages[index] = null;
+        setGalleryImages(updatedImages);
+  
+        await Swal.fire({
+          title: 'Deleted!',
+          text: 'The image has been successfully removed from your gallery.',
+          icon: 'success',
+          iconColor: '#E33183',
+          confirmButtonText: 'OK',
+        });
+      } else {
+        Swal.fire({
+          title: 'Failed!',
+          text: apiResult?.data?.message || 'Unable to delete the image.',
+          icon: 'error',
+          confirmButtonText: 'OK',
+        });
+      }
+    } catch (error) {
+      console.error("Error deleting gallery image:", error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Something went wrong while deleting the image.',
+        icon: 'error',
+        confirmButtonText: 'OK',
+      });
+    }
+  }; */
+
+
 
     const fileInputRef = useRef(null);
     const handleFileChange = (event) => {
@@ -215,17 +317,58 @@ function ProfileSection() {
             setIsEditing(false);
             setEditingSection(null);
 
+
+            /*  if (result?.data?.result === true) {
+                 await Swal.fire({
+                     title: 'Plan Added Successfully!',
+                     text: `The "${planData.name}" subscription plan has been added.`,
+                     icon: 'success',
+                     iconColor: '#E33183',
+                     confirmButtonText: 'OK',
+                 });
+                 selectedPlan({
+                     name: "",
+                     price: "",
+                     duration: "",
+                     contact_limit: "",
+                 })
+                 getSubscriptionPlan();
+             } else {
+                 Swal.fire({
+                     title: 'Failed to Add Plan',
+                     text: 'Unable to add the subscription plan. Please try again.',
+                     icon: 'error',
+                     confirmButtonText: 'Retry',
+                 });
+             }
+  */
             if (result?.data?.result === true) {
-                alert("Profile updated successfully");
+                await Swal.fire({
+                    title: 'Profile updated Successfully!',
+                    text: `Your profile details have been updated. Keep your information up to date to get better matches!`,
+                    icon: 'success',
+                    iconColor: '#E33183',
+                    confirmButtonText: 'OK',
+                });
                 console.log(result);
                 fetchProfileData();
             } else {
                 console.log(result);
-                alert(result?.data?.message || "Update failed");
+                Swal.fire({
+                    title: 'Updation failed',
+                    text: result?.data?.message || 'Please try again.',
+                    icon: 'error',
+                    confirmButtonText: 'ok',
+                });
+
             }
         } catch (error) {
-            console.error("Update profile failed:", error);
-            alert("Something went wrong while updating profile");
+            Swal.fire({
+                title: 'Error',
+                text: "Something went wrong! pleas",
+                icon: 'error',
+                confirmButtonText: 'ok',
+            });
         }
     };
 
@@ -307,11 +450,7 @@ function ProfileSection() {
                     ) : (
 
                         <div className='flex flex-col gap-3' >
-                            <div className='flex flex-col items-start' >
-                                <h1 className='text-[14px]' >Plan name</h1>
-                                <p className='text-[14px]'  ><span>Expiry:</span> 13 Sep 2025</p>
-                            </div>
-                            <div className='flex flex-col items-start' >
+                            <div className='flex flex-col sm:items-start items-center align-baseline border-2 text-pink-500 border-pink-500 px-6 py-3 rounded-full' >
                                 <h1 className='text-[14px]' >Plan name</h1>
                                 <p className='text-[14px]'  ><span>Expiry:</span> 13 Sep 2025</p>
                             </div>
@@ -356,12 +495,15 @@ function ProfileSection() {
                                                     <span className="text-xs font-bold text-[#540D33]">{index + 1}</span>
                                                 </div>
                                                 <div
-                                                    className="absolute top-2 left-2 bg-red-500 rounded-full w-6 h-6 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
-                                                    onClick={() => handleDeleteGalleryImage(index)}
+                                                    className="absolute top-2 left-2 bg-red-500 rounded-full w-7 h-7 flex items-center justify-center cursor-pointer hover:bg-red-600 transition-colors"
+                                                    onClick={() => handleDeleteGalleryImage(image, index)}
                                                 >
-                                                    <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    {/* <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-                                                    </svg>
+                                                    </svg> */}
+                                                    <div className='text-white'  >
+                                                        <IoTrashBinSharp />
+                                                    </div>
                                                 </div>
                                             </div>
                                         ) : (
@@ -1032,7 +1174,7 @@ function ProfileSection() {
                                     }
                                     className="form-checkbox h-5 w-5"
                                 />
-                                <span className="text-sm text-[#540D33]">Keep this private</span>
+                                <span className="text-sm text-[#540D33]">Keep the annual income private</span>
                             </label>
                         </div>
                     </div>
@@ -1084,7 +1226,7 @@ function ProfileSection() {
                     </div>
                 </div>
 
-               {/*  <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
+                {/*  <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
 
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">HOBBIES & INTEREST</h2>
@@ -1171,122 +1313,122 @@ function ProfileSection() {
 
 
                 <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
-    {/* Header */}
-    <div className="flex justify-between items-center px-6 py-6 bg-white">
-        <h2 className="text-lg font-bold text-[#540D33]">HOBBIES & INTEREST</h2>
-        <div
-            className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
-            onClick={() =>
-                setEditingSection(editingSection === "hobbies" ? null : "hobbies")
-            }
-        >
-            <FaPen className="text-white text-[10px]" />
-        </div>
-    </div>
-
-    {/* Body */}
-    <div className="bg-[#F5F5F5] px-7 py-7">
-        {editingSection === "hobbies" ? (
-            <div className="flex flex-wrap gap-3">
-                {profileData.hobbies.map((hobby, index) => (
-                    <div
-                        key={index}
-                        className="relative inline-flex items-center gap-2 bg-pink-50 rounded-lg border border-pink-400"
-                    >
-                        {/* Hidden span to match width */}
-                        <span
-                            className="invisible absolute whitespace-pre px-4 py-2 text-sm font-medium"
-                            ref={(el) => {
-                                if (el) {
-                                    el.textContent = hobby || "Enter hobby";
-                                    const input = el.nextSibling;
-                                    if (input) input.style.width = `${el.offsetWidth}px`;
-                                }
-                            }}
+                    {/* Header */}
+                    <div className="flex justify-between items-center px-6 py-6 bg-white">
+                        <h2 className="text-lg font-bold text-[#540D33]">HOBBIES & INTEREST</h2>
+                        <div
+                            className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
+                            onClick={() =>
+                                setEditingSection(editingSection === "hobbies" ? null : "hobbies")
+                            }
                         >
-                            {hobby || "Enter hobby"}
-                        </span>
-
-                        {/* Input */}
-                        <input
-                            type="text"
-                            value={hobby}
-                            placeholder="Enter hobby"
-                            onChange={(e) => {
-                                const updated = [...profileData.hobbies];
-                                updated[index] = e.target.value;
-                                setProfileData({ ...profileData, hobbies: updated });
-                            }}
-                            onBlur={() => {
-                                // Auto remove empty on blur
-                                if (hobby.trim() === "") {
-                                    const updated = profileData.hobbies.filter(
-                                        (_, i) => i !== index
-                                    );
-                                    setProfileData({ ...profileData, hobbies: updated });
-                                }
-                            }}
-                            className="px-4 py-2 rounded-lg text-[#540D33] text-sm font-medium 
-                                       bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 inline-block"
-                            style={{ width: "auto" }}
-                        />
-
-                        {/* Delete Button */}
-                        <button
-                            type="button"
-                            onClick={() => {
-                                const updated = profileData.hobbies.filter(
-                                    (_, i) => i !== index
-                                );
-                                setProfileData({ ...profileData, hobbies: updated });
-                            }}
-                            className="text-pink-500 hover:text-pink-700 px-2 font-bold"
-                        >
-                            ✕
-                        </button>
+                            <FaPen className="text-white text-[10px]" />
+                        </div>
                     </div>
-                ))}
 
-                {/* Add New Hobby */}
-                <button
-                    type="button"
-                    onClick={() => {
-                        const last = profileData.hobbies[profileData.hobbies.length - 1];
-                        // allow adding if no hobbies or last one is filled
-                        if (profileData.hobbies.length === 0 || (last && last.trim() !== "")) {
-                            setProfileData({
-                                ...profileData,
-                                hobbies: [...profileData.hobbies, ""],
-                            });
-                        }
-                    }}
-                    className="px-4 py-2 rounded-lg border border-dashed border-pink-400 
+                    {/* Body */}
+                    <div className="bg-[#F5F5F5] px-7 py-7">
+                        {editingSection === "hobbies" ? (
+                            <div className="flex flex-wrap gap-3">
+                                {profileData.hobbies.map((hobby, index) => (
+                                    <div
+                                        key={index}
+                                        className="relative inline-flex items-center gap-2 bg-pink-50 rounded-lg border border-pink-400"
+                                    >
+                                        {/* Hidden span to match width */}
+                                        <span
+                                            className="invisible absolute whitespace-pre px-4 py-2 text-sm font-medium"
+                                            ref={(el) => {
+                                                if (el) {
+                                                    el.textContent = hobby || "Enter hobby";
+                                                    const input = el.nextSibling;
+                                                    if (input) input.style.width = `${el.offsetWidth}px`;
+                                                }
+                                            }}
+                                        >
+                                            {hobby || "Enter hobby"}
+                                        </span>
+
+                                        {/* Input */}
+                                        <input
+                                            type="text"
+                                            value={hobby}
+                                            placeholder="Enter hobby"
+                                            onChange={(e) => {
+                                                const updated = [...profileData.hobbies];
+                                                updated[index] = e.target.value;
+                                                setProfileData({ ...profileData, hobbies: updated });
+                                            }}
+                                            onBlur={() => {
+                                                // Auto remove empty on blur
+                                                if (hobby.trim() === "") {
+                                                    const updated = profileData.hobbies.filter(
+                                                        (_, i) => i !== index
+                                                    );
+                                                    setProfileData({ ...profileData, hobbies: updated });
+                                                }
+                                            }}
+                                            className="px-4 py-2 rounded-lg text-[#540D33] text-sm font-medium 
+                                       bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 inline-block"
+                                            style={{ width: "auto" }}
+                                        />
+
+                                        {/* Delete Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                const updated = profileData.hobbies.filter(
+                                                    (_, i) => i !== index
+                                                );
+                                                setProfileData({ ...profileData, hobbies: updated });
+                                            }}
+                                            className="text-pink-500 hover:text-pink-700 px-2 font-bold"
+                                        >
+                                            ✕
+                                        </button>
+                                    </div>
+                                ))}
+
+                                {/* Add New Hobby */}
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const last = profileData.hobbies[profileData.hobbies.length - 1];
+                                        // allow adding if no hobbies or last one is filled
+                                        if (profileData.hobbies.length === 0 || (last && last.trim() !== "")) {
+                                            setProfileData({
+                                                ...profileData,
+                                                hobbies: [...profileData.hobbies, ""],
+                                            });
+                                        }
+                                    }}
+                                    className="px-4 py-2 rounded-lg border border-dashed border-pink-400 
                                text-pink-500 text-sm font-medium bg-white hover:bg-pink-50 transition"
-                >
-                    + Add Hobby
-                </button>
-            </div>
-        ) : (
-            <div className="flex flex-wrap gap-3">
-                {profileData.hobbies.filter((h) => h.trim() !== "").length > 0 ? (
-                    profileData.hobbies
-                        .filter((h) => h.trim() !== "")
-                        .map((hobby, index) => (
-                            <span
-                                key={index}
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg 
+                                >
+                                    + Add Hobby
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="flex flex-wrap gap-3">
+                                {profileData.hobbies.filter((h) => h.trim() !== "").length > 0 ? (
+                                    profileData.hobbies
+                                        .filter((h) => h.trim() !== "")
+                                        .map((hobby, index) => (
+                                            <span
+                                                key={index}
+                                                className="flex items-center gap-2 px-4 py-2 rounded-lg 
                                            border border-pink-400 bg-pink-50 text-[#540D33] text-sm font-medium"
-                            >
-                                {hobby}
-                            </span>
-                        ))
-                ) : (
-                    <span className="text-gray-500 text-sm">No hobbies added</span>
-                )}
-            </div>
-        )}
-    </div>
-</div>
+                                            >
+                                                {hobby}
+                                            </span>
+                                        ))
+                                ) : (
+                                    <span className="text-gray-500 text-sm">No hobbies added</span>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
 
 
 

@@ -1,25 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import { FaPen, FaQrcode } from 'react-icons/fa'
+import React from 'react'
+import { FaPen } from 'react-icons/fa'
 import { IoIosCheckmarkCircleOutline } from 'react-icons/io'
-import { IoArrowBack, IoTrashBin } from 'react-icons/io5'
-import EditSubscriptionPlanModal from './EditSubscriptionPlanModal'
-import { LuIndianRupee } from "react-icons/lu";
-import { deleteSubscriptionPlanApi } from '../../Services/allApi'
+import { IoTrashBin } from 'react-icons/io5'
+import { LuIndianRupee } from "react-icons/lu"
 import Swal from 'sweetalert2'
+import { deleteSubscriptionPlanApi } from '../../Services/allApi'
 
+function AdminSubscriptionPlanCards({ plan, onEdit, onDeleteSuccess }) {
 
-
-function AdminSubscriptionPlanCards({ plan, flipped, onFlip, onBack, onEdit, onDeleteSuccess }) {
-    useEffect(() => {
-        console.log("plan data :::", plan);
-    })
-
-
-    const deleteSubscriptionPlan = async (p_id, planName) => {
+    const deleteSubscriptionPlan = async (p_id) => {
         try {
             const confirm = await Swal.fire({
                 title: "Are you sure?",
-                text: "This Plan will be permanently deleted.",
+                text: "This plan will be permanently deleted.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#E33183",
@@ -36,14 +29,13 @@ function AdminSubscriptionPlanCards({ plan, flipped, onFlip, onBack, onEdit, onD
 
             const reqBody = { plan_id: p_id };
 
-
             const result = await deleteSubscriptionPlanApi(reqHeader, reqBody);
             console.log("result for delete sub plan", result);
 
             if (result?.data?.result === true) {
                 await Swal.fire({
                     title: 'Plan Deleted Successfully!',
-                    text: `The subscription plan has been deleted.`,
+                    text: 'The subscription plan has been deleted.',
                     icon: 'success',
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
@@ -69,72 +61,43 @@ function AdminSubscriptionPlanCards({ plan, flipped, onFlip, onBack, onEdit, onD
         }
     };
 
-
     return (
-        <div className="w-full md:w-72 [perspective:1000px]">
-            <div
-                className={`relative w-auto h-100 transition-transform duration-700 [transform-style:preserve-3d] ${flipped ? "[transform:rotateY(180deg)]" : ""}`}
-            >
-                {/* Front Side */}
-                <div className="absolute w-full h-full bg-white rounded-lg border border-[#5A0A1D] shadow-md [backface-visibility:hidden] flex flex-col gap-4">
-                    <div className="text-center p-5 border-b border-gray-200">
-                        <h2 className="inline-block px-4 py-1 font-semibold text-[#5A0A1D] border-1 border-[#5A0A1D] rounded-[8px]">
-                            {plan.p_name}
-                        </h2>
-                    </div>
-                    <div className=" flex flex-col gap-1 text-center">
-                        <div className='flex items-center justify-center gap-1' >
-                            <h3 className="text-[40px] font-medium text-[#5A0A1D]">
-                                {plan.p_price}
-                            </h3>
-                            <LuIndianRupee className="text-[35px] font-medium text-[#5A0A1D]" />
-                        </div>
-                        <p className="text-[14px] text-gray-500">{plan.p_duration} Months</p>
-                        <div className='flex items-center justify-center gap-2' >
-                            <IoIosCheckmarkCircleOutline className="text-[#E33183] text-xl" />
-                            <p>{plan.p_contact_limit} Contact limit</p>
-                        </div>
-                    </div>
+        <div className=" w-[250px] bg-white rounded-xl border border-[#5A0A1D] shadow-md p-5 flex flex-col justify-between transition-transform hover:scale-[1.02]">
+            {/* Plan Title */}
+            <div className="text-center border-b border-gray-200 pb-3 mb-3">
+                <h2 className="inline-block px-4 py-1 font-semibold text-[#5A0A1D] border border-[#5A0A1D] rounded-md text-lg">
+                    {plan.p_name}
+                </h2>
+            </div>
 
-                    <div className="pt-2 pb-5 px-6 flex flex-col gap-3">
-                        <button
-                            onClick={onFlip}
-                            className="w-full py-2 rounded-md font-semibold bg-[#E33183] text-white transition-colors hover:bg-pink-700 flex items-center justify-center gap-2"
-                        >
-                            <FaQrcode /> View QR
-                        </button>
-                        <button
-                            onClick={onEdit}
-                            className="w-full py-2 rounded-md font-semibold bg-[#ff6a00] hover:bg-[#c65300] text-white transition-colors flex items-center justify-center gap-2"
-                        >
-                            <FaPen /> Edit Plan
-                        </button>
-                        <button onClick={() => deleteSubscriptionPlan(plan.p_id)}
-                            className="w-full py-2 rounded-md font-semibold bg-[#f82222] hover:bg-[#bc1e1e]  text-white transition-colors flex items-center justify-center gap-2"
-                        >
-                            <IoTrashBin /> Delete Plan
-                        </button>
-                    </div>
+            {/* Plan Details */}
+            <div className="flex flex-col items-center gap-2 text-center">
+                <div className="flex items-center justify-center gap-1">
+                    <LuIndianRupee className="text-[28px] text-[#5A0A1D]" />
+                    <h3 className="text-[36px] font-medium text-[#5A0A1D]">{plan.p_price}</h3>
                 </div>
+                <p className="text-sm text-gray-500">{plan.p_duration} Months</p>
 
-                {/* Back Side */}
-                <div className="absolute w-full h-full bg-white rounded-lg border border-[#5A0A1D] shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center p-6">
-                    <div className="mb-4 flex flex-col items-center">
-                        <FaQrcode className="text-5xl text-[#5A0A1D] mb-2" />
-                        <p className="text-[#5A0A1D] font-semibold text-center">
-                            Scan to Pay for {plan.name} Plan
-                        </p>
-                    </div>
-                    <div className="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                        <FaQrcode className="text-6xl text-[#5A0A1D]" />
-                    </div>
-                    <button
-                        onClick={onBack}
-                        className="mt-4 px-4 py-2 rounded-md bg-[#E33183] text-white flex items-center gap-2 hover:bg-pink-700"
-                    >
-                        <IoArrowBack /> Back
-                    </button>
+                <div className="flex items-center justify-center gap-2">
+                    <IoIosCheckmarkCircleOutline className="text-[#E33183] text-xl" />
+                    <p className="text-gray-700">{plan.p_contact_limit} Contact limit</p>
                 </div>
+            </div>
+
+            {/* Buttons */}
+            <div className="mt-6 flex flex-col gap-3">
+                <button
+                    onClick={onEdit}
+                    className="w-full py-2 rounded-md font-semibold bg-[#ff6a00] hover:bg-[#c65300] text-white transition-colors flex items-center justify-center gap-2"
+                >
+                    <FaPen /> Edit Plan
+                </button>
+                <button
+                    onClick={() => deleteSubscriptionPlan(plan.p_id)}
+                    className="w-full py-2 rounded-md font-semibold bg-[#f82222] hover:bg-[#bc1e1e] text-white transition-colors flex items-center justify-center gap-2"
+                >
+                    <IoTrashBin /> Delete Plan
+                </button>
             </div>
         </div>
     )

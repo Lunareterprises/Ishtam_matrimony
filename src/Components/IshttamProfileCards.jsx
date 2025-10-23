@@ -128,13 +128,13 @@ function IshttamProfileCards({ item }) {
             >
                 {/* Top badges */}
                 <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
-                    {/* {item.active_plan === null ? "Free" : item.active_plan.s_plan_name} */} freee
+                    {item.active_plan === null ? "Free" : item.active_plan.s_plan_name}
                 </div>
 
                 <div className="absolute top-2 right-2 flex gap-2">
                     <div className="flex items-center gap-1 bg-black bg-opacity-80 text-white px-2 py-1 rounded-3xl text-[11px]">
                         <FaCamera className="text-xs" />
-                        <span>3</span>
+                        <span>{item.imagesLength}</span>
                     </div>
                     {
                         item.wishlisted === false ?
@@ -176,9 +176,9 @@ function IshttamProfileCards({ item }) {
                         <h3 className="text-sm font-semibold text-white">
                             {item.u_firstname} {item.u_lastname}
                         </h3>
-                        <div className="rounded-l-full rounded-r-full bg-[rgba(0,0,0,0.5)] text-white text-[7px] py-1 px-3">
+                        {/* <div className="rounded-l-full rounded-r-full bg-[rgba(0,0,0,0.5)] text-white text-[7px] py-1 px-3">
                             4 hrs ago
-                        </div>
+                        </div> */}
                     </div>
                     <p className="text-[10px] font-normal text-[#D4D4D8]">
                         {calculateAge(item.u_dob)} yrs, {item.u_height} cm |{" "}
@@ -196,9 +196,41 @@ function IshttamProfileCards({ item }) {
                         <button onClick={() => getContactData(item.u_id)} className="border border-white text-white text-[10px] px-3 py-1 rounded-l-full rounded-r-full hover:bg-white hover:text-black transition">
                             View Contact
                         </button>
-                        <button onClick={() => setShowConnectNowModal(true)} className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-l-full rounded-r-full hover:bg-pink-600 transition">
-                            Connect Now
-                        </button>
+                        {
+                            item?.is_connected?.i_status === "cancelled" ? (
+                                <button className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-full">
+                                    Cancelled
+                                </button>
+                            ) : item?.is_connected?.i_status === "rejected" ? (
+                                <button
+                                  
+                                    className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-full hover:bg-pink-600 transition"
+                                >
+                                    Rejected
+                                </button>
+                            ) : item?.is_connected?.i_status === "accepted" ? (
+                                <button
+                                    onClick={() => navigateToParnerProfile(item.u_id)}
+                                    className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-full hover:bg-pink-600 transition"
+                                >
+                                    View Profile
+                                </button>
+                            ) : item?.is_connected?.i_status === "pending" ? (
+                                <button
+
+                                    className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-full hover:bg-pink-600 transition"
+                                >
+                                    Cancel Request
+                                </button>
+                            ) : <button
+                                onClick={() => setShowConnectNowModal(true)}
+                                className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-full hover:bg-pink-600 transition"
+                            >
+                                Connect Now
+                            </button>
+                        }
+
+
                     </div>
                 </div>
             </div>

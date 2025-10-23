@@ -2,8 +2,11 @@ import React from 'react'
 import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { FaQrcode } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
+import { BsQrCode } from 'react-icons/bs';
 
 function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
+    console.log("plan data :::", plan);
+
     return (
         <div className="w-full md:w-72 [perspective:1000px]">
             <div
@@ -14,23 +17,22 @@ function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
                 <div className="absolute w-full h-full bg-white rounded-lg border border-[#5A0A1D] shadow-md [backface-visibility:hidden] flex flex-col">
                     <div className="text-center p-5 border-b border-gray-200">
                         <h2 className="inline-block px-4 py-1 font-semibold text-[#5A0A1D] border-1 border-[#5A0A1D] rounded-[8px]">
-                            {plan.name}
+                            {plan.p_name}
                         </h2>
                     </div>
                     <div className="text-center py-4">
                         <h3 className="text-[40px] font-medium text-[#5A0A1D]">
-                            {plan.price}
+                            {plan.p_price}
                         </h3>
-                        <p className="text-[14px] text-gray-500">{plan.duration}</p>
+                        <p className="text-[14px] text-gray-500">{plan.p_duration}</p>
                     </div>
                     <ul className="px-6 space-y-2 text-[13px] flex-1">
-                        {plan.features.map((feature, i) => (
-                            <li key={i} className="flex items-center gap-2">
-                                <IoIosCheckmarkCircleOutline className="text-green-500 text-xl flex-shrink-0" />
-                                {feature}
-                            </li>
-                        ))}
+                        <li className="flex items-center gap-2">
+                            <IoIosCheckmarkCircleOutline className="text-[#E33183] text-xl flex-shrink-0" />
+                            {plan.p_contact_limit} Contacts Limits
+                        </li>
                     </ul>
+
                     <div className="pt-6 pb-10 px-6">
                         <button
                             onClick={onFlip}
@@ -43,20 +45,21 @@ function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
 
                 {/* Back Side */}
                 <div className="absolute w-full h-full bg-white rounded-lg border border-[#5A0A1D] shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center p-6">
-                    <div className="mb-4 flex flex-col items-center">
-                        <FaQrcode className="text-5xl text-[#5A0A1D] mb-2" />
-                        <p className="text-[#5A0A1D] font-semibold text-center">
-                            Scan to Pay for {plan.name} Plan
-                        </p>
-                    </div>
+
                     <div className="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                        <FaQrcode className="text-6xl text-[#5A0A1D]" />
+                        <BsQrCode className="text-9xl text-[#2e2e2e]" />
+                    </div>
+                    <div className="mb-4 flex flex-col items-center">
+                        <h1 className='text-xl text-gray-700  font-semibold '  >Scan to pay</h1>
+                        <p className="text-gray-400 text-sm font-medium text-center">
+                            Scan this QR to complete the payment
+                        </p>
                     </div>
                     <button
                         onClick={onBack}
                         className="mt-4 px-4 py-2 rounded-md bg-[#E33183] text-white flex items-center gap-2 hover:bg-pink-700"
                     >
-                        <IoArrowBack /> Back
+                        <IoArrowBack /> Back to plan
                     </button>
                 </div>
             </div>

@@ -15,7 +15,7 @@ import { PiSlidersBold } from "react-icons/pi";
 import ChangePassword from '../Components/ChangePassword';
 import { Link } from 'react-router-dom';
 import { fetchPartnerPreferenceApi, fetchProfileDataApi, getCurrentPlanApi, listInterestApi } from '../Services/allApi';
-
+import Socket from "../socket/Socket"
 
 function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +25,63 @@ function Dashboard() {
     const [receivedInterestCount, setReceivedInterestCount] = useState(0);
     const [completionPercent, setCompletionPercent] = useState(0);
     const [currentPlanData, setCurrentPlanData] = useState({})
+
+
+    console.log("hiiiiii");
+    
+    useEffect(() => {
+        const user_id = sessionStorage.getItem("user_id");
+        console.log("User ID:", user_id); 
+
+        if (user_id) {
+            // ✅ Connect socket if user exists
+            Socket.connect();
+
+            // Emit that user is online
+            Socket.emit("userOnline", { user_id });
+
+            // Listen for socket events
+            Socket.on("connect", () => {
+                console.log("✅ Socket connectedddd:", Socket.id);
+            });
+
+            Socket.on("onlineUsers", (users) => {
+                console.log("🟢 Online users:", users);
+            });
+
+            Socket.on("connect_error", (err) => {
+                console.error("❌ Socket connection error:", err.message);
+            });
+
+            Socket.on("disconnect", (reason) => {
+                console.log("🔴 Socket disconnected:", reason);
+            });
+        } else {
+            // 🔴 Disconnect if no user_id
+            if (Socket.connected) {
+                console.log("⚠️ No user_id found — disconnecting socket");
+                Socket.disconnect();
+            }
+        }
+
+        // Optional cleanup on unmount
+        return () => {
+            // We do NOT disconnect if user_id exists
+            const currentUser = sessionStorage.getItem("user_id");
+            if (!currentUser && Socket.connected) {
+                Socket.disconnect();
+            }
+
+            // Remove listeners to prevent duplicates
+            Socket.off("connect");
+            Socket.off("onlineUsers");
+            Socket.off("connect_error");
+            Socket.off("disconnect");
+        };
+    }, []);
+
+
+
 
 
     const listSentInterest = async () => {
@@ -184,7 +241,6 @@ function Dashboard() {
                     is_private: userData.u_private_income || false,
                 });
 
-
                 if (userData.u_profile_pic) {
                     // Create full URL for the server image
                     const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
@@ -202,6 +258,8 @@ function Dashboard() {
 
 
     useEffect(() => {
+        console.log("hi monne");
+        
         fetchPartnerPrefernce()
         getCurrentPlan()
         fetchProfileData()
@@ -415,7 +473,7 @@ function Dashboard() {
                                                         >
                                                             {completionPercent}%
 
-                                                           
+
                                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E33183] rounded-full"></div>
                                                             <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white rounded-full scale-75"></div>
                                                         </div>

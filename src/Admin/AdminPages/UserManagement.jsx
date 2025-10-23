@@ -6,6 +6,7 @@ import AssignPlanModal from "../AdminComponents/AssignPlanModal";
 import { useNavigate } from "react-router-dom";
 import { listAllUsersApi, updateUserStatusApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
+import { IoSearch } from 'react-icons/io5';
 
 function UserManagement() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -14,24 +15,56 @@ function UserManagement() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [userData, setUserData] = useState([])
   const navigate = useNavigate()
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
+  const [totalPages, setTotalPages] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
 
 
-  const getAllUsersList = async () => {
+
+  /* const getAllUsersList = async (currentPage = page) => {
     const token = sessionStorage.getItem("token");
     try {
       const reqHeader = {
         Authorization: `Bearer ${token}`,
       };
-      const result = await listAllUsersApi(reqHeader);
+      const reqBody = { page: currentPage, limit, search: "" };
+      const result = await listAllUsersApi(reqHeader, reqBody);
       console.log(result);
+
       // Filter users with u_role = "user"
       const usersOnly = result?.data?.data?.filter(user => user.u_role === "user");
-
       setUserData(usersOnly);
+
+      // Set pagination info from backend
+      setTotalPages(result?.data?.pagination?.totalPages || 1);
+      setPage(currentPage);
     } catch (error) {
       console.log(error);
     }
-  }
+  }; */
+
+  const getAllUsersList = async (currentPage = page, currentSearch = searchTerm) => {
+    const token = sessionStorage.getItem("token");
+    try {
+      const reqHeader = {
+        Authorization: `Bearer ${token}`,
+      };
+      const reqBody = { page: currentPage, limit, search: currentSearch };
+      const result = await listAllUsersApi(reqHeader, reqBody);
+      console.log(result);
+
+      const usersOnly = result?.data?.data?.filter(user => user.u_role === "user");
+      setUserData(usersOnly);
+
+      setTotalPages(result?.data?.pagination?.totalPages || 1);
+      setPage(currentPage);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
 
   //for navigation to user profile view
   const userProfileView = (u_id) => {
@@ -103,14 +136,19 @@ function UserManagement() {
 
 
   useEffect(() => {
-    getAllUsersList()
-  }, [])
+    const delayDebounce = setTimeout(() => {
+      getAllUsersList(1, searchTerm);
+    }, 500); // waits for user to stop typing
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
 
 
   return (
     <div className="flex h-screen bg-pink-50 overflow-hidden">
       <div className="flex-1 flex flex-col overflow-hidden">
-        <AdminNavbar onMenuClick={() => setIsSidebarOpen(true)} />
+        <AdminNavbar onSearchChange={setSearchTerm} onMenuClick={() => setIsSidebarOpen(true)} />
         <div className="flex flex-1 overflow-hidden">
           <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
           <main className="flex-1 overflow-y-auto px-5">
@@ -120,6 +158,26 @@ function UserManagement() {
             <p className="text-gray-500 mb-8">
               Monitor, manage, and keep your platform safe.
             </p>
+
+            <div className="flex items-center justify-center pb-8">
+              <div className="relative flex-1 max-w-[450px] block md:hidden">
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full rounded-full border-2 border-gray-300 pl-6 pr-12 py-3 focus:outline-none text-gray-600"
+                />
+                <div
+                  className="absolute right-3 top-1/2 -translate-y-1/2 bg-gray-800 text-white rounded-full w-9 h-9 flex items-center justify-center cursor-pointer"
+                  onClick={() => getAllUsersList(1, searchTerm)} // manual trigger on click
+                >
+                  <IoSearch className="text-[17px]" />
+                </div>
+              </div>
+            </div>
+
+
 
             {/* User management table */}
             <div className="bg-white rounded-2xl shadow-sm p-6 mb-10">
@@ -226,10 +284,38 @@ function UserManagement() {
                   </tbody>
                 </table>
               </div>
+              <div className="flex justify-end gap-2 mt-4">
+                <button
+                  onClick={() => getAllUsersList(page - 1)}
+                  disabled={page === 1}
+                  className="px-4 py-2 hover:bg-[#E33183] bg-gray-200 rounded disabled:opacity-50"
+                >
+                  Prev
+                </button>
+
+                <span className="px-4 py-2">
+                  Page {page} of {totalPages}
+                </span>
+
+                <button
+                  onClick={() => getAllUsersList(page + 1)}
+                  disabled={page === totalPages}
+                  className="px-4 py-2 bg-gray-200 hover:bg-[#E33183] rounded disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
             </div>
           </main>
+
         </div>
       </div>
+
+      <AssignPlanModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        userId={selectedUser}
+      />
     </div>
   )
 }

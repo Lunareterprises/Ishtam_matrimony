@@ -51,7 +51,7 @@ function App() {
         <Route path='/myMatch' element={<MyMatch />} />
         <Route path='/moreMatch' element={<MoreMatches />} />
         <Route path='/inbox' element={<Inbox />} />
-        <Route path='/chatWindow' element={<ChatWindow/>} />
+        <Route path='/chatWindow' element={<ChatWindow />} />
         <Route path='/subscription' element={<Subscription />} />
         <Route path='/all-Success-Stories' element={<AllSuccessStories />} />
         <Route path='/add-New-success-Story' element={<AddNewSuccessStory />} />
@@ -60,6 +60,7 @@ function App() {
         <Route path='/profile-vists' element={<ProfileVisits />} />
         <Route path='/shortlisted' element={<Shortlisted />} />
 
+        <Route path='/admin'  element={<Home />}  />
         <Route path='/admin-dashboard' element={<AdminDashboard />} />
         <Route path='/subscription-management' element={<SubscriptionManagement />} />
         <Route path='/enquiries' element={<Enquiries />} />
@@ -68,7 +69,7 @@ function App() {
         <Route path='/admin-profile' element={<AdminProfile />} />
         <Route path='/banner-settings' element={<BannerSettings />} />
         <Route path="/user-profileView" element={<UserProfileView />} />
-        <Route path='/admin-successStoryView' element={<AdminSuccessStoryView/>}  />
+        <Route path='/admin-successStoryView' element={<AdminSuccessStoryView />} />
       </Routes>
 
     </>

@@ -11,8 +11,8 @@ import processImg from '../assets/processImg.png'
 
 function OurProcess() {
     return (
-        <>
-            <div id='ourProcess' className='bg-[#F5F5F5] pb-56 scroll-mt-20 hidden lg:block' >
+        <div id='ourProcess' >
+            <div  className='bg-[#F5F5F5] pb-56 scroll-mt-20 hidden lg:block' >
                 <div className='flex flex-col items-center text-center gap-4' >
                     <h1 className="text-3xl font-semibold text-[#490b22] sm:pt-[80px] pt-[60px]">
                         Our Process
@@ -83,7 +83,7 @@ function OurProcess() {
 
 
             {/* small screen design*/}
-            <div className='bg-[#F5F5F5]  block sm:hidden py-10 ' >
+            <div  className='bg-[#F5F5F5]   block sm:hidden py-10 ' >
 
                 <div className='flex flex-col items-center text-center gap-4 px-7' >
                     <h1 className="text-3xl font-semibold text-[#490b22] ">
@@ -113,7 +113,7 @@ function OurProcess() {
             </div>
 
 
-        </>
+        </div>
     )
 }
 

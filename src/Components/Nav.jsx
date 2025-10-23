@@ -11,7 +11,7 @@ import { Link } from 'react-scroll';
 import { HashLink } from 'react-router-hash-link';
 
 
-function Nav() {
+function Nav({ onOpenLogin, onOpenRegistration }) {
 
     const [showSidebar, setShowSidebar] = useState(false);
 
@@ -30,9 +30,17 @@ function Nav() {
 
 
     const openLoginForm = () => {
-        setShowRegistration(false)
-        setShowLogin(true)
-        setShowSidebar(false)
+        const token = sessionStorage.getItem("token");
+
+        if (token) {
+            // Token exists → directly navigate to dashboard
+            navigate("/dashboard");
+        } else {
+            // No token → open login form as usual
+            setShowRegistration(false);
+            setShowLogin(true);
+            setShowSidebar(false);
+        }
 
     }
 
@@ -41,6 +49,8 @@ function Nav() {
         setShowRegistration(true)
         setShowSidebar(false)
     }
+
+
 
 
     return (
@@ -70,7 +80,11 @@ function Nav() {
                         }} to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
 
 
-                        <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</Link>
+                        <HashLink smooth scroll={el => {
+                            const yOffset = -80;
+                            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }} to='/#FAQ' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</HashLink>
 
                         <HashLink
                             smooth scroll={el => {
@@ -92,10 +106,10 @@ function Nav() {
 
                     {/* Buttons - Hidden on small screens */}
                     <div className="hidden sm:flex gap-5">
-                        <button onClick={openRegistrationForm} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
+                        <button onClick={onOpenRegistration || openRegistrationForm} className="w-[150px]  h-[36px] sm:h-[40px] bg-[#E33183] text-white rounded-full font-medium hover:bg-pink-700">
                             Registration
                         </button>
-                        <button onClick={openLoginForm} className="w-[90px]  h-[36px] sm:h-[40px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
+                        <button onClick={onOpenLogin || openLoginForm} className="w-[90px]  h-[36px] sm:h-[40px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
                             Sign In
                         </button>
                     </div>
@@ -120,19 +134,25 @@ function Nav() {
                             const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
                             window.scrollTo({ top: y, behavior: 'smooth' });
                         }}
-                        onClick={closeMenu}
+                            onClick={closeMenu}
                             to='/#home' duration={500} className="cursor-pointer hover:text-[#E33183] transition-all" >Home</HashLink>
 
                         <HashLink smooth scroll={el => {
                             const yOffset = -80;
                             const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
                             window.scrollTo({ top: y, behavior: 'smooth' });
-                        }} 
-                        onClick={closeMenu}
-                        to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
+                        }}
+                            onClick={closeMenu}
+                            to="/#aboutUs" className="cursor-pointer hover:text-[#E33183] transition-all">About us</HashLink>
 
 
-                        <Link to='' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</Link>
+                        <HashLink smooth scroll={el => {
+                            const yOffset = -80;
+                            const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                            window.scrollTo({ top: y, behavior: 'smooth' });
+                        }}
+                            onClick={closeMenu}
+                            to='/#FAQ' className="cursor-pointer hover:text-[#E33183] transition-all">FAQ</HashLink>
 
                         <HashLink
                             smooth scroll={el => {
@@ -152,7 +172,7 @@ function Nav() {
                             }}
                             onClick={closeMenu}
                             to='/#contactUs' className="cursor-pointer hover:text-[#E33183] transition-all">Contact</HashLink>
-                       
+
                         <div className="sm:hidden flex flex-col gap-4 items-center mt-6">
                             <button onClick={openRegistrationForm} className="w-[150px] h-[39px] bg-pink-600 text-white rounded-full font-medium hover:bg-pink-700">
                                 Registration

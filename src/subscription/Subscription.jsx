@@ -1,85 +1,33 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../Components/Sidebar";
 import DashboardHeader from "../Components/DashboardHeader";
 import ChatMessages from "../Components/ChatMessages";
 import DashboardNav from "../Components/DashboardNav";
-import { FaSearch } from "react-icons/fa";
-import { PiSlidersBold } from "react-icons/pi";
 import SubscriptionPlanCards from "./SubscriptionPlanCards";
+import { fetchSubscriptionPlanApi } from "../Services/allApi";
 
 function Subscription() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(null);
-  const plans = [
-    {
-      name: "Basic",
-      price: "₹1500",
-      duration: "6 Month Duration",
-      features: [
-        "Unlimited Chat",
-        "Unlimited Connection Requests",
-        "3 Contact View Per Day",
-        "Chat Support",
-      ],
-    },
-    {
-      name: "Advance",
-      price: "₹3000",
-      duration: "12 Month Duration",
-      features: [
-        "App Management",
-        "Attendance Management",
-        "Leave System",
-        "Employee Management",
-        "Expense Tracking",
-        "Chat Support",
-      ],
-    },
-    {
-      name: "Premium",
-      price: "₹5000",
-      duration: "1 Year",
-      features: [
-        "All Advance Features",
-        "Invoice Generate",
-        "Purchase Generate",
-        "Payroll System",
-      ],
-    },
-    {
-      name: "Premium",
-      price: "₹5000",
-      duration: "1 Year",
-      features: [
-        "All Advance Features",
-        "Invoice Generate",
-        "Purchase Generate",
-        "Payroll System",
-      ],
-    },
-    {
-      name: "Premium",
-      price: "₹5000",
-      duration: "1 Year",
-      features: [
-        "All Advance Features",
-        "Invoice Generate",
-        "Purchase Generate",
-        "Payroll System",
-      ],
-    },
-    {
-      name: "Premium",
-      price: "₹5000",
-      duration: "1 Year",
-      features: [
-        "All Advance Features",
-        "Invoice Generate",
-        "Purchase Generate",
-        "Payroll System",
-      ],
-    },
-  ];
+  const [plans, setPlans] = useState([]);
+  const fetchSubscrptionPlans = async () => {
+    try {
+      const token = sessionStorage.getItem("token");
+      const reqHeader = { Authorization: `Bearer ${token}` };
+      const result = await fetchSubscriptionPlanApi(reqHeader);
+      console.log("fetch subscription plan :::",result);
+      setPlans(result.result.data);
+    } catch (error) {
+      console.log(error);
+      setPlans([]); // fallback
+    }
+  };
+
+  useEffect(() => {
+    console.log("hi monee");
+    fetchSubscrptionPlans()
+  }, [])
+
 
   return (
     <div className="flex">
@@ -104,20 +52,29 @@ function Subscription() {
             <div className="max-w-[1200px] w-full px-4 sm:px-10">
               {/* Pricing Plans */}
               <div className="grid gap-6 py-20 sm:py-10 px-4 
-                grid-cols-1 
-                md:grid-cols-2 
-                xl:grid-cols-3 
-                sm:justify-items-start justify-items-center ">
-                {plans.map((plan, index) => (
-                  <SubscriptionPlanCards
-                    key={index}
-                    plan={plan}
-                    flipped={flippedIndex === index}
-                    onFlip={() => setFlippedIndex(index)}
-                    onBack={() => setFlippedIndex(null)}
-                  />
-                ))}
+  grid-cols-1 
+  md:grid-cols-2 
+  xl:grid-cols-3 
+  sm:justify-items-start justify-items-center">
+
+                {plans.length > 0 ? (
+                  plans.map((plan, index) => (
+                    <SubscriptionPlanCards
+                      key={index}
+                      plan={plan}
+                      flipped={flippedIndex === index}
+                      onFlip={() => setFlippedIndex(index)}
+                      onBack={() => setFlippedIndex(null)}
+                    />
+                  ))
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <p>No Plans Available</p>
+                  </div>
+                )}
+
               </div>
+
             </div>
             <ChatMessages />
           </div>
