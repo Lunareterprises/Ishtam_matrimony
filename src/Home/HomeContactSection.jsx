@@ -41,18 +41,14 @@ function HomeContactSection() {
         else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(email))
             newErrors.email = "Enter a valid email address.";
 
-        const phoneDigits = phone.replace(/\D/g, "");
-        if (!phoneDigits) {
+        if (!phone) {
             newErrors.phone = "Please enter your phone number.";
         } else {
             if (countryCode === "+91") {
-                if (phoneDigits.length !== 10) {
+                if (phone.length !== 10)
                     newErrors.phone = "Indian phone number must be exactly 10 digits.";
-                }
-            } else {
-                if (phoneDigits.length < 7 || phoneDigits.length > 15) {
-                    newErrors.phone = "Phone number should be between 7 to 15 digits.";
-                }
+            } else if (phone.length < 7 || phone.length > 15) {
+                newErrors.phone = "Phone number should be between 7 to 15 digits.";
             }
         }
 
@@ -78,7 +74,13 @@ function HomeContactSection() {
                 didOpen: () => Swal.showLoading()
             });
 
-            const result = await sendEnquiryRequestApi(contactFormData);
+            // Combine country code and phone before sending to backend
+            const payload = {
+                ...contactFormData,
+                phone: `${countryCode} ${contactFormData.phone}`,
+            };
+
+            const result = await sendEnquiryRequestApi(payload);
             Swal.close();
 
             if (result?.data?.result === true) {
@@ -125,10 +127,10 @@ function HomeContactSection() {
                     {/* Left Content */}
                     <div className="w-full md:flex-[3] md:w-3/5 text-white p-6">
                         <h1 className="text-3xl sm:text-4xl font-bold mb-4">
-                            Meet Your ishttam with Purpose
+                            Meet Your ishtam with Purpose
                         </h1>
                         <p className="text-base sm:text-lg font-light italic mb-4">
-                            At Ishttam Marry, we don’t just match profiles – we align lives, beliefs,
+                            At Ishtam Marry, we don’t just match profiles – we align lives, beliefs,
                             and families. With us, marriage isn’t just a ritual – it’s a meaningful journey.
                         </p>
 
@@ -189,13 +191,7 @@ function HomeContactSection() {
                                 <select
                                     className="border rounded-md px-2 py-1 bg-white border-transparent focus:outline-none text-gray-400"
                                     value={countryCode}
-                                    onChange={(e) => {
-                                        setCountryCode(e.target.value);
-                                        setContactFormData({
-                                            ...contactFormData,
-                                            phone: `${e.target.value} ${contactFormData.phone.split(" ").slice(1).join(" ")}`,
-                                        });
-                                    }}
+                                    onChange={(e) => setCountryCode(e.target.value)}
                                 >
                                     <option value="+1">US (+1)</option>
                                     <option value="+91">IN (+91)</option>
@@ -204,17 +200,16 @@ function HomeContactSection() {
                                 <input
                                     type="text"
                                     placeholder="Enter phone number"
-                                    className="w-full p-2 border rounded-md bg-white border-transparent focus:outline-none"
-                                    value={contactFormData.phone.replace(countryCode + " ", "")}
+                                    className={`w-full p-2 border rounded-md bg-white border-transparent focus:outline-none ${errors.phone ? 'border-red-500' : ''}`}
+                                    value={contactFormData.phone}
                                     onChange={(e) => {
-                                        const onlyNums = e.target.value.replace(/\D/g, ""); // remove non-digits
+                                        const onlyNums = e.target.value.replace(/\D/g, "");
                                         setContactFormData({
                                             ...contactFormData,
-                                            phone: `${countryCode} ${onlyNums}`,
+                                            phone: onlyNums,
                                         });
                                     }}
                                 />
-
                             </div>
                             {errors.phone && <p className="text-red-400 text-sm mt-1">{errors.phone}</p>}
                         </div>

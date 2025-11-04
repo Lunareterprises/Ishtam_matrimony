@@ -7,10 +7,10 @@ import ViewContactModal from '../Components/ViewContactModal';
 import { getContactDataApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
 
+
 function AcceptedRequestCard({ item }) {
     const [showViewContactModal, setShowViewContactModal] = useState(false)
     const [ContactData, setContactData] = useState([])
-
     const calculateAge = (dob) => {
         if (!dob) return null;
         const birthDate = new Date(dob);   // "2025-09-17T04:07:10.000Z"
@@ -30,6 +30,21 @@ function AcceptedRequestCard({ item }) {
     const navigateToParnerProfile = (id) => {
         navigate(`/partner-profile/${id}`)
     }
+
+    const navigateToChatWindow = (partner) => {
+        navigate('/chatWindow', {
+            state: {
+                chat_id: partner.chat_id || null, // optional if you have chat id
+                partner: {
+                    id: partner.u_id,
+                    firstname: partner.u_firstname,
+                    lastname: partner.u_lastname,
+                    profile_pic: partner.u_profile_pic,
+                },
+            },
+        });
+    };
+
 
     const getContactData = async (userId) => {
         console.log("get contact data::");
@@ -100,11 +115,11 @@ function AcceptedRequestCard({ item }) {
                             <span className="text-gray-500 text-[18px]"> | ID : ITM{item.u_id}</span>
                         </h2>
                         <p className="text-sm text-gray-600 mt-1">
-                            {calculateAge(item.u_dob)} yrs, {item.height || "5’ 6”"} | {item.dob || "2001 July 04"} | {item.occupation || "Not Working"}
+                            {calculateAge(item.u_dob)} yrs, {item.height || "5’ 6"} | {item.dob || "2001 July 04"} | {item.occupation || "Not Working"}
                         </p>
                         <p className="text-sm text-gray-600">{item.education || "BA English"}</p>
                         <p className="text-sm text-gray-600">
-                            {item.language || "Malayalam"} | {item.religion || "Hindu, Nair"} | {item.location || "Alappuzha, Kerala"}
+                            {item.language || "Malayalam"} | {item.u_religion || "N/A"} | {item.location || "Alappuzha, Kerala"}
                         </p>
                     </div>
                     <div>
@@ -116,14 +131,18 @@ function AcceptedRequestCard({ item }) {
 
                 <div className="flex flex-col items-center justify-center px-7 space-y-4 border-l">
                     <div className="flex flex-col items-center gap-2">
-                        <button className="w-12 h-12 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-500">
+                        <button
+                            onClick={() => navigateToChatWindow(item)}
+                            className="w-12 h-12 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-500"
+                        >
                             <TbMessageCircleFilled className="text-2xl" />
                         </button>
+
                         <h1 className="text-[13px] font-semibold">Message</h1>
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                        <button className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
-                            <FaPhoneAlt onClick={() => getContactData(item.u_id)} className="text-2xl" />
+                        <button onClick={() => getContactData(item.u_id)} className="w-12 h-12 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
+                            <FaPhoneAlt className="text-2xl" />
                         </button>
                         <h1 className="text-[13px] font-semibold">Contact</h1>
                     </div>
@@ -170,7 +189,10 @@ function AcceptedRequestCard({ item }) {
 
                 <div className="flex justify-around p-4 border-t border-gray-300">
                     <div className="flex flex-col items-center gap-2">
-                        <button className="w-12 h-12 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-500">
+                        <button
+                            onClick={() => navigateToChatWindow(item)}
+                            className="w-12 h-12 flex items-center justify-center rounded-full bg-green-600 text-white hover:bg-green-500"
+                        >
                             <TbMessageCircleFilled className="text-xl" />
                         </button>
                         <h1 className="text-[13px] font-semibold">Message</h1>

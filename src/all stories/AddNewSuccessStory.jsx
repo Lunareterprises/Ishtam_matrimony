@@ -66,7 +66,7 @@ function AddNewSuccessStory() {
 
                 Swal.fire({
                     title: 'Story Submitted!',
-                    text: 'Your story has been sent to the Ishttam Marry team for review. It will be displayed on the platform after approval.',
+                    text: 'Your story has been sent to the Ishtam Marry team for review. It will be displayed on the platform after approval.',
                     icon: 'success',
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
@@ -118,7 +118,7 @@ function AddNewSuccessStory() {
                                 </div>
 
                                 <p className="text-base leading-relaxed">
-                                    Ishttam Matrimony wishes you a lifetime filled with love, joy, and
+                                    Ishtam Matrimony wishes you a lifetime filled with love, joy, and
                                     togetherness. We invite you to share your wedding story and experiences
                                     with us, so your journey can inspire, guide, and bring hope to countless
                                     others seeking their perfect life partner.
@@ -142,7 +142,7 @@ function AddNewSuccessStory() {
                         <div className='flex flex-col items-center justify-center gap-2' >
                             <img src={DoubleHearts} width={33} alt="" />
                             <h2 className="text-2xl font-bold text-center text-pink-600">
-                                Ishttam Marry Success Story
+                                Ishtam Marry Success Story
                             </h2>
                         </div>
 
@@ -157,7 +157,7 @@ function AddNewSuccessStory() {
                                 <input
                                     type="text"
                                     name="groom_id"
-                                    placeholder="Enter Groom’s Ishttam ID"
+                                    placeholder="Enter Groom’s Ishtam ID"
                                     value={formData.groom_id}
                                     onChange={handleChange}
                                     className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
@@ -173,7 +173,7 @@ function AddNewSuccessStory() {
                                 <input
                                     type="text"
                                     name="bride_id"
-                                    placeholder="Enter Bride’s Ishttam ID"
+                                    placeholder="Enter Bride’s Ishtam ID"
                                     value={formData.bride_id}
                                     onChange={handleChange}
                                     className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
@@ -310,7 +310,7 @@ function AddNewSuccessStory() {
                                 required
                             />
                             <span className="text-gray-700 text-sm">
-                                I agree that <span className="font-semibold text-pink-600">Ishttam Marry</span> may use
+                                I agree that <span className="font-semibold text-pink-600">Ishtam Marry</span> may use
                                 my wedding photos for promotional activities.
                             </span>
                         </div>

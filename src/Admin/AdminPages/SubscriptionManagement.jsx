@@ -245,7 +245,7 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
                                 Active Plans
                             </h2>
                             <p className="text-gray-500">
-                                All active plans currently available on Ishttam Marry
+                                All active plans currently available on Ishtam Marry
                             </p>
                             <div className="flex flex-col sm:items-start items-center w-full">
                                 <div className="grid gap-6 py-10 px-4 

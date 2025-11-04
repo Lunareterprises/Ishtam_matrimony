@@ -54,6 +54,49 @@ function ProfileSection() {
         userId: ""
     })
 
+     const religionData = {
+        Hindu: [
+            "Ambalavasi",
+            "Brahmin - Namboodiri",
+            "Chettiar",
+            "Dheevara",
+            "Ezhava",
+            "Ezhuthachan",
+            "Maniyani",
+            "Menon",
+            "Nadar",
+            "Nair",
+            "Nair - Vaniya",
+            "Nair - Vilakkithala",
+            "Nambiar",
+            "Pillai",
+            "Pulaya",
+            "Saliya",
+            "Thiyya",
+        ],
+        Christian: [
+            "Roman Catholic",
+            "Syrian Catholic",
+            "Orthodox",
+            "Jacobite",
+            "Marthoma",
+            "Pentecost",
+            "CSI",
+            "Seventh Day Adventist",
+            "Born Again",
+        ],
+        Muslim: [
+            "Sunni",
+            "Mappila",
+            "Mujahid",
+            "Shia",
+            "Ahmadiyya",
+        ],
+        Others: ["Buddhist", "Jain", "No Religion", "Spiritual - Not Religious"],
+    };
+
+    const religions = Object.keys(religionData);
+
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
@@ -210,73 +253,6 @@ function ProfileSection() {
         setGalleryImages(updatedImages);
     };
 
-
-
-
-    /*   const handleDeleteGalleryImage = async (image, index) => {
-    console.log("Delete clicked for image uf_id:", image?.uf_id);
-  
-    // SweetAlert confirmation
-    const result = await Swal.fire({
-      title: 'Delete Photo?',
-      text: 'Are you sure you want to delete this image from your gallery?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#E33183',
-      cancelButtonColor: '#6b7280',
-      confirmButtonText: 'Yes, delete it!',
-      cancelButtonText: 'Cancel',
-    });
-  
-    if (!result.isConfirmed) return; // exit if user cancels
-  
-    const token = sessionStorage.getItem("token");
-    const reqHeader = {
-      Authorization: `Bearer ${token}`,
-    };
-    const reqBody = {
-      image_id: image.uf_id,
-      type: "gallery",
-    };
-  
-    try {
-      const apiResult = await deleteGalleryImagesApi(reqBody, reqHeader);
-      console.log("API delete result:", apiResult);
-  
-      if (apiResult?.data?.result === true) {
-        // success
-        const updatedImages = [...galleryImages];
-        updatedImages[index] = null;
-        setGalleryImages(updatedImages);
-  
-        await Swal.fire({
-          title: 'Deleted!',
-          text: 'The image has been successfully removed from your gallery.',
-          icon: 'success',
-          iconColor: '#E33183',
-          confirmButtonText: 'OK',
-        });
-      } else {
-        Swal.fire({
-          title: 'Failed!',
-          text: apiResult?.data?.message || 'Unable to delete the image.',
-          icon: 'error',
-          confirmButtonText: 'OK',
-        });
-      }
-    } catch (error) {
-      console.error("Error deleting gallery image:", error);
-      Swal.fire({
-        title: 'Error',
-        text: 'Something went wrong while deleting the image.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-      });
-    }
-  }; */
-
-
-
     const fileInputRef = useRef(null);
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -316,32 +292,6 @@ function ProfileSection() {
             const result = await updateProfileApi(reqBody, reqHeader);
             setIsEditing(false);
             setEditingSection(null);
-
-
-            /*  if (result?.data?.result === true) {
-                 await Swal.fire({
-                     title: 'Plan Added Successfully!',
-                     text: `The "${planData.name}" subscription plan has been added.`,
-                     icon: 'success',
-                     iconColor: '#E33183',
-                     confirmButtonText: 'OK',
-                 });
-                 selectedPlan({
-                     name: "",
-                     price: "",
-                     duration: "",
-                     contact_limit: "",
-                 })
-                 getSubscriptionPlan();
-             } else {
-                 Swal.fire({
-                     title: 'Failed to Add Plan',
-                     text: 'Unable to add the subscription plan. Please try again.',
-                     icon: 'error',
-                     confirmButtonText: 'Retry',
-                 });
-             }
-  */
             if (result?.data?.result === true) {
                 await Swal.fire({
                     title: 'Profile updated Successfully!',
@@ -709,6 +659,69 @@ function ProfileSection() {
                     </div>
                 </div>
 
+                {/* <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
+                    
+                    <div className="flex justify-between items-center px-6 py-6 bg-white">
+                        <h2 className="text-lg font-bold text-[#540D33]">RELIGION BACKGROUND</h2>
+                        <div
+                            className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
+                            onClick={() =>
+                                setEditingSection(editingSection === "religion" ? null : "religion")
+                            }
+                        >
+                            <FaPen className="text-white text-[10px]" />
+                        </div>
+                    </div>
+
+                    
+                    <div className="bg-[#F5F5F5] px-7 py-7">
+                        <div className="flex flex-col gap-4 text-sm">
+
+                           
+                            <div className="flex gap-2 items-center">
+                                <div className="font-semibold text-[#540D33] w-32">Religion</div>
+                                <div>:</div>
+                                <div>
+                                    {editingSection === "religion" ? (
+                                        <input
+                                            type="text"
+                                            value={profileData.religion}
+                                            onChange={(e) =>
+                                                setProfileData({ ...profileData, religion: e.target.value })
+                                            }
+                                            className="bg-transparent border-b-2 border-gray-200 
+                                                              focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
+                                        />
+                                    ) : (
+                                        <span>{profileData.religion || "Not specified"}</span>
+                                    )}
+                                </div>
+                            </div>
+
+                            
+                            <div className="flex gap-2 items-center">
+                                <div className="font-semibold text-[#540D33] w-32">Community</div>
+                                <div>:</div>
+                                <div>
+                                    {editingSection === "religion" ? (
+                                        <input
+                                            type="text"
+                                            value={profileData.community}
+                                            onChange={(e) =>
+                                                setProfileData({ ...profileData, community: e.target.value })
+                                            }
+                                            className="bg-transparent border-b-2 border-gray-200 
+                                                                 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
+                                        />
+                                    ) : (
+                                        <span>{profileData.community || "Not specified"}</span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> */}
+
                 <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
@@ -733,15 +746,26 @@ function ProfileSection() {
                                 <div>:</div>
                                 <div>
                                     {editingSection === "religion" ? (
-                                        <input
-                                            type="text"
-                                            value={profileData.religion}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, religion: e.target.value })
-                                            }
+                                        <select
+                                            value={profileData.religion || ""}
+                                            onChange={(e) => {
+                                                const selectedReligion = e.target.value;
+                                                setProfileData({
+                                                    ...profileData,
+                                                    religion: selectedReligion,
+                                                    community: "", // reset when religion changes
+                                                });
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
-                                                              focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                        focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
+                                        >
+                                            <option value="">Select Religion</option>
+                                            {religions.map((religion) => (
+                                                <option key={religion} value={religion}>
+                                                    {religion}
+                                                </option>
+                                            ))}
+                                        </select>
                                     ) : (
                                         <span>{profileData.religion || "Not specified"}</span>
                                     )}
@@ -754,15 +778,30 @@ function ProfileSection() {
                                 <div>:</div>
                                 <div>
                                     {editingSection === "religion" ? (
-                                        <input
-                                            type="text"
-                                            value={profileData.community}
+                                        <select
+                                            value={profileData.community || ""}
                                             onChange={(e) =>
-                                                setProfileData({ ...profileData, community: e.target.value })
+                                                setProfileData({
+                                                    ...profileData,
+                                                    community: e.target.value,
+                                                })
                                             }
+                                            disabled={!profileData.religion}
                                             className="bg-transparent border-b-2 border-gray-200 
-                                                                 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                        focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all disabled:text-gray-400"
+                                        >
+                                            <option value="">
+                                                {profileData.religion
+                                                    ? "Select Community"
+                                                    : "Select Religion First"}
+                                            </option>
+                                            {profileData.religion &&
+                                                religionData[profileData.religion]?.map((community) => (
+                                                    <option key={community} value={community}>
+                                                        {community}
+                                                    </option>
+                                                ))}
+                                        </select>
                                     ) : (
                                         <span>{profileData.community || "Not specified"}</span>
                                     )}

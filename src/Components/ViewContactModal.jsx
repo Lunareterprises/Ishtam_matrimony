@@ -8,7 +8,7 @@ function ViewContactModal({ onClose, contactData }) {
     console.log("Contact data in modal", contactData);
     return (
         <div>
-            <div className="fixed inset-0 flex items-center justify-center z-40 px-4">
+            <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-40 px-4">
                 <div className="bg-white sm:px-9 px-7 py-8 flex flex-col items-center justify-center rounded-2xl shadow-2xl gap-6 relative">
                     <button onClick={onClose}
                         className="absolute top-5 right-5 text-[#490B22] hover:text-[#E33183]"

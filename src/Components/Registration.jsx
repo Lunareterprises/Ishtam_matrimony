@@ -187,7 +187,10 @@ function Registration({ onClose, onSuccess }) {
                                     type="text"
                                     placeholder="First Name"
                                     value={registrationData.firstname}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, firstname: e.target.value })}
+                                    onChange={(e) => {
+                                        const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, ""); 
+                                        setRegistrationData({ ...registrationData, firstname: onlyLetters });
+                                    }}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none text-[14px]"
                                 />
                                 {errors.firstname && <p className="text-red-500 text-xs ">{errors.firstname}</p>}
@@ -195,7 +198,10 @@ function Registration({ onClose, onSuccess }) {
                                     type="text"
                                     placeholder="Last Name"
                                     value={registrationData.lastname}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, lastname: e.target.value })}
+                                    onChange={(e) => {
+                                        const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, ""); 
+                                        setRegistrationData({ ...registrationData, lastname: onlyLetters });
+                                    }}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none  text-[14px]"
                                 />
                                 {errors.lastname && <p className="text-red-500 text-xs ">{errors.lastname}</p>}

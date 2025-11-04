@@ -121,7 +121,7 @@ function Enquiries() {
                                                     {item.cu_id}
                                                 </td>
                                                 <td className="p-3 text-gray-700">{item.cu_name}</td>
-                                                <td className="p-3 text-gray-700">{item.cu_phone}</td>
+                                                <td className="p-3 text-gray-700">{item.cu_email}</td>
                                                 <td className="p-3 text-gray-700">{item.cu_phone}</td>
                                                 <td className="p-3 text-gray-700">{getTimeAgo(item.cu_created_at)}</td>
                                                 <td className="p-3 text-gray-700">{item.cu_message}</td>

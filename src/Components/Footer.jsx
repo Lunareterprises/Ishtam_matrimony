@@ -72,7 +72,7 @@ function Footer() {
                         <p>Legal</p>
                         <p>Site Map</p>
                     </div>
-                    <p>© 2023–2026 ishttamarry.com</p>
+                    <p>© 2023–2026 ishtamarry.com</p>
                 </div>
             </div>
 

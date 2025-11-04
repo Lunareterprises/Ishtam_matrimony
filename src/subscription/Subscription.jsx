@@ -16,7 +16,7 @@ function Subscription() {
       const reqHeader = { Authorization: `Bearer ${token}` };
       const result = await fetchSubscriptionPlanApi(reqHeader);
       console.log("fetch subscription plan :::",result);
-      setPlans(result.result.data);
+      setPlans(result.data.data);
     } catch (error) {
       console.log(error);
       setPlans([]); // fallback

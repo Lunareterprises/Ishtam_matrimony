@@ -124,7 +124,7 @@ function Home() {
 
             <div className=" flex flex-col gap-4">
               <button onClick={() => setShowRegistration(true)} className="bg-pink-600 text-white w-45 h-12 text-[12px] sm:text-[15px] sm:w-60 sm:h-13 rounded-full font-semibold hover:bg-pink-700 transition">
-                JOIN ISHTTAM MARRY
+                JOIN ISHTAM MARRY
               </button>
               <button onClick={() => setShowLogin(true)} className="border border-white text-white w-45 h-12 text-[12px] sm:text-[15px] sm:w-60 sm:h-13 rounded-full hover:bg-white hover:text-pink-600 transition">
                 CONTINUE YOUR JOURNEY
@@ -196,7 +196,7 @@ function Home() {
       <HomeContactSection />
       <AppFeatures />
       <FAQ />
-      <TrustUs />
+      {/* <TrustUs /> */}
       <Footer />
 
       {showAdminModal && (

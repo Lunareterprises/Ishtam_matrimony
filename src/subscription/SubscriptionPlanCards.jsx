@@ -3,6 +3,7 @@ import { IoIosCheckmarkCircleOutline } from "react-icons/io";
 import { FaQrcode } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
 import { BsQrCode } from 'react-icons/bs';
+import { LuIndianRupee } from 'react-icons/lu';
 
 function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
     console.log("plan data :::", plan);
@@ -10,7 +11,7 @@ function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
     return (
         <div className="w-full md:w-72 [perspective:1000px]">
             <div
-                className={`relative w-full min-h-[480px] transition-transform duration-700 [transform-style:preserve-3d] ${flipped ? "[transform:rotateY(180deg)]" : ""
+                className={`relative w-full min-h-[400px] transition-transform duration-700 [transform-style:preserve-3d] ${flipped ? "[transform:rotateY(180deg)]" : ""
                     }`}
             >
                 {/* Front Side */}
@@ -20,13 +21,16 @@ function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
                             {plan.p_name}
                         </h2>
                     </div>
-                    <div className="text-center py-4">
-                        <h3 className="text-[40px] font-medium text-[#5A0A1D]">
-                            {plan.p_price}
-                        </h3>
-                        <p className="text-[14px] text-gray-500">{plan.p_duration}</p>
+                    <div className="text-center py-6">
+                        <div className='flex items-center justify-center' >
+                            <LuIndianRupee className="text-[32px] text-[#5A0A1D]" />
+                            <h3 className="text-[40px] font-medium text-[#5A0A1D]">
+                                {plan.p_price}
+                            </h3>
+                        </div>
+                        <p className="text-[17px] text-gray-500">{plan.p_duration} months</p>
                     </div>
-                    <ul className="px-6 space-y-2 text-[13px] flex-1">
+                    <ul className="px-6 flex flex-col items-center space-y-2 text-[15px] flex-1">
                         <li className="flex items-center gap-2">
                             <IoIosCheckmarkCircleOutline className="text-[#E33183] text-xl flex-shrink-0" />
                             {plan.p_contact_limit} Contacts Limits

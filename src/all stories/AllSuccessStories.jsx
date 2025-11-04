@@ -47,7 +47,7 @@ function AllSuccessStories() {
                         </div>
 
                         <div className='flex flex-col gap-3' >
-                            <p>On Ishttam Matrimony, every connection is the beginning of something beautiful.
+                            <p>On Ishtam Matrimony, every connection is the beginning of something beautiful.
                                 From the first conversation to a lifetime of memories, each couple writes their
                                 own unique chapter of love and companionship.
                             </p>
@@ -55,7 +55,7 @@ function AllSuccessStories() {
                             <p>Some weddings are small and simple, while others are grand and colorful.
                                 Yet, no matter how they are celebrated, the happiness they bring is beyond measure. These journeys remind us that finding the
                                 right partner is not just about matching profiles, but about discovering someone who truly complements your life, someone who makes every day brighter.
-                                Tell us your story, Your experience can inspire and guide others who are waiting to find their perfect partner through Ishttam Matrimony.
+                                Tell us your story, Your experience can inspire and guide others who are waiting to find their perfect partner through Ishtam Matrimony.
                             </p>
 
                         </div>

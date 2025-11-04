@@ -21,14 +21,14 @@ function AppFeatures() {
                 {/* LEFT CONTENT */}
                 <div className="w-full md:w-1/2 space-y-6">
                     <h1 className="text-3xl md:text-4xl font-bold leading-tight">
-                        ISHTTAM MARRY APP — <br /> LOVE IN YOUR POCKET
+                        ISHTAM MARRY APP — <br /> LOVE IN YOUR POCKET
                     </h1>
                     <h2 className="text-lg font-semibold">
                         MEET YOUR SOULMATE ANYTIME, ANYWHERE.
                     </h2>
                     <p className="text-sm md:text-base leading-relaxed">
                         Your search for a life partner doesn’t need to wait until you're at
-                        your computer. With the Ishttam Marry mobile app, finding love is as
+                        your computer. With the Ishtam Marry mobile app, finding love is as
                         easy as a swipe, tap, and chat—whether you're at work, traveling, or
                         relaxing at home.
                     </p>
@@ -86,8 +86,8 @@ function AppFeatures() {
                     <div className="flex flex-col" >
                         <h1 className="font-semibold text-[20px]" >START, SWIPE, CONNECT – IT’S THAT SIMPLE.</h1>
                         <p className="text-sm md:text-base leading-relaxed">
-                            Finding your ishttam has never been more effortless. Whether you’re
-                            searching for love or letting love find you, the Ishttam Marry app
+                            Finding your ishtam has never been more effortless. Whether you’re
+                            searching for love or letting love find you, the Ishtam Marry app
                             makes your journey beautifully seamless.
                         </p>
                     </div>

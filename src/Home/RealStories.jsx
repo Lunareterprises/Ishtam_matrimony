@@ -40,7 +40,7 @@ function RealStories() {
                 <h1 className="text-3xl font-semibold text-[#490b22]">
                     💕Real Stories, Real Love
                 </h1>
-                <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >"Be inspired by the couples who trusted Ishttam Marry to find their faith-filled soulmate."</p>
+                <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >"Be inspired by the couples who trusted Ishtam Marry to find their faith-filled soulmate."</p>
             </div>
 
             <div className="overflow-hidden w-full sm:py-10 py-5">
