@@ -54,6 +54,7 @@ function AdminDashboard() {
                     confirmButtonText: 'OK',
                 });
                 getAllUsersList()
+                getDashboardData()
             } else {
                 Swal.fire({
                     title: 'User Status Updation Failed',
@@ -329,7 +330,7 @@ function AdminDashboard() {
 
                                                         {/* Activate Button */}
                                                         <button onClick={() => {
-                                                            setSelectedUser(profile?.u_id); // pass clicked user
+                                                            setSelectedUser(profile); // pass clicked user
                                                             setIsModalOpen(true); // open modal
                                                         }} className=" bg-[#E33183] hover:bg-pink-700 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300">
                                                             <div className="flex items-center justify-center gap-2">
@@ -346,35 +347,7 @@ function AdminDashboard() {
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 pb-17">
-                            <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-gray-800">
-                                        Inactive User
-                                    </h3>
-                                    <p className="text-gray-500 text-sm mt-1">
-                                        View all inactive profiles
-                                    </p>
-                                </div>
-                                <button className="border border-gray-300 px-4 py-1.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                                    View all
-                                </button>
-                            </div>
-
-                            <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-gray-800">
-                                        Report ID
-                                    </h3>
-                                    <p className="text-gray-500 text-sm mt-1">
-                                        View all reported users
-                                    </p>
-                                </div>
-                                <button className="border border-gray-300 px-4 py-1.5 rounded-full text-sm text-gray-600 hover:bg-gray-100 whitespace-nowrap">
-                                    View all
-                                </button>
-                            </div>
-                        </div>
+                       
                     </main>
                 </div>
             </div>
@@ -382,7 +355,7 @@ function AdminDashboard() {
             <AssignPlanModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                userId={selectedUser}
+                userData={selectedUser}
             />
         </div>
     );

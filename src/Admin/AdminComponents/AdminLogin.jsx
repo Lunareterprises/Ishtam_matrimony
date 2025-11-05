@@ -70,7 +70,7 @@ function AdminLogin({ isOpen, onClose }) {
 
                 await Swal.fire({
                     title: "Login Successful!",
-                    text: "Here’s to finding your special someone!",
+                    text: "Welcome back, Admin. Let’s make things happen!",
                     icon: "success",
                     iconColor: "#E33183",
                     confirmButtonText: "OK",

@@ -5,11 +5,14 @@ import DoubleHeartsCredentials from '../../assets/DoubleHeartsCredentials.png';
 import { assignSubscriptionPlanApi, fetchSubscriptionPlansApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
 
-function AssignPlanModal({ isOpen, onClose, userId }) {
+function AssignPlanModal({ isOpen, onClose, userData }) {
     const [selectedPlan, setSelectedPlan] = useState(null);
     const [planData, setPlanaData] = useState([])
-    const user_id = userId;
-    console.log(user_id);
+    console.log("User data in plan modalllll:::", userData);
+    const userName = userData?.u_firstname
+    const user_id = userData?.u_id;
+    
+
 
     const fetchSubscriptionPlans = async () => {
         const token = sessionStorage.getItem("token");
@@ -116,7 +119,7 @@ function AssignPlanModal({ isOpen, onClose, userId }) {
 
                 {/* User Info */}
                 <div className="text-center">
-                    <p className="text-[18px] text-gray-500">Choose a Plan for <span className="font-semibold" >Gokul</span></p>
+                    <p className="text-[18px] text-gray-500">Choose a Plan for <span className="font-semibold" >{userName}</span></p>
                 </div>
 
                 {/* Plan Selection */}

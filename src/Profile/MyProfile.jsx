@@ -323,7 +323,7 @@ function MyProfile() {
 
 
                             <div className=' flex flex-col  text-left pt-[50px] text-[#540D33]' >
-                                <h1 className='text-[28px] font-bold'  >WELCOME, CALVIN..!</h1>
+                                <h1 className='text-[28px] font-bold'  >WELCOME, {sessionStorage.getItem("name")}..!</h1>
                                 <p className=' font-semibold' >Your profile is {completionPercent}% completed, Let’s finish setting up your <br /> profile so we can show it to more matches..!</p>
                             </div>
 

@@ -41,11 +41,21 @@ function AddNewSuccessStory() {
         e.preventDefault();
         console.log("Before building reqBody ::");
 
-        const reqBody = new FormData();
-        reqBody.append("groom_id", formData.groom_id);
-        reqBody.append("bride_id", formData.bride_id);
+        // ✅ Normalize and extract only the number part if "ITM" or "itm" (any case) is present
+        const extractIdNumber = (id) => {
+            if (!id) return "";
+            const match = id.match(/\d+/); // Extract only digits
+            return match ? match[0] : id; // Return digits or the original if no digits found
+        };
 
-        // Convert date properly
+        const groomId = extractIdNumber(formData.groom_id);
+        const brideId = extractIdNumber(formData.bride_id);
+
+        const reqBody = new FormData();
+        reqBody.append("groom_id", groomId);
+        reqBody.append("bride_id", brideId);
+
+        // ✅ Format date properly
         const formattedDate = new Date(formData.wedding_date)
             .toISOString()
             .split("T")[0];
@@ -60,10 +70,8 @@ function AddNewSuccessStory() {
         try {
             const result = await addSuccesstoryApi(reqBody);
 
-            // ✅ Log the full response object
             console.log("Full API Response :::", result);
             if (result?.data?.result === true) {
-
                 Swal.fire({
                     title: 'Story Submitted!',
                     text: 'Your story has been sent to the Ishtam Marry team for review. It will be displayed on the platform after approval.',
@@ -79,7 +87,7 @@ function AddNewSuccessStory() {
                     story: "",
                     file: null,
                     preview: null,
-                })
+                });
             } else {
                 Swal.fire({
                     title: 'Failed to submit story',
@@ -91,13 +99,12 @@ function AddNewSuccessStory() {
         } catch (error) {
             Swal.fire({
                 title: 'Failed to submit story',
-                text: result?.data?.message || 'Something went wrong. Please try again.',
+                text: 'Something went wrong. Please try again.',
                 icon: 'error',
                 confirmButtonText: 'Retry',
             });
         }
     };
-
 
 
     return (

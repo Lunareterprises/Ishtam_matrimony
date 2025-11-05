@@ -50,12 +50,13 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
                 });
-                selectedPlan({
+                setPlanData({
                     name: "",
                     price: "",
                     duration: "",
                     contact_limit: "",
-                })
+                });
+
                 getSubscriptionPlan();
             } else {
                 Swal.fire({
@@ -144,7 +145,13 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
                                         </label>
                                         <input
                                             value={planData.name}
-                                            onChange={(e) => setPlanData({ ...planData, name: e.target.value })}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                // Allow only letters, numbers, and spaces
+                                                if (/^[a-zA-Z0-9\s]*$/.test(value)) {
+                                                    setPlanData({ ...planData, name: value });
+                                                }
+                                            }}
                                             type="text"
                                             placeholder="Enter New Plan Name"
                                             className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
@@ -156,9 +163,22 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
                                         <label className="block text-gray-700 font-medium mb-1">
                                             Subscription Price
                                         </label>
-                                        <input
+                                        {/*  <input
                                             value={planData.price}
                                             onChange={(e) => setPlanData({ ...planData, price: e.target.value })}
+                                            type="text"
+                                            placeholder="Enter the Price for This Plan"
+                                            className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
+                                        /> */}
+                                        <input
+                                            value={planData.price}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                // Allow only digits and up to one decimal
+                                                if (/^\d*\.?\d*$/.test(value)) {
+                                                    setPlanData({ ...planData, price: value });
+                                                }
+                                            }}
                                             type="text"
                                             placeholder="Enter the Price for This Plan"
                                             className="w-full border text-gray-700 border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-pink-400"
@@ -178,12 +198,25 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
                                             >
                                                 -
                                             </button>
-                                            <input
+                                            {/* <input
                                                 type="number"
                                                 placeholder="Enter Duration"
                                                 min={1}
                                                 value={planData.duration}
                                                 onChange={(e) => setPlanData({ ...planData, duration: e.target.value })}
+                                                className="w-full text-center p-2 focus:ring-2 focus:ring-pink-400 outline-none"
+                                            /> */}
+                                            <input
+                                                type="number"
+                                                placeholder="Enter Duration"
+                                                min={1}
+                                                value={planData.duration}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value === '' || (/^\d+$/.test(value) && parseInt(value) > 0)) {
+                                                        setPlanData({ ...planData, duration: value });
+                                                    }
+                                                }}
                                                 className="w-full text-center p-2 focus:ring-2 focus:ring-pink-400 outline-none"
                                             />
                                             <button
@@ -212,9 +245,14 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
                                             <input
                                                 type="number"
                                                 placeholder="Enter Contact Limit"
-                                                value={planData.contact_limit}
-                                                onChange={(e) => setPlanData({ ...planData, contact_limit: e.target.value })}
                                                 min={1}
+                                                value={planData.contact_limit}
+                                                onChange={(e) => {
+                                                    const value = e.target.value;
+                                                    if (value === '' || (/^\d+$/.test(value) && parseInt(value) > 0)) {
+                                                        setPlanData({ ...planData, contact_limit: value });
+                                                    }
+                                                }}
                                                 className="w-full text-center p-2 focus:ring-2 focus:ring-pink-400 outline-none"
                                             />
                                             <button

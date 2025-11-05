@@ -108,12 +108,12 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                                 <span className="text-lg"><FaUserCog /></span>
                                 <span>Admin Roles</span>
                             </Link> */}
-                            <Link to='/'
+                            {/* <Link to='/'
                                 className='flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition '
                             >
                                 <span className="text-lg"><BiHomeHeart /></span>
                                 <span>Back to Home</span>
-                            </Link>
+                            </Link> */}
 
                             <Link onClick={handleLogout}
                                 className='flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition '
@@ -187,11 +187,11 @@ function AdminSidebar({ isOpen, setIsOpen }) {
                             <span className="text-lg"><FaUserCog /></span>
                             <span>Admin Roles</span>
                         </Link> */}
-                        <Link to="/"
+                       {/*  <Link to="/"
                             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition ">
                             <span className="text-lg"><BiHomeHeart /></span>
                             <span>Back to Home</span>
-                        </Link>
+                        </Link> */}
 
                         <Link onClick={handleLogout}
                             className="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-600 hover:bg-pink-100 hover:text-pink-700 cursor-pointer transition ">

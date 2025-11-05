@@ -113,11 +113,16 @@ function UserProfileView() {
                                     <div className='max-w-[750px] w-full px-10'>
                                         <div className="flex flex-col sm:flex-row bg-white rounded-xl shadow-lg overflow-hidden gap-2">
                                             {profileData.u_profile_pic ? (
-                                                <img
-                                                    src={`https://lunarsenterprises.com:6050${profileData.u_profile_pic}`}
-                                                    alt="Profile"
-                                                    className="sm:w-1/3 w-full object-cover"
-                                                />
+                                                <div className='relative sm:w-1/3 w-full h-60 bg-[#D9D9D9] flex items-center justify-center' >
+                                                    <img
+                                                        src={`https://lunarsenterprises.com:6050${profileData.u_profile_pic}`}
+                                                        alt="Profile"
+                                                        className="object-cover"
+                                                    />
+                                                    <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[11px] font-semibold px-3 py-2 rounded-tl-md rounded-br-md z-10">
+                                                        {profileData.active_plan?.s_plan_name || "Free Plan"}
+                                                    </div>
+                                                </div>
                                             ) : (
                                                 <div className="relative sm:w-1/3 w-full h-60 bg-[#D9D9D9] flex items-center justify-center">
                                                     <FaRegUser className="text-[#797979] text-[35px]" />

@@ -8,6 +8,7 @@ function ForgotPassword({ onClose, onSuccess }) {
     const [forgotEmail, setForgotEmail] = useState({
         email: ""
     });
+    const [errors, setErrors] = useState({});
     const [resetCredentials, setResetCredential] = useState({
         setEmail: "",
         setPasword: ""
@@ -16,6 +17,8 @@ function ForgotPassword({ onClose, onSuccess }) {
 
     //step1:- For sending OTP to Email
     const submitEmailID = async (e) => {
+        console.log("inside submit email for resend::::::::::::");
+
         e.preventDefault();
         try {
             const payload = {
@@ -38,7 +41,7 @@ function ForgotPassword({ onClose, onSuccess }) {
                 // Switch to OTP screen
                 setStep(2);
                 setOtpDigits(new Array(4).fill(""));
-                setCounter(300);
+                setCounter(180);
             } else {
                 await Swal.fire({
                     title: "OTP Sending Failed",
@@ -62,22 +65,72 @@ function ForgotPassword({ onClose, onSuccess }) {
 
     //For Entering OtP and Timer Display
     const [counter, setCounter] = useState(200);
-    const navigate = useNavigate();
     const inputRefs = useRef([]);
     const [otpDigits, setOtpDigits] = useState(["", "", "", ""]);
 
-    // Countdown timer
+
+    // Countdown timer (accurate even when switching tabs)
     useEffect(() => {
-        if (counter > 0) {
-            const timer = setInterval(() => {
-                setCounter(prev => prev - 1);
-            }, 1000);
-            return () => clearInterval(timer);
-        }
+        if (counter <= 0) return;
+
+        const endTime = Date.now() + counter * 1000;
+
+        const timer = setInterval(() => {
+            const newTimeLeft = Math.max(0, Math.floor((endTime - Date.now()) / 1000));
+            setCounter(newTimeLeft);
+            if (newTimeLeft <= 0) clearInterval(timer);
+        }, 1000);
+
+        return () => clearInterval(timer);
     }, [counter]);
 
-    const handleResend = () => {
-        setCounter(300);
+
+
+    const handleResend = async () => {
+
+
+        try {
+            const payload = {
+                email: forgotEmail.email
+            }
+            const result = await resetPasswordApi(payload);
+            console.log("Api result for reset password :::", result);
+
+            // Extract actual response body
+            const response = result?.data;
+
+            if (response?.result === true) {
+                await Swal.fire({
+                    title: "OTP Sent Successfully!",
+                    text: response?.message || "We have sent an OTP to your email.",
+                    icon: "success",
+                    iconColor: "#E33183",
+                    confirmButtonText: "OK",
+                });
+                // Switch to OTP screen
+                setStep(2);
+                setOtpDigits(new Array(4).fill(""));
+                setCounter(180);
+
+            } else {
+                await Swal.fire({
+                    title: "OTP Sending Failed",
+                    text: response?.message || "Please try again.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+            }
+        }
+        catch (error) {
+            console.error("Send OTP error:", error);
+            await Swal.fire({
+                title: "Error",
+                text: "Something went wrong. Please try again later.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        }
+
     };
 
     const handleChange = (e, index) => {
@@ -98,6 +151,18 @@ function ForgotPassword({ onClose, onSuccess }) {
     //step2:- For sending OTP
     const handleResetCredentials = async (e) => {
         e.preventDefault();
+
+        const newErrors = {};
+        if (!resetCredentials.setPasword || resetCredentials.setPasword.length < 6) {
+            newErrors.password = "Password must be at least 6 characters";
+        }
+
+        setErrors(newErrors);
+
+        if (Object.keys(newErrors).length > 0) {
+            return; // stop the function if error exists
+        }
+
         const otp = otpDigits.join("");
         console.log("OTP to send:", otp);
         const payload = {
@@ -112,8 +177,8 @@ function ForgotPassword({ onClose, onSuccess }) {
             if (result?.data?.result === true) {
                 onClose()
                 await Swal.fire({
-                    title: 'OTP Verification Successful!',
-                    text: 'Your Email has been verified successfully.',
+                    title: 'Password Updated!',
+                    text: 'You can now log in with your new password.',
                     icon: 'success',
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
@@ -173,7 +238,7 @@ function ForgotPassword({ onClose, onSuccess }) {
                         </button>
 
                         <div className="flex flex-col justify-center items-center gap-2">
-                            <h1 className="text-[14px]  text-[#490B22] font-semibold">Forgot Password</h1>
+                            <h1 className="text-[16px]  text-[#490B22] font-semibold">Forgot Password</h1>
                             <h1 className="text-[14px]  text-[#490B22]">We will send you an OTP to reset</h1>
                         </div>
 
@@ -213,8 +278,8 @@ function ForgotPassword({ onClose, onSuccess }) {
                             <IoCloseOutline size={24} />
                         </button>
 
-                        <div className="flex flex-col justify-center items-center gap-2">
-                            <h1 className="text-[14px]  text-[#490B22] font-semibold">Login with OTP</h1>
+                        <div className="flex flex-col justify-center items-center gap-1">
+                            <h1 className="text-[16px]  text-[#490B22] font-semibold">Login with OTP</h1>
                             <div className="flex flex-col justify-center items-center"  >
                                 <h1 className="text-[13px]  text-[#490B22]">OTP has been sent to {forgotEmail.email} </h1>
                             </div>
@@ -228,7 +293,7 @@ function ForgotPassword({ onClose, onSuccess }) {
                                 </label>
                                 <input
                                     type="text"
-                                    placeholder="Reset your Emai Id"
+                                    placeholder="Enter your Email Id"
                                     className="w-full border border-gray-300 rounded-lg px-3 py-3 focus:outline-none text-[14px]"
                                     value={resetCredentials.setEmail}
                                     onChange={(e) => setResetCredential({ ...resetCredentials, setEmail: e.target.value })}
@@ -245,6 +310,7 @@ function ForgotPassword({ onClose, onSuccess }) {
                                     value={resetCredentials.setPasword}
                                     onChange={(e) => setResetCredential({ ...resetCredentials, setPasword: e.target.value })}
                                 />
+                                {errors.password && <p className="text-red-500 text-xs pt-1">{errors.password}</p>}
                             </div>
                             <div className='flex flex-col items-center justify-center gap-4'>
                                 <label className="block text-sm font-medium text-[#490B22]">Enter OTP</label>

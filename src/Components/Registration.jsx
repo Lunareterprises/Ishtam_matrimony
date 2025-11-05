@@ -4,11 +4,14 @@ import { IoCloseOutline } from "react-icons/io5"
 import { RegistrationApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
 import DatePicker from "react-datepicker";
+import { FaChevronDown } from 'react-icons/fa';
 
 function Registration({ onClose, onSuccess }) {
     const [step, setStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [showReligionDropdown, setShowReligionDropdown] = useState(false);
     const [registrationData, setRegistrationData] = useState({
         profile_for: "",
         gender: "",
@@ -23,6 +26,47 @@ function Registration({ onClose, onSuccess }) {
         confirm_password: ""
     });
 
+    const religionData = {
+        Hindu: [
+            "Ambalavasi",
+            "Brahmin - Namboodiri",
+            "Chettiar",
+            "Dheevara",
+            "Ezhava",
+            "Ezhuthachan",
+            "Maniyani",
+            "Menon",
+            "Nadar",
+            "Nair",
+            "Nair - Vaniya",
+            "Nair - Vilakkithala",
+            "Nambiar",
+            "Pillai",
+            "Pulaya",
+            "Saliya",
+            "Thiyya",
+        ],
+        Christian: [
+            "Roman Catholic",
+            "Syrian Catholic",
+            "Orthodox",
+            "Jacobite",
+            "Marthoma",
+            "Pentecost",
+            "CSI",
+            "Seventh Day Adventist",
+            "Born Again",
+        ],
+        Muslim: [
+            "Sunni",
+            "Mappila",
+            "Mujahid",
+            "Shia",
+            "Ahmadiyya",
+        ],
+        Others: ["Buddhist", "Jain", "No Religion", "Spiritual - Not Religious"],
+    };
+
     // ✅ Step validations
     const validateStep = () => {
         let newErrors = {};
@@ -30,15 +74,31 @@ function Registration({ onClose, onSuccess }) {
             if (!registrationData.profile_for) newErrors.profile_for = "Please select profile type";
             if (!registrationData.gender) newErrors.gender = "Please select gender";
         } else if (step === 2) {
+
             if (!registrationData.firstname) newErrors.firstname = "First name is required";
             if (!registrationData.lastname) newErrors.lastname = "Last name is required";
             if (!registrationData.dob || !/^\d{4}-\d{2}-\d{2}$/.test(registrationData.dob)) {
                 newErrors.dob = "Enter a valid DOB (YYYY-MM-DD)";
+            } else {
+                // ✅ Age validation (must be 18 years or older)
+                const today = new Date();
+                const dob = new Date(registrationData.dob);
+                const age = today.getFullYear() - dob.getFullYear();
+                const monthDiff = today.getMonth() - dob.getMonth();
+                const dayDiff = today.getDate() - dob.getDate();
+
+                // Adjust if the birthday hasn't occurred yet this year
+                const actualAge = monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+
+                if (actualAge < 18) {
+                    newErrors.dob = "Registration is only available for users aged 18 and above.";
+                }
             }
 
         } else if (step === 3) {
             if (!registrationData.religion) newErrors.religion = "Religion is required";
             if (!registrationData.community) newErrors.community = "Community is required";
+
         } else if (step === 4) {
             if (!registrationData.email || !/\S+@\S+\.\S+/.test(registrationData.email)) {
                 newErrors.email = "Enter a valid email";
@@ -188,7 +248,7 @@ function Registration({ onClose, onSuccess }) {
                                     placeholder="First Name"
                                     value={registrationData.firstname}
                                     onChange={(e) => {
-                                        const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, ""); 
+                                        const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, "");
                                         setRegistrationData({ ...registrationData, firstname: onlyLetters });
                                     }}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none text-[14px]"
@@ -199,7 +259,7 @@ function Registration({ onClose, onSuccess }) {
                                     placeholder="Last Name"
                                     value={registrationData.lastname}
                                     onChange={(e) => {
-                                        const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, ""); 
+                                        const onlyLetters = e.target.value.replace(/[^A-Za-z\s]/g, "");
                                         setRegistrationData({ ...registrationData, lastname: onlyLetters });
                                     }}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none  text-[14px]"
@@ -233,44 +293,100 @@ function Registration({ onClose, onSuccess }) {
                     </form>
                 )}
 
+
                 {/* STEP 3 */}
                 {step === 3 && (
                     <form className="flex flex-col sm:gap-6 sm:w-85 w-60 gap-4">
-                        <div className='flex flex-col gap-3'>
-                            <div className='flex flex-col gap-2'>
+                        <div className="flex flex-col gap-3">
+                            {/* Religion */}
+                            <div className="flex flex-col gap-2 relative">
                                 <label className="block text-sm font-medium text-[#490B22]">Your Religion</label>
-                                <select
-                                    value={registrationData.religion}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, religion: e.target.value })}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-[#490B22]"
-                                >
-                                    <option value="">Select Religion</option>
-                                    <option value="Religion 1">Religion 1</option>
-                                    <option value="Religion 2">Religion 2</option>
-                                    <option value="Religion 3">Religion 3</option>
-                                </select>
+
+                                {/* Wrapper for dropdown */}
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowReligionDropdown(!showReligionDropdown)}
+                                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                    >
+                                        <span>{registrationData.religion || "Select Religion"}</span>
+                                        <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                    </button>
+
+                                    {showReligionDropdown && (
+                                        <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                            {Object.keys(religionData).map((religion, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => {
+                                                        setRegistrationData({
+                                                            ...registrationData,
+                                                            religion,
+                                                            community: "", // Reset community when religion changes
+                                                        });
+                                                        setShowReligionDropdown(false);
+                                                    }}
+                                                    className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                >
+                                                    {religion}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
                                 {errors.religion && <p className="text-red-500 text-xs pt-1">{errors.religion}</p>}
                             </div>
-                            <div className='flex flex-col gap-2'>
+
+                            {/* Community */}
+                            <div className="flex flex-col gap-2 relative">
                                 <label className="block text-sm font-medium text-[#490B22]">Community</label>
-                                <select
-                                    value={registrationData.community}
-                                    onChange={(e) => setRegistrationData({ ...registrationData, community: e.target.value })}
-                                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-[#490B22]"
-                                >
-                                    <option value="">Select Community</option>
-                                    <option value="Community 1">Community 1</option>
-                                    <option value="Community 2">Community 2</option>
-                                    <option value="Community 3">Community 3</option>
-                                </select>
+
+                                {/* Wrapper for dropdown */}
+                                <div className="relative">
+                                    <button
+                                        type="button"
+                                        disabled={!registrationData.religion}
+                                        onClick={() => setShowDropdown(!showDropdown)}
+                                        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white disabled:bg-gray-100 flex justify-between items-center"
+                                    >
+                                        <span>{registrationData.community || "Select Community"}</span>
+                                        <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                    </button>
+
+                                    {showDropdown && registrationData.religion && (
+                                        <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                            {religionData[registrationData.religion]?.map((community, index) => (
+                                                <div
+                                                    key={index}
+                                                    onClick={() => {
+                                                        setRegistrationData({ ...registrationData, community });
+                                                        setShowDropdown(false);
+                                                    }}
+                                                    className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                >
+                                                    {community}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+
                                 {errors.community && <p className="text-red-500 text-xs pt-1">{errors.community}</p>}
                             </div>
+
                         </div>
-                        <button onClick={nextStep} type="button" className="w-full bg-[#E33183] text-white py-2 rounded-lg font-semibold hover:bg-pink-700">
+
+                        <button
+                            onClick={nextStep}
+                            type="button"
+                            className="w-full bg-[#E33183] text-white py-2 rounded-lg font-semibold hover:bg-pink-700"
+                        >
                             Continue
                         </button>
                     </form>
                 )}
+
 
                 {/* STEP 4 */}
                 {step === 4 && !isSubmitting && (

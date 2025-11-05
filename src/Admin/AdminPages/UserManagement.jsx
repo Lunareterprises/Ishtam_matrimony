@@ -21,29 +21,6 @@ function UserManagement() {
   const [searchTerm, setSearchTerm] = useState("");
 
 
-
-  /* const getAllUsersList = async (currentPage = page) => {
-    const token = sessionStorage.getItem("token");
-    try {
-      const reqHeader = {
-        Authorization: `Bearer ${token}`,
-      };
-      const reqBody = { page: currentPage, limit, search: "" };
-      const result = await listAllUsersApi(reqHeader, reqBody);
-      console.log(result);
-
-      // Filter users with u_role = "user"
-      const usersOnly = result?.data?.data?.filter(user => user.u_role === "user");
-      setUserData(usersOnly);
-
-      // Set pagination info from backend
-      setTotalPages(result?.data?.pagination?.totalPages || 1);
-      setPage(currentPage);
-    } catch (error) {
-      console.log(error);
-    }
-  }; */
-
   const getAllUsersList = async (currentPage = page, currentSearch = searchTerm) => {
     const token = sessionStorage.getItem("token");
     try {
@@ -65,14 +42,12 @@ function UserManagement() {
   };
 
 
-
   //for navigation to user profile view
   const userProfileView = (u_id) => {
     console.log("userid on user management :::", u_id);
     navigate('/user-profileView', { state: { userId: u_id } });
 
   }
-
 
   const updateUserStatus = async (u_id) => {
     const token = sessionStorage.getItem("token");
@@ -244,8 +219,6 @@ function UserManagement() {
                               >
                                 {profile.u_status === "active" ? "Active" : "Inactive"}
                               </span>
-
-
                               <button
                                 onClick={() => updateUserStatus(profile.u_id)}
                                 className={`relative w-14 h-7 flex items-center rounded-full p-1 transition-colors ${profile.u_status === "active" ? "bg-green-500" : "bg-gray-400"
@@ -269,7 +242,7 @@ function UserManagement() {
 
                             {/* Activate Button */}
                             <button onClick={() => {
-                              setSelectedUser(profile.u_id); // pass clicked user
+                              setSelectedUser(profile); // pass clicked user
                               setIsModalOpen(true); // open modal
                             }} className=" bg-[#E33183] hover:bg-pink-700 font-sm py-[9px] px-4 rounded-lg text-white whitespace-nowrap shrink-0 transition-colors duration-300">
                               <div className="flex items-center justify-center gap-2">
@@ -314,7 +287,7 @@ function UserManagement() {
       <AssignPlanModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        userId={selectedUser}
+        userData={selectedUser}
       />
     </div>
   )
