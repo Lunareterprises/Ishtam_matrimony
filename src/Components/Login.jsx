@@ -121,7 +121,7 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
           </button>
 
           <div className='flex flex-col justify-center items-center' >
-            <img src={DoubleHeartsCredentials} alt="icon" />
+            <img className='w-8 h-auto' src={DoubleHeartsCredentials} alt="icon" />
             <h1 className="text-[20px] font-semibold text-[#E33183]">
               ishtam<span className='text-[#490B22]'>Marry</span>
             </h1>

@@ -12,7 +12,10 @@ import PartnerPreferenceSection from './PartnerPreferenceSection';
 function MyProfile() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [completionPercent, setCompletionPercent] = useState(0);
-    const [currentPlanData, setCurrentPlanData] = useState({})
+    const [currentPlanData, setCurrentPlanData] = useState({});
+    const [loading, setIsLoading] = useState(true);
+    const [preview, setPreview] = useState(null);
+
 
     const getCurrentPlan = async () => {
         try {
@@ -50,7 +53,6 @@ function MyProfile() {
             };
             const result = await fetchPartnerPreferenceApi(reqHeader);
 
-
             // Update state with fetched data - CORRECTED
             if (result.data && result.data.data && result.data.data.length > 0) {
                 const partnerData = result.data.data[0];
@@ -83,9 +85,6 @@ function MyProfile() {
             console.error("Error fetching partner preference data:", error);
         }
     };
-
-
-
 
 
     const fetchProfileData = async () => {
@@ -137,12 +136,11 @@ function MyProfile() {
                     is_private: userData.u_private_income || false,
                 });
 
-
                 if (userData.u_profile_pic) {
-                    // Create full URL for the server image
                     const fullImageUrl = `https://lunarsenterprises.com:6050${userData.u_profile_pic}`;
-                    setPreview(fullImageUrl);  // Setting the complete URL
+                    setPreview(fullImageUrl);
                 }
+
 
             }
             calculateCompletion()

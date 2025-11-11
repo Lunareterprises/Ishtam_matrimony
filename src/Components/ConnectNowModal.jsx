@@ -57,7 +57,7 @@ function ConnectNowModal({ onClose, receiver_id }) {
                 </button>
 
                 <div className='flex flex-col justify-center items-center' >
-                    <img src={DoubleHeartsCredentials} alt="icon" />
+                    <img src={DoubleHeartsCredentials} className='w-8 h-auto'  alt="icon" />
                     <h1 className="text-[20px] font-semibold text-[#E33183]">
                         ishtam<span className='text-[#490B22]'>Marry</span>
                     </h1>

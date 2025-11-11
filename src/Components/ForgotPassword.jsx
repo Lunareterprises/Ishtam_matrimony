@@ -3,6 +3,7 @@ import { IoCloseOutline } from 'react-icons/io5'
 import Swal from 'sweetalert2';
 import { resetCredentialsApi, resetPasswordApi, verifyOtpApi } from '../Services/allApi';
 import { useNavigate } from 'react-router-dom';
+import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
 
 function ForgotPassword({ onClose, onSuccess }) {
     const [forgotEmail, setForgotEmail] = useState({
@@ -238,6 +239,7 @@ function ForgotPassword({ onClose, onSuccess }) {
                         </button>
 
                         <div className="flex flex-col justify-center items-center gap-2">
+                            <img src={DoubleHeartsCredentials} className='w-8 h-auto' alt="" />
                             <h1 className="text-[16px]  text-[#490B22] font-semibold">Forgot Password</h1>
                             <h1 className="text-[14px]  text-[#490B22]">We will send you an OTP to reset</h1>
                         </div>

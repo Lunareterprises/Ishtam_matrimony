@@ -47,9 +47,9 @@ function MyMatchHeader({ onSearch }) {
             </button>
           )}
         </div>
-        <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+       {/*  <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
           <PiSlidersBold className="text-xl text-[#787878]" />
-        </div>
+        </div> */}
       </div>
 
       {/* Right Section - User Info */}

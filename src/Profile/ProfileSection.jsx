@@ -6,6 +6,7 @@ import { useRef } from "react";
 import { deleteGalleryImagesApi, fetchProfileDataApi, getCurrentPlanApi, updateProfileApi } from '../Services/allApi';
 import { IoTrashBinSharp } from 'react-icons/io5';
 import Swal from 'sweetalert2';
+import { FaChevronDown } from "react-icons/fa";
 
 
 function ProfileSection() {
@@ -17,6 +18,9 @@ function ProfileSection() {
     const [isLoading, setIsLoading] = useState(true);
     const [galleryImages, setGalleryImages] = useState([]);
     const galleryFileInputRefs = useRef([]);
+    const [showReligionDropdown, setShowReligionDropdown] = useState(false);
+    const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
+
     const [profileData, setProfileData] = useState({
         created_by: "",
         gender: "",
@@ -54,7 +58,7 @@ function ProfileSection() {
         userId: ""
     })
 
-     const religionData = {
+    const religionData = {
         Hindu: [
             "Ambalavasi",
             "Brahmin - Namboodiri",
@@ -534,7 +538,7 @@ function ProfileSection() {
 
                             {/* Created by */}
                             <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-32">Created by</div>
+                                <div className="font-semibold text-[#540D33] w-32">Profile for</div>
                                 <div>:</div>
                                 <div>
                                     {editingSection === "basic" ? (
@@ -595,8 +599,14 @@ function ProfileSection() {
                                             type="text"
                                             value={profileData.firstname}
                                             onChange={(e) =>
-                                                setProfileData({ ...profileData, firstName: e.target.value })
+                                                setProfileData({ ...profileData, firstname: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 
                                                         focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         />
@@ -616,8 +626,14 @@ function ProfileSection() {
                                             type="text"
                                             value={profileData.lastname}
                                             onChange={(e) =>
-                                                setProfileData({ ...profileData, lastName: e.target.value })
+                                                setProfileData({ ...profileData, lastname: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 
                                                             focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         />
@@ -659,70 +675,8 @@ function ProfileSection() {
                     </div>
                 </div>
 
-                {/* <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
-                    
-                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                        <h2 className="text-lg font-bold text-[#540D33]">RELIGION BACKGROUND</h2>
-                        <div
-                            className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
-                            onClick={() =>
-                                setEditingSection(editingSection === "religion" ? null : "religion")
-                            }
-                        >
-                            <FaPen className="text-white text-[10px]" />
-                        </div>
-                    </div>
 
-                    
-                    <div className="bg-[#F5F5F5] px-7 py-7">
-                        <div className="flex flex-col gap-4 text-sm">
-
-                           
-                            <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-32">Religion</div>
-                                <div>:</div>
-                                <div>
-                                    {editingSection === "religion" ? (
-                                        <input
-                                            type="text"
-                                            value={profileData.religion}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, religion: e.target.value })
-                                            }
-                                            className="bg-transparent border-b-2 border-gray-200 
-                                                              focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
-                                    ) : (
-                                        <span>{profileData.religion || "Not specified"}</span>
-                                    )}
-                                </div>
-                            </div>
-
-                            
-                            <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-32">Community</div>
-                                <div>:</div>
-                                <div>
-                                    {editingSection === "religion" ? (
-                                        <input
-                                            type="text"
-                                            value={profileData.community}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, community: e.target.value })
-                                            }
-                                            className="bg-transparent border-b-2 border-gray-200 
-                                                                 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
-                                    ) : (
-                                        <span>{profileData.community || "Not specified"}</span>
-                                    )}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
-
-                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
+                <div className="bg-white rounded-xl overflow-visible border-[0.4px] border-[#E4E4E7] ">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">RELIGION BACKGROUND</h2>
@@ -741,31 +695,46 @@ function ProfileSection() {
                         <div className="flex flex-col gap-4 text-sm">
 
                             {/* Religion */}
+                            {/* Religion */}
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-32">Religion</div>
                                 <div>:</div>
-                                <div>
+                                <div className="relative w-full">
                                     {editingSection === "religion" ? (
-                                        <select
-                                            value={profileData.religion || ""}
-                                            onChange={(e) => {
-                                                const selectedReligion = e.target.value;
-                                                setProfileData({
-                                                    ...profileData,
-                                                    religion: selectedReligion,
-                                                    community: "", // reset when religion changes
-                                                });
-                                            }}
-                                            className="bg-transparent border-b-2 border-gray-200 
-                                        focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
-                                        >
-                                            <option value="">Select Religion</option>
-                                            {religions.map((religion) => (
-                                                <option key={religion} value={religion}>
-                                                    {religion}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowReligionDropdown(!showReligionDropdown);
+                                                    setShowCommunityDropdown(false); // close community dropdown
+                                                }}
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                            >
+                                                <span>{profileData.religion || "Select Religion"}</span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showReligionDropdown && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {religions.map((religion, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setProfileData({
+                                                                    ...profileData,
+                                                                    religion,
+                                                                    community: "", // reset community when religion changes
+                                                                });
+                                                                setShowReligionDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {religion}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{profileData.religion || "Not specified"}</span>
                                     )}
@@ -776,32 +745,47 @@ function ProfileSection() {
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-32">Community</div>
                                 <div>:</div>
-                                <div>
+                                <div className="relative w-full">
                                     {editingSection === "religion" ? (
-                                        <select
-                                            value={profileData.community || ""}
-                                            onChange={(e) =>
-                                                setProfileData({
-                                                    ...profileData,
-                                                    community: e.target.value,
-                                                })
-                                            }
-                                            disabled={!profileData.religion}
-                                            className="bg-transparent border-b-2 border-gray-200 
-                                        focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all disabled:text-gray-400"
-                                        >
-                                            <option value="">
-                                                {profileData.religion
-                                                    ? "Select Community"
-                                                    : "Select Religion First"}
-                                            </option>
-                                            {profileData.religion &&
-                                                religionData[profileData.religion]?.map((community) => (
-                                                    <option key={community} value={community}>
-                                                        {community}
-                                                    </option>
-                                                ))}
-                                        </select>
+                                        <>
+                                            <button
+                                                type="button"
+                                                disabled={!profileData.religion}
+                                                onClick={() => {
+                                                    setShowCommunityDropdown(!showCommunityDropdown);
+                                                    setShowReligionDropdown(false); // close religion dropdown
+                                                }}
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white disabled:bg-gray-100 flex justify-between items-center"
+                                            >
+                                                <span>
+                                                    {profileData.community ||
+                                                        (profileData.religion
+                                                            ? "Select Community"
+                                                            : "Select Religion First")}
+                                                </span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showCommunityDropdown && profileData.religion && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {religionData[profileData.religion]?.map((community, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setProfileData({
+                                                                    ...profileData,
+                                                                    community,
+                                                                });
+                                                                setShowCommunityDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {community}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{profileData.community || "Not specified"}</span>
                                     )}
@@ -843,6 +827,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, father: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 
                              focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -864,6 +854,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, mother: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -971,6 +967,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, country: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
                              focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -992,6 +994,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, state: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
                              focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -1013,6 +1021,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, district: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1033,6 +1047,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, city: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1073,6 +1093,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, qualification: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1093,6 +1119,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, college: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1113,6 +1145,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, profession_area: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1133,6 +1171,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, working_with: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1153,6 +1197,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, working_as: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1173,6 +1223,12 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, employer_name: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1265,90 +1321,7 @@ function ProfileSection() {
                     </div>
                 </div>
 
-                {/*  <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
 
-                    <div className="flex justify-between items-center px-6 py-6 bg-white">
-                        <h2 className="text-lg font-bold text-[#540D33]">HOBBIES & INTEREST</h2>
-                        <div
-                            className="w-8 h-8 rounded-full bg-[#540D33] flex items-center justify-center cursor-pointer"
-                            onClick={() =>
-                                setEditingSection(editingSection === "hobbies" ? null : "hobbies")
-                            }
-                        >
-                            <FaPen className="text-white text-[10px]" />
-                        </div>
-                    </div>
-
-                    <div className="bg-[#F5F5F5] px-7 py-7">
-                        {editingSection === "hobbies" ? (
-                            <div className="flex flex-wrap gap-3">
-                                {profileData.hobbies.map((hobby, index) => (
-                                    <div key={index} className="relative inline-block">
-
-                                        <span
-                                            className="invisible absolute whitespace-pre px-4 py-2 text-sm font-medium"
-                                            ref={(el) => {
-                                                if (el) {
-                                                    el.textContent = hobby || " ";
-                                                    const input = el.nextSibling;
-                                                    if (input) input.style.width = `${el.offsetWidth}px`;
-                                                }
-                                            }}
-                                        >
-                                            {hobby || " "}
-                                        </span>
-
-
-                                        <input
-                                            type="text"
-                                            value={hobby}
-                                            onChange={(e) => {
-                                                const updated = [...profileData.hobbies];
-                                                updated[index] = e.target.value;
-                                                setProfileData({ ...profileData, hobbies: updated });
-                                            }}
-                                            className="px-4 py-2 rounded-lg border border-pink-400 
-                                                                  text-[#540D33] text-sm font-medium bg-pink-50 focus:outline-none focus:ring-2 focus:ring-pink-400 inline-block"
-                                            style={{ width: "auto" }}
-                                        />
-                                    </div>
-                                ))}
-
-
-
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        setProfileData({
-                                            ...profileData,
-                                            hobbies: [...profileData.hobbies, ""],
-                                        })
-                                    }
-                                    className="px-4 py-2 rounded-lg border border-dashed border-pink-400 
-                                                                 text-pink-500 text-sm font-medium bg-white hover:bg-pink-50 transition"
-                                >
-                                    + Add Hobby
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="flex flex-wrap gap-3">
-                                {profileData.hobbies.length > 0 ? (
-                                    profileData.hobbies.map((hobby, index) => (
-                                        <span
-                                            key={index}
-                                            className="flex items-center gap-2 px-4 py-2 rounded-lg 
-                                                                     border border-pink-400 bg-pink-50  text-[#540D33] text-sm font-medium"
-                                        >
-                                            <span>{hobby}</span>
-                                        </span>
-                                    ))
-                                ) : (
-                                    <span className="text-gray-500 text-sm">No hobbies added</span>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                </div> */}
 
 
                 <div className="bg-white rounded-xl overflow-hidden border border-[#E4E4E7]">
@@ -1525,6 +1498,12 @@ function ProfileSection() {
                                                     mother_tongue: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
                                     ) : (
@@ -1568,6 +1547,12 @@ function ProfileSection() {
                                                     marital_status: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
                                     ) : (

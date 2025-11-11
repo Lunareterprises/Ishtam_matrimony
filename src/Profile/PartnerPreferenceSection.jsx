@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import { fetchPartnerPreferenceApi, updatePartnerPreferenceApi } from '../Services/allApi';
 import { FaPen } from "react-icons/fa";
 import Swal from 'sweetalert2';
+import { FaChevronDown } from "react-icons/fa";
+
 
 function PartnerPreferenceSection() {
     const [isEditing, setIsEditing] = useState(false);
     const [editingSection, setEditingSection] = useState(null);
+    const [showPartnerReligionDropdown, setShowPartnerReligionDropdown] = useState(false);
+    const [showPartnerCommunityDropdown, setShowPartnerCommunityDropdown] = useState(false);
 
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
@@ -90,7 +94,7 @@ function PartnerPreferenceSection() {
                 Swal.fire({
                     title: 'Partner preference updated',
                     text: 'We’ve saved your new partner preferences successfully.',
-                    icon: 'info',
+                    icon: 'success',
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
                 });
@@ -114,7 +118,46 @@ function PartnerPreferenceSection() {
         }
     }
 
-
+    const religionData = {
+        Hindu: [
+            "Ambalavasi",
+            "Brahmin - Namboodiri",
+            "Chettiar",
+            "Dheevara",
+            "Ezhava",
+            "Ezhuthachan",
+            "Maniyani",
+            "Menon",
+            "Nadar",
+            "Nair",
+            "Nair - Vaniya",
+            "Nair - Vilakkithala",
+            "Nambiar",
+            "Pillai",
+            "Pulaya",
+            "Saliya",
+            "Thiyya",
+        ],
+        Christian: [
+            "Roman Catholic",
+            "Syrian Catholic",
+            "Orthodox",
+            "Jacobite",
+            "Marthoma",
+            "Pentecost",
+            "CSI",
+            "Seventh Day Adventist",
+            "Born Again",
+        ],
+        Muslim: [
+            "Sunni",
+            "Mappila",
+            "Mujahid",
+            "Shia",
+            "Ahmadiyya",
+        ],
+        Others: ["Buddhist", "Jain", "No Religion", "Spiritual - Not Religious"],
+    };
 
     return (
         <>
@@ -127,7 +170,7 @@ function PartnerPreferenceSection() {
                     </div>
                 </div>
 
-                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7]">
+                <div className="bg-white rounded-xl overflow-visible border-[0.4px] border-[#E4E4E7]">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">PARTNER BASIC INFO</h2>
@@ -156,6 +199,17 @@ function PartnerPreferenceSection() {
                                             onChange={(e) =>
                                                 setPartnerPreferenceData({ ...partnerPreferenceData, age: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // Allow only numeric keys, Backspace, Tab, Arrow keys
+                                                if (
+                                                    !(
+                                                        (e.key >= "0" && e.key <= "9") ||
+                                                        ["Backspace", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                    )
+                                                ) {
+                                                    e.preventDefault(); // block alphabets and other non-numeric keys
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
                          focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -201,6 +255,12 @@ function PartnerPreferenceSection() {
                                                     marital_status: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
+
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
                          focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -211,23 +271,47 @@ function PartnerPreferenceSection() {
                             </div>
 
                             {/* Religion */}
+
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-32">Religion</div>
                                 <div>:</div>
-                                <div>
+                                <div className="relative w-full">
                                     {editingSection === "partner_basic" ? (
-                                        <input
-                                            type="text"
-                                            value={partnerPreferenceData.religion}
-                                            onChange={(e) =>
-                                                setPartnerPreferenceData({
-                                                    ...partnerPreferenceData,
-                                                    religion: e.target.value,
-                                                })
-                                            }
-                                            className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
-                         focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowPartnerReligionDropdown(!showPartnerReligionDropdown);
+                                                    setShowPartnerCommunityDropdown(false); // 👈 KEY FIX
+                                                }}
+
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                            >
+                                                <span>{partnerPreferenceData.religion || "Select Religion"}</span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showPartnerReligionDropdown && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {Object.keys(religionData).map((religion, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setPartnerPreferenceData({
+                                                                    ...partnerPreferenceData,
+                                                                    religion,
+                                                                    community: "",
+                                                                });
+                                                                setShowPartnerReligionDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {religion}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{partnerPreferenceData.religion || "Not specified"}</span>
                                     )}
@@ -238,25 +322,55 @@ function PartnerPreferenceSection() {
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-32">Community</div>
                                 <div>:</div>
-                                <div>
+                                <div className="relative w-full">
                                     {editingSection === "partner_basic" ? (
-                                        <input
-                                            type="text"
-                                            value={partnerPreferenceData.community}
-                                            onChange={(e) =>
-                                                setPartnerPreferenceData({
-                                                    ...partnerPreferenceData,
-                                                    community: e.target.value,
-                                                })
-                                            }
-                                            className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
-                         focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                        <>
+                                            <button
+                                                type="button"
+                                                disabled={!partnerPreferenceData.religion}
+                                                onClick={() => {
+                                                    setShowPartnerCommunityDropdown(!showPartnerCommunityDropdown);
+                                                    setShowPartnerReligionDropdown(false); // 👈 KEY FIX
+                                                }}
+
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white disabled:bg-gray-100 flex justify-between items-center"
+                                            >
+                                                <span>
+                                                    {partnerPreferenceData.community ||
+                                                        (partnerPreferenceData.religion
+                                                            ? "Select Community"
+                                                            : "Select Religion First")}
+                                                </span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showPartnerCommunityDropdown && partnerPreferenceData.religion && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {religionData[partnerPreferenceData.religion]?.map((community, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setPartnerPreferenceData({
+                                                                    ...partnerPreferenceData,
+                                                                    community,
+                                                                });
+                                                                setShowPartnerCommunityDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {community}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{partnerPreferenceData.community || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
+
+
 
                             {/* Mother Tongue */}
                             <div className="flex gap-2 items-center">
@@ -273,6 +387,11 @@ function PartnerPreferenceSection() {
                                                     mother_tongue: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
                          focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -286,7 +405,7 @@ function PartnerPreferenceSection() {
                 </div>
 
 
-                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7]">
+                <div className="bg-white rounded-xl overflow-visible border-[0.4px] border-[#E4E4E7]">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">PARTNER LOCATION DETAILS</h2>
@@ -318,6 +437,11 @@ function PartnerPreferenceSection() {
                                                     country: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -342,6 +466,11 @@ function PartnerPreferenceSection() {
                                                     state: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -366,6 +495,11 @@ function PartnerPreferenceSection() {
                                                     city: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -390,6 +524,11 @@ function PartnerPreferenceSection() {
                                                     district: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -434,6 +573,11 @@ function PartnerPreferenceSection() {
                                                     qualification: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -458,6 +602,11 @@ function PartnerPreferenceSection() {
                                                     working_with: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -482,6 +631,11 @@ function PartnerPreferenceSection() {
                                                     profession_area: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -506,6 +660,11 @@ function PartnerPreferenceSection() {
                                                     working_as: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                if (e.key >= "0" && e.key <= "9") {
+                                                    e.preventDefault(); // block numbers only
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -530,6 +689,7 @@ function PartnerPreferenceSection() {
                                                     annual_income: e.target.value,
                                                 })
                                             }
+
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -599,8 +759,8 @@ function PartnerPreferenceSection() {
                                             className="bg-transparent border-b-2 border-gray-200
                                     focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         >
-                                            <option value="My Son">Veg</option>
-                                            <option value="My Self">Non Veg</option>
+                                            <option value="Veg">Veg</option>
+                                            <option value="Non Veg">Non Veg</option>
 
                                         </select>
                                     ) : (

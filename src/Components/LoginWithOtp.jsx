@@ -154,6 +154,7 @@ function LoginWithOtp({ onClose, onSendOtp }) {
                         </button>
 
                         <div className="flex flex-col justify-center items-center gap-2">
+                            <img src={DoubleHeartsCredentials} className='w-8 h-auto' alt="" />
                             <h1 className="text-[14px]  text-[#490B22] font-semibold">Login with OTP</h1>
                             <h1 className="text-[14px]  text-[#490B22]">We will send you an OTP to login</h1>
                         </div>

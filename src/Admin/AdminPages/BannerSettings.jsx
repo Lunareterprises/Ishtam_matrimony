@@ -415,7 +415,7 @@ function BannerSettings() {
                             <img
                                 src={DoubleHeartsCredentials}
                                 alt="icon"
-                                className="w-12 mb-1"
+                                className="w-8 mb-1"
                             />
                             <h1 className="text-[20px] font-semibold text-[#E33183]">
                                 ishtam<span className="text-[#490B22]">Marry</span>

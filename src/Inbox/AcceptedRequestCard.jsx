@@ -84,7 +84,7 @@ function AcceptedRequestCard({ item }) {
 
     return (
         <div>
-            <div className="hidden md:flex bg-white shadow-lg rounded-lg overflow-hidden w-full mb-4">
+            <div className="hidden md:flex bg-white shadow-lg rounded-lg overflow-hidden w-full mb-4 justify-between">
                 <div className="relative">
                     {
                         item.u_profile_pic ?

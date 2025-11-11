@@ -95,9 +95,9 @@ function MyMatch() {
                   />
                   <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                 </div>
-                <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+               {/*  <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
                   <PiSlidersBold className="text-xl text-[#787878]" />
-                </div>
+                </div> */}
               </div>
 
               {/* ✅ Title and Count */}

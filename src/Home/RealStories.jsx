@@ -78,7 +78,7 @@ function RealStories() {
 
             <div className='flex justify-center pt-6' >
                 <Link to="/all-Success-Stories" >
-                    <button className="border border-transparent font-semibold hover:border-[#490b22] text-[#490b22] h-12 text-[13px] sm:text-[15px]  w-70 sm:w-85 sm:h-14 rounded-full hover:text-[#490b22a7] transition-colors duration-300 flex justify-center items-center gap-1">
+                    <button className="border font-semibold border-[#490b22] hover:bg-[#E33183] hover:text-white text-[#490b22] h-12 text-[13px] sm:text-[15px]  w-70 sm:w-85 sm:h-14 rounded-full  transition-colors duration-300 flex justify-center items-center gap-1">
                         See all stories & add your story<span><MdArrowOutward /></span>
                     </button>
                 </Link>
