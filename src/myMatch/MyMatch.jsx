@@ -138,7 +138,7 @@ function MyMatch() {
                 )}
 
                 {/* ✅ View More button (pagination ready) */}
-                {myMatchData.length > 0 && !loading && (
+                {myMatchData.length > 10 && !loading && (
                   <div className="flex w-full justify-center pt-10">
                     <button
                       onClick={() => setPage((prev) => prev + 1)}

@@ -114,6 +114,10 @@ export const getTodaysMatchApi = async (reqHeader, reqBody) => {
     return await commonApi("POST", `${BASE_URL}/partner/list`, reqBody, reqHeader)
 }
 
+export const getMoreMatcheshApi = async (reqHeader, reqBody) => {
+    return await commonApi("POST", `${BASE_URL}/morematches`, reqBody, reqHeader)
+}
+
 //for listing visited history
 export const listVisitedHistoryApi = async (reqHeader, reqBody) => {
     return await commonApi("POST", `${BASE_URL}/profile/visited`, reqBody, reqHeader)

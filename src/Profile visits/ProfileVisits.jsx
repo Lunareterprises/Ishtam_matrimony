@@ -112,7 +112,7 @@ function ProfileVisits() {
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center py-20 w-full">
                                                     <img src={DoubleHearts} alt="" className="h-6 mb-2" />
-                                                    <p className="text-gray-600">No data found</p>
+                                                    <p className="text-gray-600">You haven’t visited any profiles yet</p>
                                                 </div>
                                             )}
                                         </div>
@@ -142,7 +142,7 @@ function ProfileVisits() {
                                             ) : (
                                                 <div className="flex flex-col items-center justify-center py-20 w-full">
                                                     <img src={DoubleHearts} alt="" className="h-6 mb-2" />
-                                                    <p className="text-gray-600">No data found</p>
+                                                    <p className="text-gray-600">No visitors yet</p>
                                                 </div>
                                             )}
                                         </div>

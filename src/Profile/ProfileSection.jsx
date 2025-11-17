@@ -20,6 +20,9 @@ function ProfileSection() {
     const galleryFileInputRefs = useRef([]);
     const [showReligionDropdown, setShowReligionDropdown] = useState(false);
     const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
+    const [showMaritalDropdown, setShowMaritalDropdown] = useState(false);
+    const [showDietDropdown, setShowDietDropdown] = useState(false);
+
 
     const [profileData, setProfileData] = useState({
         created_by: "",
@@ -100,6 +103,24 @@ function ProfileSection() {
     };
 
     const religions = Object.keys(religionData);
+    const calculateAge = (dobString) => {
+        if (!dobString) return 0;
+
+        const dob = new Date(dobString + "T00:00:00");
+        const today = new Date();
+
+        let age = today.getFullYear() - dob.getFullYear();
+
+        const hasNotHadBirthdayYet =
+            today.getMonth() < dob.getMonth() ||
+            (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate());
+
+        if (hasNotHadBirthdayYet) {
+            age--;
+        }
+
+        return age;
+    };
 
     const getCurrentPlan = async () => {
         try {
@@ -651,12 +672,27 @@ function ProfileSection() {
                                     {editingSection === "basic" ? (
                                         <input
                                             type="date"
-                                            value={profileData.dob}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, dob: e.target.value })
+                                            value={profileData.dob?.split("T")[0] || ""}
+                                            onChange={(e) => {
+                                                const selectedDate = e.target.value;
+
+                                                const age = calculateAge(selectedDate);
+                                                if (age < 18) {
+                                                    alert("Age must be 18 or above.");
+                                                    return;
+                                                }
+
+                                                setProfileData({ ...profileData, dob: selectedDate });
+                                            }}
+                                            max={
+                                                new Date(
+                                                    new Date().setFullYear(new Date().getFullYear() - 18)
+                                                )
+                                                    .toISOString()
+                                                    .split("T")[0]
                                             }
                                             className="bg-transparent border-b-2 border-gray-200 
-                                                                  focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
+                   focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
                                         />
                                     ) : (
                                         <span>
@@ -671,6 +707,7 @@ function ProfileSection() {
                                     )}
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -880,6 +917,19 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, no_of_sisters: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -900,6 +950,19 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, no_of_brothers: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1073,6 +1136,19 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, zip: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1239,7 +1315,7 @@ function ProfileSection() {
 
                             {/* Annual Income */}
                             <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-48">Annual Income</div>
+                                <div className="font-semibold text-[#540D33] w-48">Annual Income (INR)</div>
                                 <div>:</div>
                                 <div>
                                     {editingSection === "location" ? (
@@ -1249,6 +1325,19 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, annual_income: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none"
                                         />
                                     ) : (
@@ -1259,7 +1348,7 @@ function ProfileSection() {
                         </div>
 
                         {/* Keep Private Checkbox */}
-                        <div className="flex justify-center pt-10">
+                        {/*  <div className="flex justify-center pt-10">
                             <label className="inline-flex items-center space-x-2 cursor-pointer">
                                 <input
                                     type="checkbox"
@@ -1271,12 +1360,12 @@ function ProfileSection() {
                                 />
                                 <span className="text-sm text-[#540D33]">Keep the annual income private</span>
                             </label>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
 
 
-                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
+                <div className="bg-white rounded-xl overflow-visible border-[0.4px] border-[#E4E4E7] ">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">LIFE STYLE</h2>
@@ -1294,29 +1383,49 @@ function ProfileSection() {
                     <div className="bg-[#F5F5F5] px-7 py-7">
                         <div className="flex flex-col gap-4 text-sm">
                             {/* Diet */}
+                            {/* Diet */}
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-20">Diet</div>
                                 <div>:</div>
-                                <div>
+
+                                <div className="relative w-full">
                                     {editingSection === "lifestyle" ? (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowDietDropdown(!showDietDropdown)}
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                            >
+                                                <span>{profileData.diet || "Select Diet"}</span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
 
-                                        < select
-                                            value={profileData.diet}
-                                            onChange={(e) =>
-                                                setProfileData({ ...profileData, diet: e.target.value })
-                                            }
-                                            className="bg-transparent border-b-2 border-gray-200
-                                    focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
-                                        >
-                                            <option value="Veg">Veg</option>
-                                            <option value="Non Veg">Non Veg</option>
-                                        </select>
-
+                                            {showDietDropdown && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {["Veg", "Non Veg"].map((diet, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setProfileData({
+                                                                    ...profileData,
+                                                                    diet,
+                                                                });
+                                                                setShowDietDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {diet}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{profileData.diet || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -1445,7 +1554,7 @@ function ProfileSection() {
 
 
 
-                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
+                <div className="bg-white rounded-xl overflow-visible border-[0.4px] border-[#E4E4E7] ">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">MORE ABOUT MY SELF</h2>
@@ -1514,7 +1623,7 @@ function ProfileSection() {
 
                             {/* Height */}
                             <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-32">Height</div>
+                                <div className="font-semibold text-[#540D33] w-32">Height (CM)</div>
                                 <div>:</div>
                                 <div>
                                     {editingSection === "more" ? (
@@ -1524,6 +1633,19 @@ function ProfileSection() {
                                             onChange={(e) =>
                                                 setProfileData({ ...profileData, height: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
                                     ) : (
@@ -1533,28 +1655,45 @@ function ProfileSection() {
                             </div>
 
                             {/* Marital Status */}
+
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-32">Marital Status</div>
                                 <div>:</div>
-                                <div>
-                                    {editingSection === "more" ? (
-                                        <input
-                                            type="text"
-                                            value={profileData.marital_status}
-                                            onChange={(e) =>
-                                                setProfileData({
-                                                    ...profileData,
-                                                    marital_status: e.target.value,
-                                                })
-                                            }
-                                            onKeyDown={(e) => {
-                                                if (e.key >= "0" && e.key <= "9") {
-                                                    e.preventDefault(); // block numbers only
-                                                }
-                                            }}
 
-                                            className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                <div className="relative w-full">
+                                    {editingSection === "more" ? (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowMaritalDropdown(!showMaritalDropdown);
+                                                }}
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                            >
+                                                <span>{profileData.marital_status || "Select Marital Status"}</span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showMaritalDropdown && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {["Single", "Married", "Divorced", "Widowed", "Separated"].map((status, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setProfileData({
+                                                                    ...profileData,
+                                                                    marital_status: status,
+                                                                });
+                                                                setShowMaritalDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {status}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{profileData.marital_status || "Not specified"}</span>
                                     )}

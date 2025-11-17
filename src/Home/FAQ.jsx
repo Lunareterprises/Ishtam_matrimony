@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { FaPlus, FaTimes } from "react-icons/fa";
 
 function FAQ() {
   const [activeIndex, setActiveIndex] = useState(null);
+  const contentRefs = useRef([]);
 
   const faqs = [
     {
@@ -16,13 +17,13 @@ function FAQ() {
       question:
         "I don't need a brand strategist but I need help executing an upcoming campaign. Can we still work together?",
       answer:
-        "Absolutely! We can assist you in executing specific campaigns or projects even if you don’t require full brand strategy services.",
+        "Absolutely! We can assist you in executing specific campaigns or projects even if you don't require full brand strategy services.",
     },
     {
       id: 3,
       question: "Are your rates competitive?",
       answer:
-        "We offer flexible pricing tailored to your project’s scope and budget, ensuring top-quality work at a fair rate.",
+        "We offer flexible pricing tailored to your project's scope and budget, ensuring top-quality work at a fair rate.",
     },
     {
       id: 4,
@@ -43,7 +44,7 @@ function FAQ() {
           <div
             key={faq.id}
             className={`rounded-lg transition-all duration-300 overflow-hidden ${
-              activeIndex === index ? "bg-purple-50" : "bg-white"
+              activeIndex === index ? "bg-purple-100" : "bg-gray-100"
             }`}
           >
             <div
@@ -58,16 +59,28 @@ function FAQ() {
                   {faq.question}
                 </h2>
               </div>
-              <div className="text-gray-600 text-xl flex-shrink-0">
+              <div 
+                className={`text-gray-600 text-xl flex-shrink-0 transition-transform duration-300 ${
+                  activeIndex === index ? "rotate-90" : ""
+                }`}
+              >
                 {activeIndex === index ? <FaTimes /> : <FaPlus />}
               </div>
             </div>
 
-            {activeIndex === index && (
-              <div className="px-16 pb-5 text-gray-600 text-sm sm:text-xl leading-relaxed">
+            <div
+              ref={(el) => (contentRefs.current[index] = el)}
+              style={{
+                maxHeight: activeIndex === index 
+                  ? `${contentRefs.current[index]?.scrollHeight}px` 
+                  : "0px",
+              }}
+              className="transition-all duration-500 ease-in-out overflow-hidden"
+            >
+              <div className="px-15 pb-5 text-gray-600 text-sm sm:text-xl leading-relaxed">
                 {faq.answer}
               </div>
-            )}
+            </div>
           </div>
         ))}
       </div>

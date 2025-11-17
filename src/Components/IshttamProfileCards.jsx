@@ -181,14 +181,14 @@ function IshttamProfileCards({ item }) {
                         </div> */}
                     </div>
                     <p className="text-[10px] font-normal text-[#D4D4D8]">
-                        {calculateAge(item.u_dob)} yrs, {item.u_height} cm |{" "}
+                        {calculateAge(item.u_dob)} yrs, {item.u_height&& "|"} {item.u_height}  {item.u_height&& "cm"} { item.u_working_as && "| "}
                         {item.u_working_as}
                     </p>
                     <p className="text-[10px] font-normal text-[#D4D4D8]">
-                        {item.u_religion} | {item.u_community}
+                        {item.u_religion} {item.u_community && " | "} {item.u_community}
                     </p>
                     <p className="text-[10px] font-normal text-[#D4D4D8]">
-                        {item.u_district} | {item.u_state}
+                        {item.u_district} {item.u_state && "|"} {item.u_state}
                     </p>
 
                     {/* Buttons */}
@@ -203,7 +203,7 @@ function IshttamProfileCards({ item }) {
                                 </button>
                             ) : item?.is_connected?.i_status === "rejected" ? (
                                 <button
-                                  
+
                                     className="bg-[#E33183] text-white text-[10px] px-3 py-1 rounded-full hover:bg-pink-600 transition"
                                 >
                                     Rejected

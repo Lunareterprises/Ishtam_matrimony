@@ -42,7 +42,6 @@ function App() {
 
   return (
     <>
-
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/myProfile' element={<MyProfile />} />
@@ -59,7 +58,6 @@ function App() {
         <Route path='/partner-profile/:profileId' element={<PartnerProfile />} />
         <Route path='/profile-vists' element={<ProfileVisits />} />
         <Route path='/shortlisted' element={<Shortlisted />} />
-
         <Route path='/admin'  element={<Home />}  />
         <Route path='/admin-dashboard' element={<AdminDashboard />} />
         <Route path='/subscription-management' element={<SubscriptionManagement />} />
@@ -71,7 +69,6 @@ function App() {
         <Route path="/user-profileView" element={<UserProfileView />} />
         <Route path='/admin-successStoryView' element={<AdminSuccessStoryView />} />
       </Routes>
-
     </>
   )
 }

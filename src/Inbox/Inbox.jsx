@@ -254,7 +254,7 @@ function Inbox() {
                                                             className="sm:w-5 sm:h-5 h-4 w-4 accent-[#540D33] cursor-pointer transition-all duration-200"
                                                         />
                                                         <span className="sm:text-sm text-[13px] font-medium text-gray-700">
-                                                            Contacted by Her
+                                                            Contacted by others
                                                         </span>
                                                     </label>
                                                 </div>

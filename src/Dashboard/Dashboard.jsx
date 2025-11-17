@@ -28,10 +28,10 @@ function Dashboard() {
 
 
     console.log("hiiiiii");
-    
+
     useEffect(() => {
         const user_id = sessionStorage.getItem("user_id");
-        console.log("User ID:", user_id); 
+        console.log("User ID:", user_id);
 
         if (user_id) {
             // ✅ Connect socket if user exists
@@ -259,7 +259,7 @@ function Dashboard() {
 
     useEffect(() => {
         console.log("hi monne");
-        
+
         fetchPartnerPrefernce()
         getCurrentPlan()
         fetchProfileData()
@@ -366,20 +366,30 @@ function Dashboard() {
     const calculateAge = (dob) => {
         if (!dob) return "";
 
-        const birthDate = new Date(dob);   // parses "1999-12-13T18:30:00.000Z"
+        // Extract only the date part → "YYYY-MM-DD"
+        const datePart = dob.split("T")[0];
+
+        // Convert safely without timezone shift
+        const [year, month, day] = datePart.split("-");
+        const birthDate = new Date(year, month - 1, day);
+
         const today = new Date();
+
+        // ❌ Prevent future DOB from calculating wrong age
+        if (birthDate > today) {
+            return "";
+        }
 
         let age = today.getFullYear() - birthDate.getFullYear();
         const monthDiff = today.getMonth() - birthDate.getMonth();
 
-        // adjust if birthday hasn’t occurred yet this year
+        // Adjust if birthday is still upcoming this year
         if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
             age--;
         }
 
         return age;
     };
-
 
 
     return (
@@ -450,11 +460,11 @@ function Dashboard() {
                                                         <h1 className="text-[17px] font-semibold">{profileData.firstname} {profileData.lastname}</h1>
                                                         <HiBadgeCheck className="text-[19px] text-[#3A78FF]" />
                                                     </div>
-                                                    <h1 className="text-[14px] font-medium">{calculateAge(profileData.dob)} | {profileData.religion}</h1>
+                                                    <h1 className="text-[14px] font-medium">{calculateAge(profileData.dob)} yrs | {profileData.religion} | {profileData.community}</h1>
                                                 </div>
 
                                                 {/* Progress Section */}
-                                                <div className="w-full pt-10">
+                                                <div className="w-full pt-14">
                                                     {/* Progress Container */}
                                                     <div className="relative w-full bg-gray-200 rounded-full h-2">
                                                         {/* Fill */}
@@ -463,31 +473,30 @@ function Dashboard() {
                                                             style={{ width: `${completionPercent}%` }}
                                                         ></div>
 
-                                                        {/* Floating Label */}
+                                                        {/* Floating Label - Arrow Style */}
                                                         <div
-                                                            className="absolute -top-15 flex items-center justify-center px-4 py-3 text-white text-[11px] font-medium bg-[#E33183] rounded-full whitespace-nowrap"
+                                                            className="absolute -top-11 flex items-center justify-center"
                                                             style={{
                                                                 left: `${completionPercent}%`,
                                                                 transform: "translateX(-50%)",
                                                             }}
                                                         >
-                                                            {completionPercent}%
-
-
-                                                            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-[#E33183] rounded-full"></div>
-                                                            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-5 h-5 bg-white rounded-full scale-75"></div>
+                                                            <div className="px-2 py-2 text-white text-[11px] font-bold bg-[#E33183] rounded-lg shadow-lg">
+                                                                {completionPercent}%
+                                                            </div>
+                                                            {/* Arrow pointing down */}
+                                                            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[6px] border-t-[#E33183]"></div>
                                                         </div>
-
                                                     </div>
 
                                                     {/* Bottom Text */}
-                                                    <p className="mt-3 text-[#540D33] text-[14px] font-medium">
-                                                        “ Your profile is {completionPercent}% completed ”
+                                                    <p className="mt-2 text-[#540D33] text-[14px] font-medium">
+                                                        " Your profile is {completionPercent}% completed "
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className='flex gap-5 items-center justify-center pt-5' >
+                                        <div className='flex gap-5 items-center justify-center pt-8' >
                                             <button onClick={() => setShowChangePassword(true)} className="py-2 px-7 text-[14px] border border-[#E33183] text-[#E33183] rounded-full font-medium hover:bg-pink-50">
                                                 Change password
                                             </button>

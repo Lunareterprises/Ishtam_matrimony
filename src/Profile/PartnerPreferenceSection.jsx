@@ -10,6 +10,9 @@ function PartnerPreferenceSection() {
     const [editingSection, setEditingSection] = useState(null);
     const [showPartnerReligionDropdown, setShowPartnerReligionDropdown] = useState(false);
     const [showPartnerCommunityDropdown, setShowPartnerCommunityDropdown] = useState(false);
+    const [showPartnerMaritalDropdown, setShowPartnerMaritalDropdown] = useState(false);
+    const [showPartnerDietDropdown, setShowPartnerDietDropdown] = useState(false);
+
 
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
@@ -221,7 +224,7 @@ function PartnerPreferenceSection() {
 
                             {/* Height */}
                             <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-32">Height</div>
+                                <div className="font-semibold text-[#540D33] w-32">Height (CM)</div>
                                 <div>:</div>
                                 <div>
                                     {editingSection === "partner_basic" ? (
@@ -231,6 +234,19 @@ function PartnerPreferenceSection() {
                                             onChange={(e) =>
                                                 setPartnerPreferenceData({ ...partnerPreferenceData, height: e.target.value })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
                                             className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
                          focus:outline-none text-sm text-[#540D33] transition-all"
                                         />
@@ -241,34 +257,51 @@ function PartnerPreferenceSection() {
                             </div>
 
                             {/* Marital Status */}
+                            {/* Marital Status */}
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-32">Marital Status</div>
                                 <div>:</div>
-                                <div>
-                                    {editingSection === "partner_basic" ? (
-                                        <input
-                                            type="text"
-                                            value={partnerPreferenceData.marital_status}
-                                            onChange={(e) =>
-                                                setPartnerPreferenceData({
-                                                    ...partnerPreferenceData,
-                                                    marital_status: e.target.value,
-                                                })
-                                            }
-                                            onKeyDown={(e) => {
-                                                if (e.key >= "0" && e.key <= "9") {
-                                                    e.preventDefault(); // block numbers only
-                                                }
-                                            }}
 
-                                            className="bg-transparent border-b-2 border-gray-200 focus:border-[#E33183] 
-                         focus:outline-none text-sm text-[#540D33] transition-all"
-                                        />
+                                <div className="relative w-full">
+                                    {editingSection === "partner_basic" ? (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setShowPartnerMaritalDropdown(!showPartnerMaritalDropdown);
+                                                }}
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                            >
+                                                <span>{partnerPreferenceData.marital_status || "Select Marital Status"}</span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showPartnerMaritalDropdown && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {["Single", "Married", "Divorced", "Widowed", "Separated"].map((status, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setPartnerPreferenceData({
+                                                                    ...partnerPreferenceData,
+                                                                    marital_status: status,
+                                                                });
+                                                                setShowPartnerMaritalDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {status}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{partnerPreferenceData.marital_status || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
+
 
                             {/* Religion */}
 
@@ -676,7 +709,7 @@ function PartnerPreferenceSection() {
 
                             {/* Annual Income */}
                             <div className="flex gap-2 items-center">
-                                <div className="font-semibold text-[#540D33] w-32">Annual Income</div>
+                                <div className="font-semibold text-[#540D33] w-39">Annual Income (INR)</div>
                                 <div>:</div>
                                 <div>
                                     {editingSection === "partner_career" ? (
@@ -689,6 +722,19 @@ function PartnerPreferenceSection() {
                                                     annual_income: e.target.value,
                                                 })
                                             }
+                                            onKeyDown={(e) => {
+                                                // allow backspace, delete, tab, arrows
+                                                if (
+                                                    ["Backspace", "Delete", "Tab", "ArrowLeft", "ArrowRight"].includes(e.key)
+                                                ) {
+                                                    return;
+                                                }
+
+                                                // block alphabets & special characters
+                                                if (!/^[0-9]$/.test(e.key)) {
+                                                    e.preventDefault();
+                                                }
+                                            }}
 
                                             className="bg-transparent border-b-2 border-gray-200 
                          focus:border-[#E33183] focus:outline-none text-sm text-[#540D33] transition-all"
@@ -703,7 +749,7 @@ function PartnerPreferenceSection() {
                 </div>
 
 
-                <div className="bg-white rounded-xl overflow-hidden border-[0.4px] border-[#E4E4E7] ">
+                <div className="bg-white rounded-xl overflow-visible border-[0.4px] border-[#E4E4E7] ">
                     {/* Header */}
                     <div className="flex justify-between items-center px-6 py-6 bg-white">
                         <h2 className="text-lg font-bold text-[#540D33]">PARTNER OTHER DETAILS</h2>
@@ -746,28 +792,49 @@ function PartnerPreferenceSection() {
                             </div>
 
                             {/* Diet */}
+                           
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-40">Diet</div>
                                 <div>:</div>
-                                <div>
-                                    {editingSection === "partner_other" ? (
-                                        < select
-                                            value={partnerPreferenceData.diet}
-                                            onChange={(e) =>
-                                                setPartnerPreferenceData({ ...partnerPreferenceData, diet: e.target.value })
-                                            }
-                                            className="bg-transparent border-b-2 border-gray-200
-                                    focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
-                                        >
-                                            <option value="Veg">Veg</option>
-                                            <option value="Non Veg">Non Veg</option>
 
-                                        </select>
+                                <div className="relative w-full">
+                                    {editingSection === "partner_other" ? (
+                                        <>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPartnerDietDropdown(!showPartnerDietDropdown)}
+                                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
+                                            >
+                                                <span>{partnerPreferenceData.diet || "Select Diet"}</span>
+                                                <FaChevronDown className="text-[#490B22] text-sm ml-2" />
+                                            </button>
+
+                                            {showPartnerDietDropdown && (
+                                                <div className="absolute z-50 mt-1 w-full max-h-40 overflow-y-auto border border-gray-300 bg-white rounded-lg shadow-md">
+                                                    {["Veg", "Non Veg"].map((diet, index) => (
+                                                        <div
+                                                            key={index}
+                                                            onClick={() => {
+                                                                setPartnerPreferenceData({
+                                                                    ...partnerPreferenceData,
+                                                                    diet,
+                                                                });
+                                                                setShowPartnerDietDropdown(false);
+                                                            }}
+                                                            className="px-3 py-2 text-[14px] text-[#490B22] hover:bg-gray-100 cursor-pointer"
+                                                        >
+                                                            {diet}
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            )}
+                                        </>
                                     ) : (
                                         <span>{partnerPreferenceData.diet || "Not specified"}</span>
                                     )}
                                 </div>
                             </div>
+
 
                         </div>
                     </div>

@@ -147,14 +147,14 @@ function TodaysMatch() {
                                         ) : (
                                             <div className="flex flex-col items-center justify-center py-20 w-full">
                                                 <img src={DoubleHearts} alt="" className="h-6 mb-2" />
-                                                <p className="text-gray-600">No data found</p>
+                                                <p className="text-gray-600">We couldn’t find any matches for you today</p>
                                             </div>
                                         )}
                                     </div>
                                 )}
 
                                 {/* View More */}
-                                {todaysMatchData.length > 0 && !loading && (
+                                {todaysMatchData.length > 10 && !loading && (
                                     <div className='flex w-full justify-center pt-10'>
                                         <button
                                             onClick={() => setPage(prev => prev + 1)}

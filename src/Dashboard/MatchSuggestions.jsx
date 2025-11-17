@@ -82,7 +82,7 @@ function MatchSuggestions() {
                 ) : (
                     <div className="flex flex-col items-center justify-center py-20 w-full">
                         <img src={DoubleHearts} alt="" className="h-6 mb-2" />
-                        <p className="text-gray-600">No data found</p>
+                        <p className="text-gray-600">We couldn’t find any matches for you today</p>
                     </div>
                 )}
             </div>

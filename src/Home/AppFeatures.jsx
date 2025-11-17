@@ -1,6 +1,6 @@
 import React from "react";
 import AppFeaturesBg from "../assets/Herosection(4).png";
-import mobileImg from "../assets/mobile.png"
+import mobileImg from "../assets/ishttammobile.png"
 
 function AppFeatures() {
     return (
@@ -16,12 +16,12 @@ function AppFeatures() {
             <div className="absolute inset-0 "></div>
 
             {/* Main Content */}
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10 px-6 md:px-15 py-12 md:py-20 text-white">
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between sm:gap-2 gap-3 px-6 md:px-15 py-12 md:py-20 text-white">
 
                 {/* LEFT CONTENT */}
-                <div className="w-full md:w-1/2 space-y-6">
+                <div className="w-full md:w-1/2 space-y-4">
                     <h1 className="text-3xl md:text-4xl font-bold leading-tight">
-                        ISHTAM MARRY APP — <br /> LOVE IN YOUR POCKET
+                        ISHTAM MARRY APP <br /> LOVE IN YOUR POCKET
                     </h1>
                     <h2 className="text-lg font-semibold">
                         MEET YOUR SOULMATE ANYTIME, ANYWHERE.
@@ -58,13 +58,12 @@ function AppFeatures() {
                     <img
                         src={mobileImg}
                         alt="App Screenshot"
-                        className="max-w-xs md:max-w-sm drop-shadow-2xl translate-y-0 md:translate-y-20"
+                        className="max-w-sm md:max-w-lg drop-shadow-2xl translate-y-0 md:translate-y-20"
                     />
                 </div>
 
                 {/* RIGHT CONTENT */}
                 <div className="w-full md:w-1/2 flex flex-col items-center justify-center gap-6">
-
 
                     {/* Features Section */}
                     <div  className="flex flex-col  justify-center" >
@@ -91,7 +90,6 @@ function AppFeatures() {
                             makes your journey beautifully seamless.
                         </p>
                     </div>
-
                 </div>
             </div>
         </div>
