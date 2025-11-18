@@ -39,10 +39,17 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
         setSelectedPlan(null);
     };
 
+    const isFormValid =
+        planData.name.trim() !== "" &&
+        planData.price.trim() !== "" &&
+        planData.duration !== "" &&
+        planData.contact_limit !== "";
+
+
     const addSubscriptionPlan = async (planData) => {
         console.log("Plan data ::", planData); // Console log for planData
         try {
-           
+
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await addNewSubscriptionPlanApi(reqHeader, planData);
             if (result?.data?.result === true) {
@@ -82,7 +89,7 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
     // For fetching subscription plan data
     const getSubscriptionPlan = async () => {
         try {
-            
+
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await getSubscriptionPlanApi(reqHeader);
             console.log("API Result:", result); // Log the full result
@@ -271,12 +278,19 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
 
                                 {/* Submit Button */}
                                 <div className='flex items-center justify-center pt-5'>
-                                    <button onClick={() => addSubscriptionPlan(planData)}
+                                    <button
+                                        onClick={() => isFormValid && addSubscriptionPlan(planData)}
                                         type="button"
-                                        className="px-5 py-2 bg-pink-600 text-white font-medium rounded-lg hover:bg-pink-700 transition"
+                                        disabled={!isFormValid}
+                                        className={`px-5 py-2 font-medium rounded-lg transition 
+        ${isFormValid
+                                                ? "bg-pink-600 text-white hover:bg-pink-700"
+                                                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                                            }`}
                                     >
                                         Confirm and Add Plan
                                     </button>
+
                                 </div>
                             </form>
                         </div>

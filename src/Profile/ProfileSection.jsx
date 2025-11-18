@@ -12,7 +12,7 @@ import { useAuth } from '../AuthContext/AuthContext';
 
 function ProfileSection() {
 
-    const [currentPlanData, setCurrentPlanData] = useState({});
+    const [currentPlanData, setCurrentPlanData] = useState([]);
     const [isEditing, setIsEditing] = useState(false);
     const [editingSection, setEditingSection] = useState(null);
     const [preview, setPreview] = useState(null);
@@ -24,7 +24,12 @@ function ProfileSection() {
     const [showMaritalDropdown, setShowMaritalDropdown] = useState(false);
     const [showDietDropdown, setShowDietDropdown] = useState(false);
     const { user } = useAuth();
-    const token = user?.token
+    const token = user?.token;
+    const activePlan = currentPlanData?.find(p => p.s_status === "active");
+    const expiredPlan = currentPlanData?.find(p => p.s_status === "expired");
+    const noPlans = !currentPlanData || currentPlanData.length === 0;
+
+
 
     const [profileData, setProfileData] = useState({
         created_by: "",
@@ -127,28 +132,29 @@ function ProfileSection() {
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
-            
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
             const result = await getCurrentPlanApi(reqHeader)
-            console.log("consoling result ::", result.data.data);
-            setCurrentPlanData(result.data);
-            if (result.data.result === false) {
-                console.log("ni mandan aada");
-            }
-            else {
-                console.log("pottta");
-            }
+            console.log("consoling resultgg ::", result?.data?.data);
+            setCurrentPlanData(result?.data?.data);
+            console.log("Current plan Data:::", currentPlanData);
+
         }
         catch (error) {
             console.log(error);
         }
     }
 
+    useEffect(() => {
+        console.log("Updated currentPlanData:", currentPlanData);
+    }, [currentPlanData]);
+
+
     const fetchProfileData = async () => {
         try {
-           
+
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             };
@@ -224,6 +230,24 @@ function ProfileSection() {
         }
     }
 
+
+    const formatDateToYYYYMMDD = (dateString) => {
+        if (!dateString) return "";
+        return dateString.split("T")[0];
+    };
+
+    const formatPreviewDate = (dateString) => {
+        if (!dateString) return "";
+        const [year, month, day] = dateString.split("T")[0].split("-");
+        const dateObj = new Date(`${year}-${month}-${day}T00:00:00`);
+        return dateObj.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+        });
+    };
+
+
     useEffect(() => {
         getCurrentPlan()
         fetchProfileData()
@@ -260,7 +284,7 @@ function ProfileSection() {
             cancelButtonText: 'Cancel',
         });
         if (!result.isConfirmed) return;
-        
+
         const reqHeader = {
             "Authorization": `Bearer ${token}`
         };
@@ -295,7 +319,7 @@ function ProfileSection() {
         console.log("handle update profile function::");
 
         try {
-       
+
             const reqHeader = {
                 "Authorization": `Bearer ${token}`,
             };
@@ -420,21 +444,48 @@ function ProfileSection() {
                     </div>
                 </div>
                 {
-                    currentPlanData.result === false ? (
+                    noPlans ? (
+                        // No plan at all
                         <button className="bg-[#E33183] py-2 px-6 sm:px-10 rounded-full text-white font-medium text-sm sm:text-base self-start sm:self-auto">
                             Subscription
                         </button>
-                    ) : (
-
-                        <div className='flex flex-col gap-3' >
-                            <div className='flex flex-col sm:items-start items-center align-baseline border-2 text-pink-500 border-pink-500 px-6 py-3 rounded-full' >
-                                <h1 className='text-[14px]' >Plan name</h1>
-                                <p className='text-[14px]'  ><span>Expiry:</span> 13 Sep 2025</p>
+                    ) : activePlan ? (
+                        // ACTIVE PLAN DISPLAY
+                        <div className="flex flex-col gap-3">
+                            <div className='flex flex-col sm:items-start items-center border-2 text-pink-500 border-pink-500 px-6 py-3 rounded-full'>
+                                <h1 className='text-[14px]'>{activePlan.s_plan_name}</h1>
+                                <p className='text-[14px]'>
+                                    <span>Expiry:</span>{" "}
+                                    {new Date(activePlan.s_end_date).toLocaleDateString("en-GB", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                    })}
+                                </p>
                             </div>
                         </div>
+                    ) : (
+                        // EXPIRED PLAN CASE
+                        <div className="flex flex-col gap-3">
+                            <div className='flex flex-col sm:items-start items-center border-2 text-red-500 border-red-500 px-6 py-3 rounded-full'>
+                                <h1 className='text-[14px]'>{expiredPlan?.s_plan_name} (Expired)</h1>
+                                <p className='text-[14px]'>
+                                    <span>Expired:</span>{" "}
+                                    {new Date(expiredPlan?.s_end_date).toLocaleDateString("en-GB", {
+                                        day: "2-digit",
+                                        month: "short",
+                                        year: "numeric",
+                                    })}
+                                </p>
+                            </div>
 
+                            <button className="bg-[#E33183] py-2 px-6 sm:px-10 rounded-full text-white font-medium text-sm sm:text-base self-start sm:self-auto">
+                                Subscription
+                            </button>
+                        </div>
                     )
                 }
+
             </div>
 
 
@@ -625,10 +676,14 @@ function ProfileSection() {
                                                 setProfileData({ ...profileData, firstname: e.target.value })
                                             }
                                             onKeyDown={(e) => {
-                                                if (e.key >= "0" && e.key <= "9") {
-                                                    e.preventDefault(); // block numbers only
+                                                const allowedChars = /^[A-Za-z ]$/;
+
+                                                // If the pressed key is NOT a letter or space — block it
+                                                if (!allowedChars.test(e.key) && e.key.length === 1) {
+                                                    e.preventDefault();
                                                 }
                                             }}
+
 
                                             className="bg-transparent border-b-2 border-gray-200 
                                                         focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
@@ -652,10 +707,14 @@ function ProfileSection() {
                                                 setProfileData({ ...profileData, lastname: e.target.value })
                                             }
                                             onKeyDown={(e) => {
-                                                if (e.key >= "0" && e.key <= "9") {
-                                                    e.preventDefault(); // block numbers only
+                                                const allowedChars = /^[A-Za-z ]$/;
+
+                                                // If the pressed key is NOT a letter or space — block it
+                                                if (!allowedChars.test(e.key) && e.key.length === 1) {
+                                                    e.preventDefault();
                                                 }
                                             }}
+
 
                                             className="bg-transparent border-b-2 border-gray-200 
                                                             focus:border-[#E33183] focus:outline-none text-sm text-[#540D33]"
@@ -674,7 +733,8 @@ function ProfileSection() {
                                     {editingSection === "basic" ? (
                                         <input
                                             type="date"
-                                            value={profileData.dob?.split("T")[0] || ""}
+                                            /* value={profileData.dob?.split("T")[0] || ""} */
+                                            value={formatDateToYYYYMMDD(profileData.dob)}
                                             onChange={(e) => {
                                                 const selectedDate = e.target.value;
 
@@ -699,11 +759,7 @@ function ProfileSection() {
                                     ) : (
                                         <span>
                                             {profileData.dob
-                                                ? new Date(profileData.dob).toLocaleDateString("en-GB", {
-                                                    day: "2-digit",
-                                                    month: "long",
-                                                    year: "numeric",
-                                                })
+                                                ? formatPreviewDate(profileData.dob)
                                                 : "Not specified"}
                                         </span>
                                     )}

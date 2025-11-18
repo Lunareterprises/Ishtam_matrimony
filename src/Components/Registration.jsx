@@ -306,7 +306,10 @@ function Registration({ onClose, onSuccess }) {
                                 <div className="relative">
                                     <button
                                         type="button"
-                                        onClick={() => setShowReligionDropdown(!showReligionDropdown)}
+                                        onClick={() => {
+                                            setShowReligionDropdown(!showReligionDropdown);
+                                            setShowDropdown(false);
+                                        }}
                                         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white flex justify-between items-center"
                                     >
                                         <span>{registrationData.religion || "Select Religion"}</span>
@@ -347,7 +350,10 @@ function Registration({ onClose, onSuccess }) {
                                     <button
                                         type="button"
                                         disabled={!registrationData.religion}
-                                        onClick={() => setShowDropdown(!showDropdown)}
+                                        onClick={() => {
+                                            setShowDropdown(!showDropdown);
+                                            setShowReligionDropdown(false);
+                                        }}
                                         className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[14px] text-left text-[#490B22] bg-white disabled:bg-gray-100 flex justify-between items-center"
                                     >
                                         <span>{registrationData.community || "Select Community"}</span>

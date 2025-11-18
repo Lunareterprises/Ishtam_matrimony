@@ -89,7 +89,7 @@ function PartnerPreferenceSection() {
         e.preventDefault();
         console.log("handle update partner prefernce:");
         try {
-            
+
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             }
@@ -103,6 +103,8 @@ function PartnerPreferenceSection() {
                     iconColor: '#E33183',
                     confirmButtonText: 'OK',
                 });
+                setEditingSection(null);  // Close the section after saving
+
             } else {
                 Swal.fire({
                     title: 'Error',
