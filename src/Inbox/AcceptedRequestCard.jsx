@@ -6,11 +6,14 @@ import { useNavigate } from 'react-router-dom';
 import ViewContactModal from '../Components/ViewContactModal';
 import { getContactDataApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function AcceptedRequestCard({ item }) {
     const [showViewContactModal, setShowViewContactModal] = useState(false)
     const [ContactData, setContactData] = useState([])
+    const { user } = useAuth();
+    const token = user?.token
     const calculateAge = (dob) => {
         if (!dob) return null;
         const birthDate = new Date(dob);   // "2025-09-17T04:07:10.000Z"
@@ -50,7 +53,7 @@ function AcceptedRequestCard({ item }) {
         console.log("get contact data::");
 
         try {
-            const token = sessionStorage.getItem("token");
+
             console.log("token::", token);
             const reqHeader = {
                 "Content-Type": "application/json",

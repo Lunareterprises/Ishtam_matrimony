@@ -5,10 +5,12 @@ import { RxCross1 } from 'react-icons/rx';
 import { useNavigate } from 'react-router-dom';
 import { UpdateStatusApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function ReceivedRequestCard({ item }) {
-
+    const { user } = useAuth();
+    const token = user?.token
     const calculateAge = (dob) => {
         if (!dob) return null;
 
@@ -36,7 +38,7 @@ function ReceivedRequestCard({ item }) {
         console.log("Inside cancel request");
 
         try {
-            const token = sessionStorage.getItem("token")
+
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -81,7 +83,7 @@ function ReceivedRequestCard({ item }) {
         console.log("Inside cancel request");
 
         try {
-            const token = sessionStorage.getItem("token")
+           
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

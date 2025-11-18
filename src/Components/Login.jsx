@@ -6,6 +6,7 @@ import ForgotPassword from '../Components/ForgotPassword';
 import { userLoginApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
 import { IoEye, IoEyeOff } from "react-icons/io5";
+import { useAuth } from '../AuthContext/AuthContext';
 
 function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal }) {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
     emailOrMobile: "",
     password: ""
   })
+
+  const { Userlogin } = useAuth()
 
   const [errors, setErrors] = useState({}); // <-- add this state
 
@@ -68,6 +71,9 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
           });
           return; // stop further execution
         }
+
+        Userlogin(userData)
+
 
         // ✅ Proceed with login for active user
         sessionStorage.setItem("token", userData.token);
@@ -169,7 +175,7 @@ function Login({ onClose, onOtpLogin, onForgotPassword, openRegistrationModal })
 
               <div className="flex items-center justify-between text-sm sm:gap-15 gap-3">
                 <label className="flex items-center gap-2 text-white">
-                  <p  className="w-4 h-4 text-white " />
+                  <p className="w-4 h-4 text-white " />
                   Remember me
                 </label>
 

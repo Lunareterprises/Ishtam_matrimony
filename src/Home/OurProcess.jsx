@@ -17,7 +17,7 @@ function OurProcess() {
                     <h1 className="text-3xl font-semibold text-[#490b22] sm:pt-[80px] pt-[60px]">
                         Our Process
                     </h1>
-                    <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >"From registration to relationship-see how we help you find your Ishttan."</p>
+                    <p className='max-w-[1200px] text-[18px] sm:text-[20px] px-7 text-[#490b22]' >"From registration to relationship-see how we help you find your Ishtam."</p>
                 </div>
 
 
@@ -89,7 +89,7 @@ function OurProcess() {
                     <h1 className="text-3xl font-semibold text-[#490b22] ">
                         Our Process
                     </h1>
-                    <p className=' text-[16px] text-[#490b22]' >"From registration to relationship-see how we help you find your Ishttan."</p>
+                    <p className=' text-[16px] text-[#490b22]' >"From registration to relationship-see how we help you find your Ishtam."</p>
                 </div>
 
                 <img src={processImg} alt="" className='px-3 pt-10' />
@@ -104,7 +104,7 @@ function OurProcess() {
                         Our Process
                     </h1>
                     <p className="text-[16px] text-[#490b22]">
-                        "From registration to relationship—see how we help you find your Ishttan."
+                        "From registration to relationship—see how we help you find your Ishtam."
                     </p>
                 </div>
                 <div className='flex w-full items-center pt-5 justify-center' >

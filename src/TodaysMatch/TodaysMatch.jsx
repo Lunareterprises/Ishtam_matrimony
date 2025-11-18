@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { getTodaysMatchApi } from '../Services/allApi';
 import DoubleHearts from '../assets/DoubleHearts.png';
 import TodaysMatchHeader from './TodaysMatchHeader';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function TodaysMatch() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -18,12 +19,14 @@ function TodaysMatch() {
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { user } = useAuth();
+    const token = user?.token
 
     // ✅ Fetch todays match data
     const getTodaysMatch = async () => {
         try {
             setLoading(true);
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -113,7 +116,7 @@ function TodaysMatch() {
                                     <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                                 </div>
 
-                              {/*   <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+                                {/*   <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
                                     <PiSlidersBold className="text-xl text-[#787878]" />
                                 </div> */}
                             </div>

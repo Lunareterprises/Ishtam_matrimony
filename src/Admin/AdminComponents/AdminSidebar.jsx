@@ -17,9 +17,11 @@ import { IoMdHeart } from "react-icons/io";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { BiHomeHeart } from "react-icons/bi";
+import { useAuth } from "../../AuthContext/AuthContext";
 
 
 function AdminSidebar({ isOpen, setIsOpen }) {
+    const {Adminlogout} = useAuth()
 
     const navigate = useNavigate()
     const handleLogout = async (e) => {
@@ -36,8 +38,10 @@ function AdminSidebar({ isOpen, setIsOpen }) {
             cancelButtonText: "Cancel"
         }).then((result) => {
             if (result.isConfirmed) {
-                sessionStorage.removeItem("token")
-                navigate('/')
+                // sessionStorage.removeItem("token")
+                // navigate('/')
+                Adminlogout()
+
             }
         });
 

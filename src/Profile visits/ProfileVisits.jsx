@@ -8,12 +8,14 @@ import { PiSlidersBold } from "react-icons/pi";
 import { listVisitedHistoryApi } from '../Services/allApi';
 import IshttamProfileCards from '../Components/IshttamProfileCards';
 import DoubleHearts from '../assets/DoubleHearts.png';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function ProfileVisits() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [activeTab, setActiveTab] = useState("visited_me");
     const [visitHistoryList, setVisitHistoryList] = useState([])
-
+    const { user } = useAuth();
+    const token = user?.token
     const tabs = [
         { key: "visited_me", label: "Profiles Who Viewed Me" },
         { key: "i_visited", label: "Profiles I Viewed" }
@@ -25,7 +27,7 @@ function ProfileVisits() {
             console.log("type::", type);
 
             const reqBody = { type };
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };

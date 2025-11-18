@@ -3,16 +3,19 @@ import { IoCloseOutline, IoEye, IoEyeOff } from 'react-icons/io5';
 import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
 import { sendInterestApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function ConnectNowModal({ onClose, receiver_id }) {
     const [message, setMessage] = useState(
         "Hi, I found your profile interesting and would like to connect with you."
     );
+    const { user } = useAuth();
+        const token = user?.token
     console.log("Receiver ID:", receiver_id);
     const handleSendInterest = async (e) => {
         e.preventDefault()
         try {
-            const token = sessionStorage.getItem("token")
+            
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

@@ -12,13 +12,13 @@ function AboutUs() {
 
                     <div>
                         <p>
-                            Ishttan Marry is a trusted matrimonial platform designed to bring together hearts, families, and traditions.
+                            Ishtam Marry is a trusted matrimonial platform designed to bring together hearts, families, and traditions.
                             With a thoughtful blend of modern technology and cultural values, we make the journey of finding your life partner simple, safe, and meaningful.
                         </p>
 
                         <p className="mt-4">
                             Our platform goes beyond just creating profiles we focus on building real connections.
-                            Whether you seek compatibility in values, lifestyle, or shared dreams, Ishttan Marry ensures personalized matches that truly matter.
+                            Whether you seek compatibility in values, lifestyle, or shared dreams, Ishtam Marry ensures personalized matches that truly matter.
                             Every detail is handled with care, from profile verification to intelligent matchmaking, giving you the confidence that your search is genuine and secure.
                         </p>
 

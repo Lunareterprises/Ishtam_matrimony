@@ -26,7 +26,7 @@ function WhyIshttamMarry() {
     {
       title: "Real Stories. Real People.",
       description:
-        "Thousands have found their life partners on Ishttan Marry. We're not just a website-we're a bridge to soulful unions and sacred beginnings",
+        "Thousands have found their life partners on Ishtam Marry. We're not just a website-we're a bridge to soulful unions and sacred beginnings",
     },
   ];
 

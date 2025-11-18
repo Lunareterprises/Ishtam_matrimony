@@ -3,6 +3,7 @@ import { fetchPartnerPreferenceApi, updatePartnerPreferenceApi } from '../Servic
 import { FaPen } from "react-icons/fa";
 import Swal from 'sweetalert2';
 import { FaChevronDown } from "react-icons/fa";
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function PartnerPreferenceSection() {
@@ -12,12 +13,13 @@ function PartnerPreferenceSection() {
     const [showPartnerCommunityDropdown, setShowPartnerCommunityDropdown] = useState(false);
     const [showPartnerMaritalDropdown, setShowPartnerMaritalDropdown] = useState(false);
     const [showPartnerDietDropdown, setShowPartnerDietDropdown] = useState(false);
-
+    const { user } = useAuth();
+    const token = user?.token
 
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -87,7 +89,7 @@ function PartnerPreferenceSection() {
         e.preventDefault();
         console.log("handle update partner prefernce:");
         try {
-            const token = sessionStorage.getItem('token')
+            
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             }
@@ -792,7 +794,7 @@ function PartnerPreferenceSection() {
                             </div>
 
                             {/* Diet */}
-                           
+
                             <div className="flex gap-2 items-center">
                                 <div className="font-semibold text-[#540D33] w-40">Diet</div>
                                 <div>:</div>

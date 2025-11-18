@@ -7,6 +7,7 @@ import { deleteGalleryImagesApi, fetchProfileDataApi, getCurrentPlanApi, updateP
 import { IoTrashBinSharp } from 'react-icons/io5';
 import Swal from 'sweetalert2';
 import { FaChevronDown } from "react-icons/fa";
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function ProfileSection() {
@@ -22,7 +23,8 @@ function ProfileSection() {
     const [showCommunityDropdown, setShowCommunityDropdown] = useState(false);
     const [showMaritalDropdown, setShowMaritalDropdown] = useState(false);
     const [showDietDropdown, setShowDietDropdown] = useState(false);
-
+    const { user } = useAuth();
+    const token = user?.token
 
     const [profileData, setProfileData] = useState({
         created_by: "",
@@ -125,7 +127,7 @@ function ProfileSection() {
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
-            const token = sessionStorage.getItem("token");
+            
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -146,7 +148,7 @@ function ProfileSection() {
 
     const fetchProfileData = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+           
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             };
@@ -258,7 +260,7 @@ function ProfileSection() {
             cancelButtonText: 'Cancel',
         });
         if (!result.isConfirmed) return;
-        const token = sessionStorage.getItem("token")
+        
         const reqHeader = {
             "Authorization": `Bearer ${token}`
         };
@@ -293,7 +295,7 @@ function ProfileSection() {
         console.log("handle update profile function::");
 
         try {
-            const token = sessionStorage.getItem("token");
+       
             const reqHeader = {
                 "Authorization": `Bearer ${token}`,
             };

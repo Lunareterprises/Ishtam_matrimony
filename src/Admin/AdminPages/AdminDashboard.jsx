@@ -7,6 +7,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import { getDashboardDataApi, listAllUsersApi, updateUserStatusApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { useAuth } from "../../AuthContext/AuthContext";
 
 function AdminDashboard() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -15,8 +16,9 @@ function AdminDashboard() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [userData, setUserData] = useState([]);
     const [dashboardData, setDashbordData] = useState([])
-    const getAllUsersList = async () => {
-        const token = sessionStorage.getItem("token");
+    const {admin} = useAuth();
+    const token = admin?.token
+    const getAllUsersList = async () => {      
         try {
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
@@ -33,7 +35,7 @@ function AdminDashboard() {
     }
 
     const updateUserStatus = async (u_id) => {
-        const token = sessionStorage.getItem("token");
+        console.log(token,'admintoken');    
         try {
             console.log(u_id);
             const payload = { user_id: u_id };
@@ -77,8 +79,6 @@ function AdminDashboard() {
 
     const getDashboardData = async () => {
         try {
-            console.log("inside dashbord daaa");
-            const token = sessionStorage.getItem("token");
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await getDashboardDataApi(reqHeader);
             console.log(result);
@@ -107,7 +107,7 @@ function AdminDashboard() {
     useEffect(() => {
         getAllUsersList();
         getDashboardData();
-    }, [])
+    }, [admin])
 
 
     //for navigation to user profile view

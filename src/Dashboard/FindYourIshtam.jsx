@@ -6,18 +6,20 @@ import profilecardimg from '../assets/ishtam-profilecard.jpg'
 import { FaCamera } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import DoubleHearts from '../assets/DoubleHearts.png'
+import { useAuth } from '../AuthContext/AuthContext';
 
 function FindYourIshtam() {
     const [myMatchData, setMyMatchData] = useState([])
     const [page, setPage] = useState(1);
     const [limit, setlimit] = useState(12);
     const [search, setSearch] = useState("")
-
+    const { user } = useAuth();
+    const token = user?.token
 
     //for fetching my match data
     const getMyMatch = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -30,8 +32,8 @@ function FindYourIshtam() {
             const result = await getMyMatchesApi(reqHeader, reqBody)
             console.log("match data ::", result);
             setMyMatchData(result.data.updated)
-            console.log("my match data length:",myMatchData.length);
-            
+            console.log("my match data length:", myMatchData.length);
+
         }
         catch (error) {
             console.log("Error in fetching my match", error);
@@ -43,7 +45,7 @@ function FindYourIshtam() {
     }, [])
 
     const navigate = useNavigate()
-    
+
     const navigateToParnerProfile = (id) => {
         navigate(`/partner-profile/${id}`)
     }

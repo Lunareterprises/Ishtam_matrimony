@@ -10,6 +10,7 @@ import { addNewSubscriptionPlanApi, getSubscriptionPlanApi } from '../../Service
 import Swal from 'sweetalert2';
 import EditSubscriptionPlanModal from '../AdminComponents/EditSubscriptionPlanModal';
 import AdminSubscriptionPlanCards from '../AdminComponents/AdminSubscriptionPlanCards';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 function SubscriptionManagement({ plans: subscriptionPlans }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,6 +22,8 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
         contact_limit: "",
     });
     const [flippedIndex, setFlippedIndex] = useState(null);
+    const { admin } = useAuth();
+    const token = admin?.token
 
     // For editing subscription plan
     const [viewEditModal, setViewEditModal] = useState(false);
@@ -39,7 +42,7 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
     const addSubscriptionPlan = async (planData) => {
         console.log("Plan data ::", planData); // Console log for planData
         try {
-            const token = sessionStorage.getItem("token");
+           
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await addNewSubscriptionPlanApi(reqHeader, planData);
             if (result?.data?.result === true) {
@@ -79,7 +82,7 @@ function SubscriptionManagement({ plans: subscriptionPlans }) {
     // For fetching subscription plan data
     const getSubscriptionPlan = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+            
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await getSubscriptionPlanApi(reqHeader);
             console.log("API Result:", result); // Log the full result

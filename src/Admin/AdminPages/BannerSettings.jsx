@@ -15,6 +15,7 @@ import {
     updateBannerStatusApi,
 } from "../../Services/allApi";
 import Swal from "sweetalert2";
+import { useAuth } from "../../AuthContext/AuthContext";
 
 function BannerSettings() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -25,6 +26,8 @@ function BannerSettings() {
     const [newBanner, setNewBanner] = useState(null);
     const [selectedFile, setSelectedFile] = useState(null);
     const [validate, setValidate] = useState("");
+    const { admin } = useAuth();
+    const token = admin?.token
 
 
     useEffect(() => {
@@ -39,7 +42,7 @@ function BannerSettings() {
 
     const handleAddBanner = () => setIsModalOpen(true);
 
-    
+
 
     const handleFileChange = (e) => {
         const file = e.target.files[0];
@@ -124,7 +127,6 @@ function BannerSettings() {
             if (!selectedFile) return;
             const formData = new FormData();
             formData.append("file", selectedFile);
-            const token = sessionStorage.getItem("token");
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await insertBannerApi(reqHeader, formData);
             console.log(result);
@@ -180,7 +182,7 @@ function BannerSettings() {
     // ✅ Admin banner list
     const listAdminBanners = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+            
             const reqHeader = { Authorization: `Bearer ${token}` };
 
             const result = await listAdminBannerApi(reqHeader);
@@ -212,7 +214,7 @@ function BannerSettings() {
             if (!confirm.isConfirmed) return;
 
             const reqBody = { banner_id: b_id };
-            const token = sessionStorage.getItem("token");
+    
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await deleteBannerApi(reqHeader, reqBody);
             console.log("Delete for banner ", result);
@@ -249,7 +251,7 @@ function BannerSettings() {
     // ✅ Update banner status
     const updateBannerStatus = async (b_id) => {
         try {
-            const token = sessionStorage.getItem("token");
+            
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await updateBannerStatusApi(reqHeader, { banner_id: b_id });
             if (result?.data?.result === true) {

@@ -5,8 +5,11 @@ import { IoTrashBin } from 'react-icons/io5'
 import { LuIndianRupee } from "react-icons/lu"
 import Swal from 'sweetalert2'
 import { deleteSubscriptionPlanApi } from '../../Services/allApi'
+import { useAuth } from '../../AuthContext/AuthContext'
 
 function AdminSubscriptionPlanCards({ plan, onEdit, onDeleteSuccess }) {
+    const { admin } = useAuth();
+    const token = admin?.token
 
     const deleteSubscriptionPlan = async (p_id) => {
         try {
@@ -22,7 +25,7 @@ function AdminSubscriptionPlanCards({ plan, onEdit, onDeleteSuccess }) {
 
             if (!confirm.isConfirmed) return;
 
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };

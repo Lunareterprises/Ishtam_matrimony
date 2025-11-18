@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { listAllUsersApi, updateUserStatusApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
 import { IoSearch } from 'react-icons/io5';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 function UserManagement() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -19,10 +20,13 @@ function UserManagement() {
   const [limit] = useState(10);
   const [totalPages, setTotalPages] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const { admin } = useAuth();
+      const token = admin?.token
+
 
 
   const getAllUsersList = async (currentPage = page, currentSearch = searchTerm) => {
-    const token = sessionStorage.getItem("token");
+    
     try {
       const reqHeader = {
         Authorization: `Bearer ${token}`,
@@ -50,7 +54,7 @@ function UserManagement() {
   }
 
   const updateUserStatus = async (u_id) => {
-    const token = sessionStorage.getItem("token");
+    
     try {
       console.log("update user status :::", u_id);
       const payload = { user_id: u_id };

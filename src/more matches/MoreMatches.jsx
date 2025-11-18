@@ -6,6 +6,7 @@ import ChatMessages from '../Components/ChatMessages'
 import { getMoreMatcheshApi } from '../Services/allApi'
 import IshttamProfileCards from '../Components/IshttamProfileCards'
 import DoubleHearts from "../assets/DoubleHearts.png";
+import { useAuth } from '../AuthContext/AuthContext'
 
 function MoreMatches() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -14,11 +15,13 @@ function MoreMatches() {
     const [limit] = useState(12);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
+    const { user } = useAuth();
+    const token = user?.token
 
     const getMoreMatches = async (pageNumber = 1) => {
         try {
             setLoading(true);
-            const token = sessionStorage.getItem("token");
+
 
             const reqHeader = { Authorization: `Bearer ${token}` };
             const reqBody = {

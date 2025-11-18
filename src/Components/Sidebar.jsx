@@ -9,12 +9,14 @@ import { BsEnvelopeArrowDown } from "react-icons/bs";
 import { FaEye } from "react-icons/fa";
 import { BiLogOut } from "react-icons/bi";
 import Swal from 'sweetalert2';
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function Sidebar() {
   const [toggleMyIshtam, setToggleMyIshtam] = useState(false);
   const [toggleMatches, setToggleMatches] = useState(false);
   const navigate = useNavigate()
+  const {Userlogout} = useAuth()
 
   const handleLogout = async (e) => {
     e.preventDefault()
@@ -31,7 +33,8 @@ function Sidebar() {
     }).then((result) => {
       if (result.isConfirmed) {
         sessionStorage.removeItem("token")
-        navigate('/')
+        // navigate('/')
+        Userlogout()
       }
     });
   }

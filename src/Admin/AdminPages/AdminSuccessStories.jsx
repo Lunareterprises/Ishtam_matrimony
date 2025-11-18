@@ -7,17 +7,20 @@ import Swal from 'sweetalert2'
 import { MdOutlineHourglassEmpty } from 'react-icons/md'
 import { FiInbox } from 'react-icons/fi'
 import DoubleHearts from '../../assets/DoubleHearts.png';
+import { useAuth } from '../../AuthContext/AuthContext'
 
 
 function AdminSuccessStories() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [successStoryData, setSuccessStoryData] = useState([])
     const navigate = useNavigate();
+    const {admin} = useAuth();
+           const token = admin?.token
+
 
     //for listing success stories 
     const listSuccessStory = async () => {
         try {
-            const token = sessionStorage.getItem("token")
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -39,7 +42,7 @@ function AdminSuccessStories() {
     //for approving success stories 
     const approveSuccessstories = async (ss_id) => {
         console.log("Inside approve success stories ");
-        const token = sessionStorage.getItem("token")
+      
         try {
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
@@ -81,7 +84,7 @@ function AdminSuccessStories() {
     //for approving success stories 
     const rejectSuccessstories = async (ss_id) => {
         console.log("Inside approve success stories ");
-        const token = sessionStorage.getItem("token")
+        
 
         try {
             const reqHeader = {
@@ -125,7 +128,6 @@ function AdminSuccessStories() {
     const deleteSuccessStories = async (ss_id) => {
         console.log("Successs story data ::", ss_id);
         try {
-            const token = sessionStorage.getItem("token")
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };

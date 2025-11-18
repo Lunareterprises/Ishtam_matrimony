@@ -5,17 +5,20 @@ import ChatMessages from "../Components/ChatMessages";
 import DashboardNav from "../Components/DashboardNav";
 import SubscriptionPlanCards from "./SubscriptionPlanCards";
 import { fetchSubscriptionPlanApi } from "../Services/allApi";
+import { useAuth } from "../AuthContext/AuthContext";
 
 function Subscription() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [flippedIndex, setFlippedIndex] = useState(null);
   const [plans, setPlans] = useState([]);
+  const { user } = useAuth();
+  const token = user?.token
+
   const fetchSubscrptionPlans = async () => {
     try {
-      const token = sessionStorage.getItem("token");
       const reqHeader = { Authorization: `Bearer ${token}` };
       const result = await fetchSubscriptionPlanApi(reqHeader);
-      console.log("fetch subscription plan :::",result);
+      console.log("fetch subscription plan :::", result);
       setPlans(result.data.data);
     } catch (error) {
       console.log(error);

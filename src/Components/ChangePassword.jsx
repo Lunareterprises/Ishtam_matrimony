@@ -3,17 +3,20 @@ import { IoCloseOutline, IoEye, IoEyeOff } from 'react-icons/io5';
 import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
 import { changePasswordApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function ChangePassword({ onClose }) {
     const [showPassword, setShowPassword] = useState(false);
     const [newPassword, setNewPassword] = useState({
         password: ""
     })
+    const { user } = useAuth();
+        const token = user?.token
 
     const handleChangPassword = async (e) => {
         e.preventDefault()
         try {
-            const token = sessionStorage.getItem("token");
+          
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };

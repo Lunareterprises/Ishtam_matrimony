@@ -5,6 +5,7 @@ import { IoCloseOutline } from "react-icons/io5";
 import Swal from 'sweetalert2';
 import { IoEye, IoEyeOff } from "react-icons/io5";
 import { userLoginApi } from '../../Services/allApi';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 function AdminLogin({ isOpen, onClose }) {
     if (!isOpen) return null;
@@ -13,7 +14,10 @@ function AdminLogin({ isOpen, onClose }) {
     const [loginData, setLoginData] = useState({
         emailOrMobile: "",
         password: ""
-    })
+    });
+
+    const {Adminlogin} = useAuth();
+
 
     const [errors, setErrors] = useState({}); // <-- add this state
     const validateLoginData = () => {
@@ -37,65 +41,101 @@ function AdminLogin({ isOpen, onClose }) {
     };
 
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        if (!validateLoginData()) return;
-        console.log("login Data ::", loginData);
-        try {
-            const result = await userLoginApi(loginData);
-            console.log("Login result ::", result);
-            if (result?.data?.result === true) {
-                const userData = result.data.data;
-                onClose();
-                // Check role and status before allowing login
-                if (userData.role !== "admin") {
-                    await Swal.fire({
-                        title: "Access Denied",
-                        text: "Only admin accounts are allowed to log in here.",
-                        icon: "error",
-                        confirmButtonText: "OK",
-                    });
-                    return; // stop further execution
-                }
+    // const handleLogin = async (e) => {
+    //     e.preventDefault();
+    //     if (!validateLoginData()) return;
+    //     console.log("login Data ::", loginData);
+    //     try {
+    //         const result = await userLoginApi(loginData);
+    //         console.log("Login result ::", result);
+    //         if (result?.data?.result === true) {
+    //             const userData = result.data.data;
+    //             onClose();
+    //             // Check role and status before allowing login
+    //             if (userData.role !== "admin") {
+    //                 await Swal.fire({
+    //                     title: "Access Denied",
+    //                     text: "Only admin accounts are allowed to log in here.",
+    //                     icon: "error",
+    //                     confirmButtonText: "OK",
+    //                 });
+    //                 return; // stop further execution
+    //             }
 
-                // ✅ Proceed with login for active user
-                sessionStorage.setItem("token", userData.token);
-                sessionStorage.setItem("profilePic", userData.profile_pic);
-                sessionStorage.setItem("user_id", userData.user_id);
-                sessionStorage.setItem("email", userData.email);
-                sessionStorage.setItem("name", userData.name);
+    //             Adminlogin(userData)
+    //             await Swal.fire({
+    //                 title: "Login Successful!",
+    //                 text: "Welcome back, Admin. Let’s make things happen!",
+    //                 icon: "success",
+    //                 iconColor: "#E33183",
+    //                 confirmButtonText: "OK",
+    //             });
+    //             // navigate("/admin-dashboard");
+    //         }
+    //         else {
+    //             Swal.fire({
+    //                 title: 'Login failed',
+    //                 text: result?.data?.message || 'Please try again.',
+    //                 icon: 'error',
+    //                 confirmButtonText: 'Retry',
+    //             });
+    //         }
+    //     }
+    //     catch (error) {
+    //         console.error(error);
+    //         Swal.fire({
+    //             title: 'Error',
+    //             text: 'Something went wrong. Please try again later.',
+    //             icon: 'error',
+    //             confirmButtonText: 'OK',
+    //         });
+    //     }
+    // }
 
+      const handleLogin = async (e) => {
+    e.preventDefault();
+    if (!validateLoginData()) return;
 
-
-
-                await Swal.fire({
-                    title: "Login Successful!",
-                    text: "Welcome back, Admin. Let’s make things happen!",
-                    icon: "success",
-                    iconColor: "#E33183",
-                    confirmButtonText: "OK",
-                });
-                navigate("/admin-dashboard");
-            }
-            else {
-                Swal.fire({
-                    title: 'Login failed',
-                    text: result?.data?.message || 'Please try again.',
-                    icon: 'error',
-                    confirmButtonText: 'Retry',
-                });
-            }
+    try {
+      const result = await userLoginApi(loginData);
+      if (result?.data?.result === true) {
+        const userData = result.data.data;
+        onClose();
+        if (userData.role !== "admin") {
+          await Swal.fire({
+            title: "Access Denied",
+            text: "Only admin accounts are allowed to log in here.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+          return;
         }
-        catch (error) {
-            console.error(error);
-            Swal.fire({
-                title: 'Error',
-                text: 'Something went wrong. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'OK',
-            });
-        }
+        Adminlogin(userData);
+        await Swal.fire({
+          title: "Login Successful!",
+          text: "Welcome back, Admin. Let’s make things happen!",
+          icon: "success",
+          iconColor: "#E33183",
+          confirmButtonText: "OK",
+        });
+        navigate("/admin-dashboard");
+      } else {
+        Swal.fire({
+          title: "Login failed",
+          text: result?.data?.message || "Please try again.",
+          icon: "error",
+          confirmButtonText: "Retry",
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Something went wrong. Please try again later.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
+  };
 
 
 

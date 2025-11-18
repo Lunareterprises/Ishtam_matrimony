@@ -9,17 +9,20 @@ import AdminSidebar from '../AdminComponents/AdminSidebar';
 import AdminNavbar from '../AdminComponents/AdminNavbar';
 import { getUserProfileDataApi } from '../../Services/allApi';
 import { useLocation, useParams } from 'react-router-dom';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 function UserProfileView() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [profileData, setProfileData] = useState([])
     const location = useLocation();
     const userId = location.state?.userId;
+    const {admin} = useAuth();
+    const token = admin?.token
 
     const userProfileView = async (userId) => {
         console.log("User id:::::", userId);
         try {
-            const token = sessionStorage.getItem("token");
+           
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };

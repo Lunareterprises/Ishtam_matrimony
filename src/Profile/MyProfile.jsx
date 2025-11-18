@@ -8,6 +8,7 @@ import ChatMessages from '../Components/ChatMessages';
 import { fetchPartnerPreferenceApi, fetchProfileDataApi, getCurrentPlanApi, updatePartnerPreferenceApi, updateProfileApi } from '../Services/allApi';
 import ProfileSection from './ProfileSection';
 import PartnerPreferenceSection from './PartnerPreferenceSection';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function MyProfile() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -15,12 +16,16 @@ function MyProfile() {
     const [currentPlanData, setCurrentPlanData] = useState({});
     const [loading, setIsLoading] = useState(true);
     const [preview, setPreview] = useState(null);
+    const { user } = useAuth();
+    const token = user?.token
 
+    console.log(token,'tokennn');
+    
 
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -47,7 +52,7 @@ function MyProfile() {
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -89,7 +94,7 @@ function MyProfile() {
 
     const fetchProfileData = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             };

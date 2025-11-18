@@ -22,6 +22,7 @@ import Footer from '../Components/Footer';
 import { Link } from 'react-router-dom';
 import ViewContactModal from '../Components/ViewContactModal';
 import ImageGalleryModal from '../partner profile/ImageGalleryModal'
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function PartnerProfile() {
@@ -39,11 +40,13 @@ function PartnerProfile() {
     const [showChat, setShowChat] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const { user } = useAuth();
+    const token = user?.token
 
     const fetchPartnerProfile = async () => {
         console.log("profile id inside the function :::", profileId);
         try {
-            const token = sessionStorage.getItem("token");
+
             console.log("token::", token);
             const reqHeader = {
                 "Content-Type": "application/json",
@@ -73,7 +76,7 @@ function PartnerProfile() {
     const getContactData = async (e) => {
         e.preventDefault()
         try {
-            const token = sessionStorage.getItem("token");
+          
             console.log("token::", token);
             const reqHeader = {
                 "Content-Type": "application/json",

@@ -3,14 +3,16 @@ import IshttamProfileCards from '../Components/IshttamProfileCards'
 import { listVisitedHistoryApi } from '../Services/allApi';
 import { Link, useNavigate } from 'react-router-dom';
 import DoubleHearts from '../assets/DoubleHearts.png';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function WhoViewedMyProfile() {
     const [whoViewedMyProfile, setWhoViewedMyProfile] = useState([])
-
+    const { user } = useAuth();
+    const token = user?.token
     const getWhoViewedMyProfile = async () => {
         try {
             const reqBody = { type: "visited_me" };
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -28,7 +30,7 @@ function WhoViewedMyProfile() {
     }, [])
 
     const navigate = useNavigate()
-    
+
     const navigateToParnerProfile = (id) => {
         navigate(`/partner-profile/${id}`)
     }

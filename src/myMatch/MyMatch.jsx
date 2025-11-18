@@ -9,6 +9,7 @@ import { getMyMatchesApi } from "../Services/allApi";
 import DoubleHearts from "../assets/DoubleHearts.png";
 import IshttamProfileCards from "../Components/IshttamProfileCards";
 import MyMatchHeader from "./MyMatchHeader";
+import { useAuth } from "../AuthContext/AuthContext";
 
 function MyMatch() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -17,14 +18,15 @@ function MyMatch() {
   const [limit] = useState(12);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
-
+  const { user } = useAuth();
+  const token = user?.token
   const navigate = useNavigate();
 
   // ✅ Fetch my matches
   const getMyMatch = async () => {
     try {
       setLoading(true);
-      const token = sessionStorage.getItem("token");
+
       const reqHeader = {
         Authorization: `Bearer ${token}`,
       };
@@ -95,7 +97,7 @@ function MyMatch() {
                   />
                   <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                 </div>
-               {/*  <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+                {/*  <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
                   <PiSlidersBold className="text-xl text-[#787878]" />
                 </div> */}
               </div>

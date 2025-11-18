@@ -4,6 +4,7 @@ import { MdCheckCircle } from "react-icons/md";
 import DoubleHeartsCredentials from '../../assets/DoubleHeartsCredentials.png';
 import { assignSubscriptionPlanApi, fetchSubscriptionPlansApi } from "../../Services/allApi";
 import Swal from "sweetalert2";
+import { useAuth } from "../../AuthContext/AuthContext";
 
 function AssignPlanModal({ isOpen, onClose, userData }) {
     const [selectedPlan, setSelectedPlan] = useState(null);
@@ -11,11 +12,12 @@ function AssignPlanModal({ isOpen, onClose, userData }) {
     console.log("User data in plan modalllll:::", userData);
     const userName = userData?.u_firstname
     const user_id = userData?.u_id;
-    
+    const { admin } = useAuth();
+    const token = admin?.token
 
 
     const fetchSubscriptionPlans = async () => {
-        const token = sessionStorage.getItem("token");
+
         try {
             const reqHeader = { Authorization: `Bearer ${token}` };
             const result = await fetchSubscriptionPlansApi(reqHeader)
@@ -28,7 +30,7 @@ function AssignPlanModal({ isOpen, onClose, userData }) {
     }
 
     const assignSubscriptionPlan = async (plan_id, user_id) => {
-        const token = sessionStorage.getItem("token");
+        
         console.log("Userid:", user_id);
         console.log("Plan ID:", plan_id);
         const reqBody = { plan_id, user_id };

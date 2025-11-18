@@ -5,10 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { UpdateStatusApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
 import { FaRegUser } from 'react-icons/fa';
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function SentRequestCard({ item }) {
-
+    const { user } = useAuth();
+    const token = user?.token
     const calculateAge = (dob) => {
         if (!dob) return null;
 
@@ -35,7 +37,7 @@ function SentRequestCard({ item }) {
         console.log("Inside cancel request");
 
         try {
-            const token = sessionStorage.getItem("token")
+
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

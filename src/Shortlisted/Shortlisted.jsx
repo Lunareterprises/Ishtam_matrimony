@@ -10,14 +10,16 @@ import { Link } from 'react-router-dom';
 import IshttamProfileCards from '../Components/IshttamProfileCards';
 import DoubleHearts from '../assets/DoubleHearts.png';
 import { getWishlistedProfilesApi } from '../Services/allApi';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function Shortlisted() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [shortlistedData, setShortListedData] = useState([])
-
+    const { user } = useAuth();
+    const token = user?.token
     const getWishlistedProfiles = async () => {
         try {
-            const token = sessionStorage.getItem("token")
+
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -25,7 +27,7 @@ function Shortlisted() {
             const result = await getWishlistedProfilesApi(reqHeader)
             console.log("result for wishlisted profiles", result);
             setShortListedData(result?.data?.data)
-          
+
         }
         catch (error) {
             console.log(error);
@@ -80,7 +82,7 @@ function Shortlisted() {
                                 </div>
 
                                 {/* Filter Icon */}
-                              {/*   <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
+                                {/*   <div className="w-10 h-10 border border-[#E4E4E7] rounded-md flex items-center justify-center">
                                     <PiSlidersBold className="text-xl text-[#787878]" />
                                 </div> */}
                             </div>

@@ -11,6 +11,7 @@ import ReceivedRequestCard from "./ReceivedRequestCard";
 import AcceptedRequestCard from "./AcceptedRequestCard";
 import SentRequestCard from "./SentRequestCard";
 import ContactRequestCard from "./ContactRequestCard";
+import { useAuth } from "../AuthContext/AuthContext";
 
 function Inbox() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -20,7 +21,8 @@ function Inbox() {
     const [contactOption, setContactOption] = useState("me"); // For contacts tab
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-
+    const { user } = useAuth();
+    const token = user?.token
     const tabs = [
         { key: "received", label: "Received" },
         { key: "accepted", label: "Accepted" },
@@ -33,7 +35,7 @@ function Inbox() {
         const fetchData = async () => {
             setLoading(true);
             setError("");
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -44,7 +46,7 @@ function Inbox() {
                     // Send "me" or "else" in type key
                     const reqBody = { type: contactOption === "me" ? "me" : "else" };
                     const result = await listContactHistoryApi(reqHeader, reqBody);
-                    console.log("result for contact history",result);
+                    console.log("result for contact history", result);
                     setInterestList(result.data.data || []);
                 } else {
                     const reqBody = { status: activeTab };
@@ -109,11 +111,10 @@ function Inbox() {
                                             <button
                                                 key={tab.key}
                                                 onClick={() => setActiveTab(tab.key)}
-                                                className={`sm:px-6 px-2 py-2 rounded-lg sm:text-sm text-[13px] font-medium transition-all duration-200 ${
-                                                    activeTab === tab.key
+                                                className={`sm:px-6 px-2 py-2 rounded-lg sm:text-sm text-[13px] font-medium transition-all duration-200 ${activeTab === tab.key
                                                         ? "bg-pink-600 text-white shadow"
                                                         : "bg-white text-gray-700 hover:bg-gray-200"
-                                                }`}
+                                                    }`}
                                             >
                                                 {tab.label}
                                             </button>
@@ -160,11 +161,10 @@ function Inbox() {
                                                             className="sm:w-5 sm:h-5 h-4 w-4 accent-[#540D33] cursor-pointer transition-all duration-200"
                                                         />
                                                         <span
-                                                            className={`sm:text-sm text-[13px] font-medium ${
-                                                                selectedOption === "me"
+                                                            className={`sm:text-sm text-[13px] font-medium ${selectedOption === "me"
                                                                     ? "text-[#540D33]"
                                                                     : "text-gray-700"
-                                                            }`}
+                                                                }`}
                                                         >
                                                             Accepted by Me
                                                         </span>
@@ -180,11 +180,10 @@ function Inbox() {
                                                             className="sm:w-5 sm:h-5 h-4 w-4 accent-[#540D33] cursor-pointer transition-all duration-200"
                                                         />
                                                         <span
-                                                            className={`sm:text-sm text-[13px] font-medium ${
-                                                                selectedOption === "her"
+                                                            className={`sm:text-sm text-[13px] font-medium ${selectedOption === "her"
                                                                     ? "text-[#540D33]"
                                                                     : "text-gray-700"
-                                                            }`}
+                                                                }`}
                                                         >
                                                             Accepted by Her
                                                         </span>

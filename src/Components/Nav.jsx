@@ -11,16 +11,18 @@ import Registration from './Registration';
 import VerifyOtp from './VerifyOtp';
 import ForgotPassword from '../Components/ForgotPassword';
 import { HashLink } from 'react-router-hash-link';
+import { useAuth } from '../AuthContext/AuthContext';
 
 function Nav() {
     const navigate = useNavigate();
-
+    const { user } = useAuth();
+    const token = user?.token
     const [activeModal, setActiveModal] = useState(null);
     const [showSidebar, setShowSidebar] = useState(false);
     const [emailToVerify, setEmailToVerify] = useState("");
 
     const openLoginForm = () => {
-        const token = sessionStorage.getItem("token");
+
         if (token) navigate("/dashboard");
         else {
             setActiveModal("login");

@@ -6,6 +6,7 @@ import profilecardimg from '../assets/ishtam-profilecard.jpg'
 import { FaCamera } from "react-icons/fa";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import DoubleHearts from '../assets/DoubleHearts.png'
+import { useAuth } from '../AuthContext/AuthContext';
 
 function MatchSuggestions() {
     const [todaysMatchData, setTodaysMatchData] = useState([])
@@ -13,12 +14,13 @@ function MatchSuggestions() {
     const [limit, setlimit] = useState(12);
     const [search, setSearch] = useState("")
     const navigate = useNavigate()
-
+    const { user } = useAuth();
+    const token = user?.token
 
     //for fetching todays match data
     const getTodaysMatch = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+           
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -76,7 +78,7 @@ function MatchSuggestions() {
                 {todaysMatchData?.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 pt-10 w-full">
                         {todaysMatchData.map((item, index) => (
-                           <IshttamProfileCards item={item} />
+                            <IshttamProfileCards item={item} />
                         ))}
                     </div>
                 ) : (

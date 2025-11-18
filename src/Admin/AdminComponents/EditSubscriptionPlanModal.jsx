@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import DoubleHearts from '../../assets/DoubleHearts.png';
 import { editSubscriptionPlanApi } from '../../Services/allApi';
 import Swal from 'sweetalert2';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 function EditSubscriptionPlanModal({ onClose, plan, onUpdateSuccess }) {
     const [planData, setPlanData] = useState({
@@ -10,7 +11,8 @@ function EditSubscriptionPlanModal({ onClose, plan, onUpdateSuccess }) {
         duration: plan.p_duration,
         contact_limit: plan.p_contact_limit,
     });
-
+    const { admin } = useAuth();
+    const token = admin?.token
 
     useEffect(() => {
         console.log("Plan :::", plan);
@@ -41,7 +43,7 @@ function EditSubscriptionPlanModal({ onClose, plan, onUpdateSuccess }) {
     const editSubscriptionPlan = async (p_id) => {
         try {
             console.log("pid :::", p_id);
-            const token = sessionStorage.getItem("token")
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };

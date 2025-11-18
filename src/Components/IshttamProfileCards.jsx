@@ -9,6 +9,7 @@ import { addRemoveWishlistApi, getContactDataApi, sendInterestApi } from '../Ser
 import ViewContactModal from './ViewContactModal';
 import Swal from 'sweetalert2';
 import { FaRegHeart } from "react-icons/fa";
+import { useAuth } from '../AuthContext/AuthContext';
 
 
 function IshttamProfileCards({ item }) {
@@ -16,6 +17,8 @@ function IshttamProfileCards({ item }) {
     useEffect(() => {
         console.log("item ::: ", item);
     })
+    const { user } = useAuth();
+    const token = user?.token
     const [ContactData, setContactData] = useState([])
     const [showViewContactModal, setShowViewContactModal] = useState(false)
     const navigate = useNavigate()
@@ -46,7 +49,7 @@ function IshttamProfileCards({ item }) {
     const getContactData = async (userId) => {
 
         try {
-            const token = sessionStorage.getItem("token");
+
             console.log("token::", token);
             const reqHeader = {
                 "Content-Type": "application/json",
@@ -81,7 +84,7 @@ function IshttamProfileCards({ item }) {
     //add and remove to wishlist
     const handleAddRemoveWishlist = async (userId) => {
         try {
-            const token = sessionStorage.getItem("token");
+
             const reqBody = { partner_id: userId };
             const reqHeader = {
                 "Content-Type": "application/json",
@@ -181,7 +184,7 @@ function IshttamProfileCards({ item }) {
                         </div> */}
                     </div>
                     <p className="text-[10px] font-normal text-[#D4D4D8]">
-                        {calculateAge(item.u_dob)} yrs, {item.u_height&& "|"} {item.u_height}  {item.u_height&& "cm"} { item.u_working_as && "| "}
+                        {calculateAge(item.u_dob)} yrs, {item.u_height && "|"} {item.u_height}  {item.u_height && "cm"} {item.u_working_as && "| "}
                         {item.u_working_as}
                     </p>
                     <p className="text-[10px] font-normal text-[#D4D4D8]">

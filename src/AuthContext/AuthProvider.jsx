@@ -1,31 +1,45 @@
-// AuthProvider.jsx
 import { useState } from "react";
 import { AuthContext } from "./AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    // Load from localStorage on init
-    const savedUser = localStorage.getItem("user");
+    const savedUser = sessionStorage.getItem("user");
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  const [admin, setAdmin] = useState(() => {
+    const savedAdmin = sessionStorage.getItem("admin");
+    return savedAdmin ? JSON.parse(savedAdmin) : null;
+  });
 
-  const navigate = useNavigate();
+  // Remove navigate from here
+  const Adminlogin = (loggedInAdmin) => {
+    setAdmin(loggedInAdmin);
+    sessionStorage.setItem("admin", JSON.stringify(loggedInAdmin));
+  };
 
-  const login = (loggedInUser) => {
+  const Userlogin = (loggedInUser) => {
     setUser(loggedInUser);
-    localStorage.setItem("user", JSON.stringify(loggedInUser)); // ✅ save
-    navigate("/dashboard");
+    sessionStorage.setItem("user", JSON.stringify(loggedInUser));
   };
 
-  const logout = () => {
+  const Adminlogout = () => {
     setUser(null);
-    localStorage.removeItem("user"); // ✅ clear
-    navigate("/");
+    setAdmin(null);
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
   };
+
+  const Userlogout = () => {
+    setUser(null);
+    setAdmin(null);
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+  };
+
+
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, admin, Adminlogin, Userlogin ,Adminlogout, Userlogout }}>
       {children}
     </AuthContext.Provider>
   );

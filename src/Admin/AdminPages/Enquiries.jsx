@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react'
 import AdminNavbar from '../AdminComponents/AdminNavbar';
 import AdminSidebar from '../AdminComponents/AdminSidebar';
 import { getEnquiriesApi } from '../../Services/allApi';
+import { useAuth } from '../../AuthContext/AuthContext';
 
 function Enquiries() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [enquiryData, setEnquiryData] = useState([])
+    const { admin } = useAuth();
+    const token = admin?.token
+
     const pendingProfiles = [
         {
             id: "#12567",
@@ -59,7 +63,6 @@ function Enquiries() {
     // for listing enquiries
     const listEnquries = async () => {
         try {
-            const token = sessionStorage.getItem("token")
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -106,7 +109,7 @@ function Enquiries() {
                                             <th className="p-3">Name</th>
                                             <th className="p-3">Email</th>
                                             <th className="p-3">Phone</th>
-                                            <th  className="p-3" >Enquired At</th>
+                                            <th className="p-3" >Enquired At</th>
                                             <th className="p-3">Message</th>
 
                                         </tr>

@@ -16,6 +16,7 @@ import ChangePassword from '../Components/ChangePassword';
 import { Link } from 'react-router-dom';
 import { fetchPartnerPreferenceApi, fetchProfileDataApi, getCurrentPlanApi, listInterestApi } from '../Services/allApi';
 import Socket from "../socket/Socket"
+import { useAuth } from '../AuthContext/AuthContext';
 
 function Dashboard() {
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,7 +26,9 @@ function Dashboard() {
     const [receivedInterestCount, setReceivedInterestCount] = useState(0);
     const [completionPercent, setCompletionPercent] = useState(0);
     const [currentPlanData, setCurrentPlanData] = useState({})
-
+    const { user } = useAuth();
+    const token = user?.token;
+    
 
     console.log("hiiiiii");
 
@@ -86,7 +89,7 @@ function Dashboard() {
 
     const listSentInterest = async () => {
         try {
-            const token = sessionStorage.getItem("token")
+
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -105,7 +108,7 @@ function Dashboard() {
 
     const listReceivedInterest = async () => {
         try {
-            const token = sessionStorage.getItem("token")
+
             const reqHeader = {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -127,7 +130,7 @@ function Dashboard() {
     const getCurrentPlan = async () => {
         try {
             console.log("inside get current plan");
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -150,7 +153,7 @@ function Dashboard() {
     //function for fetching partner prefernce data
     const fetchPartnerPrefernce = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
@@ -194,7 +197,7 @@ function Dashboard() {
 
     const fetchProfileData = async () => {
         try {
-            const token = sessionStorage.getItem("token");
+            
             const reqHeader = {
                 "Authorization": `Bearer ${token}`
             };
