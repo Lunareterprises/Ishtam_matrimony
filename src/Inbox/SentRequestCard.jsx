@@ -11,6 +11,7 @@ import { useAuth } from '../AuthContext/AuthContext';
 function SentRequestCard({ item }) {
     const { user } = useAuth();
     const token = user?.token
+    console.log("item data in sent request card::", item);
     const calculateAge = (dob) => {
         if (!dob) return null;
 
@@ -105,26 +106,28 @@ function SentRequestCard({ item }) {
                             </div>
                     }
                     <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
-                        PREMIUM
+                        {item?.active_plan?.s_plan_name || "Free"}
                     </div>
                 </div>
 
+                <div className='' ></div>
+
                 {/* Middle - Details */}
-                <div className="p-5 flex flex-col justify-between items-center gap-4">
+                <div className="p-5 flex flex-col justify-between items-start gap-2 w-80">
                     <div>
                         <h2 className="text-lg font-semibold text-gray-800">
                             {item.u_firstname} {item.u_lastname}
                             <span className="text-gray-500 text-[18px]"> | ID : ITM{item.u_id}</span>
                         </h2>
                         <p className="text-sm text-gray-600 mt-1">
-                            {calculateAge(item.u_dob)} yrs, {item.height || "5’ 6”"} | {item.dob || "2001 July 04"} | {item.occupation || "Not Working"}
+                            {calculateAge(item.u_dob)} yrs  || {item.u_height} || {item.u_working_as || "Not Working"}
                         </p>
-                        <p className="text-sm text-gray-600">{item.education || "BA English"}</p>
+                        <p className="text-sm text-gray-600">{item.u_qualification || "BA English"}</p>
                         <p className="text-sm text-gray-600">
-                            {item.language || "Malayalam"} | {item.religion || "Hindu, Nair"} | {item.location || "Alappuzha, Kerala"}
+                            {item.u_mother_tongue || "N/A"} | {item.u_religion}, {item.u_community} | {item.u_district || "N/A"}, {item.u_state || "N/A"}
                         </p>
                     </div>
-                    <div>
+                    <div  className='w-full flex justify-center' >
                         <button onClick={() => navigateToParnerProfile(item.u_id)} className="bg-[#E33183] text-white px-4 py-2 rounded-full text-sm font-medium">
                             View Profile
                         </button>
@@ -175,7 +178,7 @@ function SentRequestCard({ item }) {
                             </div>
                     }
                     <div className="absolute top-0 left-0 bg-[#E33183] text-white text-[10px] font-semibold px-2 py-1 rounded">
-                        PREMIUM
+                        {item?.active_plan?.s_plan_name || "Free"}
                     </div>
                 </div>
 
@@ -189,7 +192,7 @@ function SentRequestCard({ item }) {
                     </p>
                     <p className="text-[13px] text-gray-600">{item.education || "BA English"}</p>
                     <p className="text-[13px] text-gray-600">
-                        {item.language || "Malayalam"} | {item.religion || "Hindu, Nair"} | {item.location || "Alappuzha, Kerala"}
+                        {item.language || "Malayalam"} | {item.u_religion || "Hindu, Nair"} | {item.location || "Alappuzha, Kerala"}
                     </p>
 
                     <button onClick={() => navigateToParnerProfile(item.u_id)} className="bg-[#E33183] text-white px-4 py-2 rounded-full text-[13px] font-medium w-full mt-4">

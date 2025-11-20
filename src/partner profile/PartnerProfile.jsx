@@ -58,6 +58,77 @@ function PartnerProfile() {
             if (result?.data?.result) {
                 setMatchedCriteria(result?.data?.data?.matched_criteria)
                 setPartnerProfileData(result?.data?.data);
+                const criteriaMap = {
+                    age: {
+                        label: "Age",
+                        value: item.age,
+                    },
+                    height: {
+                        label: "Height",
+                        value: item.u_height,
+                    },
+                    marital_status: {
+                        label: "Marital Status",
+                        value: item.u_marital_status,
+                    },
+                    religion: {
+                        label: "Religion",
+                        value: item.u_religion,
+                    },
+                    community: {
+                        label: "Community",
+                        value: item.u_community,
+                    },
+                    mother_tongue: {
+                        label: "Mother Tongue",
+                        value: item.u_mother_tongue,
+                    },
+                    country: {
+                        label: "Country",
+                        value: item.u_country,
+                    },
+                    state: {
+                        label: "State",
+                        value: item.u_state,
+                    },
+                    city: {
+                        label: "City",
+                        value: item.u_city,
+                    },
+                    district: {
+                        label: "District",
+                        value: item.u_district,
+                    },
+                    qualification: {
+                        label: "Qualification",
+                        value: item.u_qualification,
+                    },
+                    working_with: {
+                        label: "Working With",
+                        value: item.u_working_with,
+                    },
+                    profession_area: {
+                        label: "Profession Area",
+                        value: item.u_profession_area,
+                    },
+                    working_as: {
+                        label: "Working As",
+                        value: item.u_working_as,
+                    },
+                    annual_income: {
+                        label: "Annual Income",
+                        value: item.u_annual_income,
+                    },
+                    profile_managed_by: {
+                        label: "Profile Managed By",
+                        value: item.u_profile_for,
+                    },
+                    diet: {
+                        label: "Diet",
+                        value: item.u_diet,
+                    },
+                };
+
             } else {
                 await Swal.fire({
                     title: 'Not found!',
@@ -73,10 +144,13 @@ function PartnerProfile() {
 
 
 
+
+
+
     const getContactData = async (e) => {
         e.preventDefault()
         try {
-          
+
             console.log("token::", token);
             const reqHeader = {
                 "Content-Type": "application/json",
@@ -221,12 +295,30 @@ function PartnerProfile() {
                                                                 className='border border-[#E33183] hover:bg-[#E33183] hover:text-[white] text-[#E33183] px-6 py-2 rounded-full text-sm font-semibold self-center sm:self-start"'  >
                                                                 View Contact
                                                             </button>
-                                                            <button onClick={() => {
-                                                                setShowConnectNowModal(true)
-                                                                setSelectedProfileId(item?.u_id);
-                                                            }} className=" bg-[#E33183] hover:bg-[#c91e6b] text-white px-6 py-2 rounded-full text-sm font-semibold self-center sm:self-start">
-                                                                Send Interest
-                                                            </button>
+                                                            {(() => {
+                                                                const status = item?.is_connected?.i_status;
+
+                                                                if (status === "accepted") return null;
+                                                                if (status === "rejected") {
+                                                                    return (
+                                                                        <button className="bg-gray-200 text-gray-500 px-6 py-2 rounded-full text-sm font-semibold cursor-not-allowed">
+                                                                            Rejected
+                                                                        </button>
+                                                                    );
+                                                                }
+
+                                                                return (
+                                                                    <button
+                                                                        onClick={() => {
+                                                                            setShowConnectNowModal(true);
+                                                                            setSelectedProfileId(item?.u_id);
+                                                                        }}
+                                                                        className="bg-[#E33183] hover:bg-[#c91e6b] text-white px-6 py-2 rounded-full text-sm font-semibold transition-colors duration-200"
+                                                                    >
+                                                                        Send Interest
+                                                                    </button>
+                                                                );
+                                                            })()}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -247,17 +339,7 @@ function PartnerProfile() {
                                                 Image Gallery ({item?.images?.length || 0})
                                             </h1>
 
-                                            {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
-                                                {item?.images?.map((img, i) => (
-                                                    <img
-                                                        key={i}
-                                                        src={`https://lunarsenterprises.com:6050${img?.uf_file}`}
-                                                        alt={`img-${i}`}
-                                                        className="w-full h-full aspect-square object-cover rounded-sm cursor-pointer hover:opacity-90 transition-opacity"
-                                                        onClick={() => setCurrentIndex(i)}
-                                                    />
-                                                ))}
-                                            </div> */}
+
                                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
                                                 {item?.images?.map((img, i) => (
                                                     <img
@@ -406,7 +488,7 @@ function PartnerProfile() {
 
                                                             {/* Score */}
                                                             <div className="w-13 h-13 sm:h-22 sm:w-22 rounded-full bg-[#E33183] flex items-center justify-center text-white font-semibold sm:text-lg text-sm shadow-lg">
-                                                                {item?.matched_criteria?.length || 0}/10
+                                                                {item?.matched_criteria?.length || 0}/{item?.user_criteria?.length || 0}
                                                             </div>
 
                                                             {/* Right Profile */}
@@ -429,139 +511,59 @@ function PartnerProfile() {
                                                     </div>
 
                                                     {/* Details Section */}
+                                                    {/* Details Section */}
                                                     <div className="flex flex-col gap-6 w-full sm:w-[57%] mt-6">
 
-                                                        {/* Age */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Age</h1>
-                                                                <h1>{item.age}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("age") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
+                                                        {item.user_criteria?.map((key) => {
+                                                            const criteriaMap = {
+                                                                age: { label: "Age", value: item.age },
+                                                                height: { label: "Height", value: item.u_height },
+                                                                marital_status: { label: "Marital Status", value: item.u_marital_status },
+                                                                religion: { label: "Religion", value: item.u_religion },
+                                                                community: { label: "Community", value: item.u_community },
+                                                                mother_tongue: { label: "Mother Tongue", value: item.u_mother_tongue },
+                                                                country: { label: "Country Living In", value: item.u_country },
+                                                                state: { label: "State Living In", value: item.u_state },
+                                                                city: { label: "City", value: item.u_city },
+                                                                district: { label: "District", value: item.u_district },
+                                                                qualification: { label: "Qualification", value: item.u_qualification },
+                                                                working_with: { label: "Working With", value: item.u_working_with },
+                                                                profession_area: { label: "Profession Area", value: item.u_profession_area },
+                                                                working_as: { label: "Working As", value: item.u_working_as },
+                                                                annual_income: { label: "Annual Income", value: item.u_annual_income },
+                                                                profile_managed_by: { label: "Profile Managed By", value: item.u_profile_for },
+                                                                diet: { label: "Diet", value: item.u_diet },
+                                                            };
 
-                                                        {/* Height */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Height</h1>
-                                                                <h1>{item.u_height}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("height") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
+                                                            const criteria = criteriaMap[key];
+                                                            if (!criteria) return null;
 
-                                                        {/* Marital Status */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Marital Status</h1>
-                                                                <h1>{item.u_marital_status}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("marital_status") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
+                                                            const isMatched = item?.matched_criteria?.includes(key);
 
-                                                        {/* Religion / Community */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Religion / Community</h1>
-                                                                <h1>{item.u_religion}, {item.u_community}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("religion_community") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
+                                                            return (
+                                                                <div
+                                                                    key={key}
+                                                                    className="flex w-full justify-between items-center pb-4"
+                                                                >
+                                                                    <div className="flex flex-col items-start">
+                                                                        <h1 className="font-semibold">{criteria.label}</h1>
+                                                                        <h1>{criteria.value || "N/A"}</h1>
+                                                                    </div>
 
-                                                        {/* Mother Tongue */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Mother Tongue</h1>
-                                                                <h1>{item.u_mother_tongue}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("mother_tongue") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Country */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Country Living In</h1>
-                                                                <h1>{item.u_country}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("country") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
-
-                                                        {/* State */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">State Living In</h1>
-                                                                <h1>{item.u_state}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("state") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Qualification */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Qualification</h1>
-                                                                <h1>{item.u_qualification}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("qualification") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Working As */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Working As</h1>
-                                                                <h1>{item.u_working_as}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("working_as") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
-
-                                                        {/* Diet */}
-                                                        <div className="flex w-full justify-between items-center pb-4">
-                                                            <div className="flex flex-col items-start ">
-                                                                <h1 className="font-semibold">Diet</h1>
-                                                                <h1>{item.u_diet}</h1>
-                                                            </div>
-                                                            {item?.matched_criteria?.includes("diet") ? (
-                                                                <div className="text-[#E33183] text-3xl"><FaCircleCheck /></div>
-                                                            ) : (
-                                                                <div className="text-neutral-400 text-3xl"><FaCircleMinus /></div>
-                                                            )}
-                                                        </div>
-
+                                                                    {isMatched ? (
+                                                                        <div className="text-[#E33183] text-3xl">
+                                                                            <FaCircleCheck />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <div className="text-neutral-400 text-3xl">
+                                                                            <FaCircleMinus />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            );
+                                                        })}
                                                     </div>
+
 
                                                 </div>
 

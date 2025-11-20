@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
-import { IoCloseOutline } from "react-icons/io5"
+import { IoCloseOutline, IoEye, IoEyeOff } from "react-icons/io5"
 import { RegistrationApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
 import DatePicker from "react-datepicker";
@@ -11,6 +11,7 @@ function Registration({ onClose, onSuccess }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [errors, setErrors] = useState({});
     const [showDropdown, setShowDropdown] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
     const [showReligionDropdown, setShowReligionDropdown] = useState(false);
     const [registrationData, setRegistrationData] = useState({
         profile_for: "",
@@ -420,27 +421,41 @@ function Registration({ onClose, onSuccess }) {
                                 />
                                 {errors.mobile && <p className="text-red-500 text-xs  pt-1">{errors.mobile}</p>}
                             </div>
-                            <div>
+                            <div className='w-full relative' >
                                 <label className="block text-sm font-medium text-[#490B22]">Password</label>
                                 <input
-                                    type="password"
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="Create a strong password"
                                     value={registrationData.password}
                                     onChange={(e) => setRegistrationData({ ...registrationData, password: e.target.value })}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none text-[14px]"
                                 />
                                 {errors.password && <p className="text-red-500 text-xs pt-1">{errors.password}</p>}
+                                <span
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-8 cursor-pointer text-gray-500 hover:text-[#E33183]"
+                                >
+                                    {showPassword ? <IoEyeOff size={20} /> : <IoEye size={20} />}
+                                </span>
                             </div>
-                            <div>
+                            <div className='w-full relative' >
                                 <label className="block text-sm font-medium text-[#490B22]">Confirm Password</label>
                                 <input
-                                    type="password"
+
+                                    type={showPassword ? "text" : "password"}
                                     placeholder="Confirm Your Password"
                                     value={registrationData.confirm_password}
                                     onChange={(e) => setRegistrationData({ ...registrationData, confirm_password: e.target.value })}
                                     className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none text-[14px]"
                                 />
+
                                 {errors.confirm_password && <p className="text-red-500 text-xs pt-1">{errors.confirm_password}</p>}
+                                <span
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-3 top-8 cursor-pointer text-gray-500 hover:text-[#E33183]"
+                                >
+                                    {showPassword ? <IoEyeOff size={20} /> : <IoEye size={20} />}
+                                </span>
                             </div>
                         </div>
                         <div className="flex flex-col gap-2 justify-center items-center">

@@ -4,35 +4,64 @@ import DoubleHeartsCredentials from '../assets/DoubleHeartsCredentials.png';
 import { changePasswordApi } from '../Services/allApi';
 import Swal from 'sweetalert2';
 import { useAuth } from '../AuthContext/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function ChangePassword({ onClose }) {
     const [showPassword, setShowPassword] = useState(false);
+    const [errors, setErrors] = useState({});
     const [newPassword, setNewPassword] = useState({
         password: ""
     })
     const { user } = useAuth();
-        const token = user?.token
+    const token = user?.token
+
+    // FIXED: Correct validation logic
+    const validateStep = () => {
+        let newErrors = {};
+
+        // Check the actual password value inside the object
+        if (!newPassword.password || newPassword.password.trim().length < 6) {
+            newErrors.password = "Password must be at least 6 characters";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    const navigate = useNavigate()
+    const { Userlogout } = useAuth()
+    const handleLogout = () => {
+        // Clear session storage
+        sessionStorage.removeItem("token");
+
+        // Call your auth context logout
+        if (Userlogout) Userlogout();
+
+        // Redirect to login or home page
+        navigate('/');
+    };
 
     const handleChangPassword = async (e) => {
         e.preventDefault()
+        if (!validateStep()) return;
         try {
-          
             const reqHeader = {
                 Authorization: `Bearer ${token}`,
             };
-            console.log("inside send enquiry request::");
-            // API call
+
             const result = await changePasswordApi(newPassword, reqHeader);
             console.log("result :: ", result);
+
             if (result?.data?.result === true) {
                 await Swal.fire({
                     title: 'Password Changed!',
                     text: 'Your password has been updated successfully.',
                     icon: 'success',
                     iconColor: "#E33183",
-                    confirmButtonText: 'OK',
+                    confirmButtonText: 'ok',
                     confirmButtonColor: "#E33183"
                 });
+                handleLogout()
                 onClose()
             } else {
                 await Swal.fire({
@@ -51,7 +80,6 @@ function ChangePassword({ onClose }) {
             });
         }
     };
-
 
     return (
         <div className="fixed inset-0 flex items-center justify-center z-40 px-4">
@@ -74,7 +102,7 @@ function ChangePassword({ onClose }) {
 
                         <div className="w-full relative">
                             <label className="block text-sm font-medium mb-1 text-[#490B22]">
-                               New Password
+                                New Password
                             </label>
                             <input
                                 value={newPassword.password}
@@ -83,7 +111,8 @@ function ChangePassword({ onClose }) {
                                 placeholder="Enter your new password"
                                 className="w-full border border-gray-300 rounded-lg px-3 py-3 focus:outline-none text-[14px] pr-10"
                             />
-
+                            {/* FIXED: Correct error key */}
+                            {errors.password && <p className="text-red-500 text-xs pt-1">{errors.password}</p>}
 
                             {/* Eye Icon */}
                             <span
