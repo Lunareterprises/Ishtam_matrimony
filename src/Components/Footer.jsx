@@ -16,8 +16,11 @@ function Footer() {
                     <div className="flex flex-col text-left">
                         <h1 className="text-white font-semibold text-lg">GET IN TOUCH</h1>
                         <div className="pt-4 text-[15px] space-y-1">
-                            <p className="text-[#b1b1b1a2]">Address: 4521 road xxxxxxx</p>
-                            <p className="text-[#b1b1b1a2]">Phone: +881 252 002 892</p>
+                            <p className="text-[#b1b1b1a2]">Address: Shiju T G
+                                IshtamMatrimony
+                                Thekkiniyath house <br></br>
+                                Downhill, Malappuram</p>
+                            <p className="text-[#b1b1b1a2]">Phone: +91 93882 31910</p>
                             <p className="text-[#b1b1b1a2]">Email: info@example.com</p>
                         </div>
                     </div>
