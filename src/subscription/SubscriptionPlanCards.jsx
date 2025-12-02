@@ -4,6 +4,7 @@ import { FaQrcode } from "react-icons/fa6";
 import { IoArrowBack } from "react-icons/io5";
 import { BsQrCode } from 'react-icons/bs';
 import { LuIndianRupee } from 'react-icons/lu';
+import  scanner  from '../assets/scanner.jpeg'
 
 function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
     console.log("plan data :::", plan);
@@ -50,8 +51,9 @@ function SubscriptionPlanCards({ plan, flipped, onFlip, onBack }) {
                 {/* Back Side */}
                 <div className="absolute w-full h-full bg-white rounded-lg border border-[#5A0A1D] shadow-md [transform:rotateY(180deg)] [backface-visibility:hidden] flex flex-col items-center justify-center p-6">
 
-                    <div className="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
-                        <BsQrCode className="text-9xl text-[#2e2e2e]" />
+                    <div className="w-42 h-39 bg-gray-200 rounded-lg flex items-center justify-center mb-4">
+                       {/*  <BsQrCode className="text-9xl text-[#2e2e2e]" /> */}
+                       <img className='h-35 w-auto ' src={scanner} alt="" />
                     </div>
                     <div className="mb-4 flex flex-col items-center">
                         <h1 className='text-xl text-gray-700  font-semibold '  >Scan to pay</h1>

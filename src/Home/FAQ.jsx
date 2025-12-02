@@ -8,44 +8,67 @@ function FAQ() {
   const faqs = [
     {
       id: 1,
-      question: "Alright, but what exactly do you do?",
+      question: "What is Ishtam Marry?",
       answer:
-        "As a creative agency we work with you to develop solutions to address your brand needs. That includes various aspects of brand planning and strategy, marketing and design.",
+        "Ishtam Marry is a modern matchmaking platform designed to help individuals find their ideal life partner based on compatibility, values, and preferences."
     },
     {
       id: 2,
-      question:
-        "I don't need a brand strategist but I need help executing an upcoming campaign. Can we still work together?",
+      question: "Is creating a profile free?",
       answer:
-        "Absolutely! We can assist you in executing specific campaigns or projects even if you don't require full brand strategy services.",
+        "Yes! Creating a profile on Ishtam Marry is completely free. You can browse matches, view profiles, and show interest without any charges."
     },
     {
       id: 3,
-      question: "Are your rates competitive?",
+      question: "How does the matching process work?",
       answer:
-        "We offer flexible pricing tailored to your project's scope and budget, ensuring top-quality work at a fair rate.",
+        "Our system uses your preferences—such as community, profession, lifestyle, and personal values—to show the most compatible matches for you."
     },
     {
       id: 4,
-      question: "Why do you have a monthly project cap?",
+      question: "Is my information kept private?",
       answer:
-        "We limit the number of projects per month to ensure that every client receives our full focus and attention.",
+        "Absolutely. Your personal information and photos stay protected. Only the details you choose to share will be visible to other members."
     },
+    {
+      id: 5,
+      question: "Can I delete or edit my profile anytime?",
+      answer:
+        "Yes, you have full control over your account. You can edit your details, update your photos, or delete your profile whenever you want."
+    },
+    {
+      id: 6,
+      question: "Do you verify profiles?",
+      answer:
+        "Yes. We follow a strict verification process to ensure profiles are genuine and trustworthy, helping you match with real, authentic people."
+    },
+    {
+      id: 7,
+      question: "How can I contact someone I’m interested in?",
+      answer:
+        "You can express interest directly from their profile. If they accept, both of you can connect through our secure communication options."
+    },
+    {
+      id: 8,
+      question: "Is Ishtam Marry available outside India?",
+      answer:
+        "Yes! We support global users. NRIs and people living abroad can register and connect with matches from anywhere."
+    }
   ];
+
 
   const toggleFAQ = (index) => {
     setActiveIndex(activeIndex === index ? null : index);
   };
 
   return (
-    <div id="FAQ" className="w-full min-h-screen flex justify-center items-center bg-gray-50 p-4">
-      <div className="sm:w-[80%] w-[90%] space-y-4">
+    <div id="FAQ" className="w-full min-h-screen flex justify-center items-center bg-gray-50 sm:py-20 py-10 scroll-mt-20">
+      <div className="sm:w-[80%] w-[90%] space-y-5">
         {faqs.map((faq, index) => (
           <div
             key={faq.id}
-            className={`rounded-lg transition-all duration-300 overflow-hidden ${
-              activeIndex === index ? "bg-purple-100" : "bg-gray-100"
-            }`}
+            className={`rounded-lg transition-all duration-300 overflow-hidden ${activeIndex === index ? "bg-purple-100" : "bg-gray-100"
+              }`}
           >
             <div
               className="flex items-center justify-between p-8 cursor-pointer"
@@ -59,10 +82,9 @@ function FAQ() {
                   {faq.question}
                 </h2>
               </div>
-              <div 
-                className={`text-gray-600 text-xl flex-shrink-0 transition-transform duration-300 ${
-                  activeIndex === index ? "rotate-90" : ""
-                }`}
+              <div
+                className={`text-gray-600 text-xl flex-shrink-0 transition-transform duration-300 ${activeIndex === index ? "rotate-90" : ""
+                  }`}
               >
                 {activeIndex === index ? <FaTimes /> : <FaPlus />}
               </div>
@@ -71,8 +93,8 @@ function FAQ() {
             <div
               ref={(el) => (contentRefs.current[index] = el)}
               style={{
-                maxHeight: activeIndex === index 
-                  ? `${contentRefs.current[index]?.scrollHeight}px` 
+                maxHeight: activeIndex === index
+                  ? `${contentRefs.current[index]?.scrollHeight}px`
                   : "0px",
               }}
               className="transition-all duration-500 ease-in-out overflow-hidden"

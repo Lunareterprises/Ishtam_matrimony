@@ -114,7 +114,7 @@ function HomeContactSection() {
     };
 
     return (
-        <div id='contactUs' className="relative w-full overflow-hidden">
+        <div id='contactUs' className="relative w-full overflow-hidden scroll-mt-20">
             <img
                 src={HomeContactImg}
                 alt="Background"

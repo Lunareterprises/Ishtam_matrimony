@@ -33,7 +33,7 @@ import UserProfileView from './Admin/AdminPages/UserProfileView'
 import AdminSuccessStoryView from './Admin/AdminPages/AdminSuccessStoryView'
 import ChatWindow from './chat/ChatWindow'
 // import {A}
-import {AuthProvider} from './AuthContext/AuthProvider'
+import { AuthProvider } from './AuthContext/AuthProvider'
 import ProtectedRoute from './AuthContext/ProtectedRoute/ProtectedRoute'
 
 function App() {
@@ -76,13 +76,16 @@ function App() {
         </AuthProvider>
       </Routes> */}
 
-          <AuthProvider>
+      <AuthProvider>
 
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/admin' element={<Home />} />
+          <Route path='/all-Success-Stories' element={<AllSuccessStories />} />
+          <Route path='/add-New-success-Story' element={<AddNewSuccessStory />} />
+          <Route path='/view-success-story' element={<ViewSuccessStory />} />
           {/* <Route path='/login' element={<Login />} /> */}
-          
+
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path='/myProfile' element={<MyProfile />} />
@@ -93,13 +96,9 @@ function App() {
             <Route path='/inbox' element={<Inbox />} />
             <Route path='/chatWindow' element={<ChatWindow />} />
             <Route path='/subscription' element={<Subscription />} />
-            <Route path='/all-Success-Stories' element={<AllSuccessStories />} />
-            <Route path='/add-New-success-Story' element={<AddNewSuccessStory />} />
-            <Route path='/view-success-story' element={<ViewSuccessStory />} />
             <Route path='/partner-profile/:profileId' element={<PartnerProfile />} />
             <Route path='/profile-vists' element={<ProfileVisits />} />
             <Route path='/shortlisted' element={<Shortlisted />} />
-            
             <Route path='/admin-dashboard' element={<AdminDashboard />} />
             <Route path='/subscription-management' element={<SubscriptionManagement />} />
             <Route path='/enquiries' element={<Enquiries />} />
@@ -112,7 +111,7 @@ function App() {
           </Route>
         </Routes>
 
-    </AuthProvider>
+      </AuthProvider>
     </>
   )
 }
